@@ -75,7 +75,7 @@ $creatives = [
     </style>
 </head>
 <body class="bg-white text-gray-800">
-    <?php include 'layouts/header.php'; ?>
+    <?php include '../layouts/header.php'; ?>
 
 
     <section class="max-w-6xl mx-auto px-4 py-12 text-center">
@@ -157,7 +157,7 @@ $creatives = [
             <?php endforeach; ?>
         </div>
     </section>
-<?php include 'layouts/footer.php'; ?>
+<?php include '../layouts/footer.php'; ?>
 
 </body>
 </html>
