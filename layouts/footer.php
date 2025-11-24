@@ -36,19 +36,17 @@
                 <h3 class="text-lg font-semibold mb-4">Menu Cepat</h3>
                 <ul class="space-y-2">
                     <li><a href="index.php" class="text-sm hover:text-orange-500 transition">Beranda</a></li>
-                    <li><a href="tentang.php" class="text-sm hover:text-orange-500 transition">Tentang Kami</a></li>
-                    <li><a href="karya.php" class="text-sm hover:text-orange-500 transition">Karya</a></li>
-                    <li><a href="berita.php" class="text-sm hover:text-orange-500 transition">Berita</a></li>
-                    <li><a href="kontak.php" class="text-sm hover:text-orange-500 transition">Kontak</a></li>
+                    <li><a href="view/about.php" class="text-sm hover:text-orange-500 transition">Tentang Kami</a></li>
+                    <li><a href="view/catalog.php" class="text-sm hover:text-orange-500 transition">Karya</a></li>
+                    <li><a href="view/news.php" class="text-sm hover:text-orange-500 transition">Berita</a></li>
+                    <li><a href="view/gallery.php" class="text-sm hover:text-orange-500 transition">Galeri</a></li>
                 </ul>
             </div>
 
             <!-- Logo & Maskot + Login Admin -->
             <div class="flex flex-col items-center">
-                <div class="bg-white rounded-lg p-4 mb-4">
-                    <img src="/pbl/assets/images/logo.png" alt="Lab MMT Maskot" class="w-32">
-                </div>
-                <a href="login.php" class="text-sm text-gray-300 hover:text-orange-500 transition underline">Masuk</a>
+                <img src="/pbl/assets/images/mmtLogo.png" alt="Lab MMT Maskot" class="w-40 object-contain">
+                <a href="login.php" class="text-sm text-gray-300 hover:text-orange-500 transition underline mt-3">Masuk</a>
             </div>
         </div>
 
