@@ -1,20 +1,37 @@
 <!-- HEADER.PHP -->
-<header id="header" class="bg-white shadow-md">
+<?php
+$currentPage = basename($_SERVER['SCRIPT_NAME']);
+$navItems = [
+    ['label' => 'Beranda', 'href' => 'index.php'],
+    ['label' => 'Tentang Kami', 'href' => 'view/about.php'],
+    ['label' => 'Karya', 'href' => 'view/catalog.php'],
+    ['label' => 'Berita', 'href' => 'view/news.php'],
+    ['label' => 'Galeri', 'href' => 'view/gallery.php'],
+];
+?>
+<header id="header" class="bg-white shadow-md sticky top-0 z-50 transition-transform duration-300 will-change-transform">
     <div class="container mx-auto px-4">
         <div class="flex items-center justify-between h-16">
             <!-- Logo -->
-            <div class="flex items-center">
-                <img src="/pbl/assets/images/logo.png" alt="Lab MMT Logo" class="h-12">
-                <span class="ml-2 text-xl font-bold text-orange-600">LAB MMT</span>
-            </div>
+            <a href="index.php" class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 bg-white px-2 py-1 rounded-md">
+                    <img src="/pbl/assets/images/jtiLogo.png" alt="Logo JTI" class="h-10 w-10 object-contain" onerror="this.src='/pbl/assets/images/image.png'">
+                    <span class="w-px h-10 bg-gray-300"></span>
+                    <img src="/pbl/assets/images/mmtLogo.png" alt="Lab MMT Maskot" class="h-12 w-12 object-contain">
+                </div>
+                <span class="ml-1 text-xl font-bold text-orange-600">LAB MMT</span>
+            </a>
 
             <!-- Navbar Desktop -->
             <nav class="hidden md:flex space-x-8">
-                <a href="#" class="text-gray-700 hover:text-orange-600 transition">Home</a>
-                <a href="#" class="text-gray-700 hover:text-orange-600 transition">Project</a>
-                <a href="#" class="text-gray-700 hover:text-orange-600 transition">Galery</a>
-                <a href="#" class="text-gray-700 hover:text-orange-600 transition">About Us</a>
-                <a href="#" class="text-gray-700 hover:text-orange-600 transition">News</a>
+                <?php foreach ($navItems as $item): 
+                    $isActive = $currentPage === $item['href'];
+                    $activeClass = $isActive ? 'text-orange-600 font-semibold underline underline-offset-4' : 'text-gray-700';
+                ?>
+                    <a href="<?php echo $item['href']; ?>" class="<?php echo $activeClass; ?> hover:text-orange-600 transition">
+                        <?php echo $item['label']; ?>
+                    </a>
+                <?php endforeach; ?>
             </nav>
 
             <!-- Mobile Menu Button -->
@@ -26,12 +43,33 @@
         </div>
 
         <!-- Mobile Menu -->
-        <nav id="mobile-menu" class="hidden md:hidden pb-4">
-            <a href="#" class="block py-2 text-gray-700 hover:text-orange-600 transition">Home</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-orange-600 transition">Project</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-orange-600 transition">Galery</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-orange-600 transition">About Us</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-orange-600 transition">News</a>
+        <nav id="mobile-menu" class="hidden md:hidden pb-4 space-y-1">
+            <?php foreach ($navItems as $item): 
+                $isActive = $currentPage === $item['href'];
+                $activeClass = $isActive ? 'text-orange-600 font-semibold underline underline-offset-4' : 'text-gray-700';
+            ?>
+                <a href="<?php echo $item['href']; ?>" class="block py-2 <?php echo $activeClass; ?> hover:text-orange-600 transition">
+                    <?php echo $item['label']; ?>
+                </a>
+            <?php endforeach; ?>
         </nav>
     </div>
 </header>
+
+<script>
+    (function () {
+        const header = document.getElementById('header');
+        if (!header) return;
+
+        let lastY = window.scrollY;
+        window.addEventListener('scroll', () => {
+            const currentY = window.scrollY;
+            const goingDown = currentY > lastY && currentY > 80;
+            header.classList.toggle('-translate-y-full', goingDown);
+            if (!goingDown) {
+                header.classList.remove('-translate-y-full');
+            }
+            lastY = currentY;
+        }, { passive: true });
+    })();
+</script>
