@@ -7,7 +7,7 @@ if (!isset($_SESSION['data_seeded'])) {
         'title' => 'Selamat Datang di Lab Multimedia',
         'subtitle' => 'Bangun pengalaman interaktif lewat game, UI/UX, dan AR/VR.',
         'cta' => 'Jelajahi Karya →',
-        'image' => '../pbl/assets/images/image.png',
+        'image' => '../pbl/assets/images/mmtLogo.png',
     ];
     $_SESSION['fokus'] = [
         ['icon' => '🎮', 'title' => 'Game Development', 'text' => 'Rancang gameplay, art, dan deployment multi-platform.'],
