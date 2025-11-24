@@ -1,17 +1,16 @@
 <?php include '../layouts/header.php'; ?>
-<?php include '../layouts/sidebar.php'; ?>
 
 <!-- Tailwind CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 
-<div class="p-6 sm:ml-64 mt-14">
-    <section class="max-w-7xl mx-auto">
-
-        <h1 class="text-2xl font-bold text-center">Galeri Karya Mahasiswa</h1>
-        <p class="text-sm text-gray-500 text-center mb-6">Telusuri inovasi terbaru dari mahasiswa Lab MMT</p>
+<main class="max-w-7xl mx-auto px-4 py-16 space-y-8">
+    <section class="space-y-2 text-center">
+        <h1 class="text-3xl font-bold text-gray-800">Galeri Karya Mahasiswa</h1>
+        <p class="text-sm text-gray-500">Telusuri inovasi terbaru dari mahasiswa Lab MMT</p>
+    </section>
 
         <!-- Filter -->
-        <div class="flex flex-wrap gap-3 justify-center items-center mb-6">
+        <div class="flex flex-wrap gap-3 justify-center items-center">
             <input id="searchInput" type="text" placeholder="Cari judul proyek..." 
             class="px-3 py-2 border rounded-lg text-sm w-60">
 
@@ -24,50 +23,49 @@
             </select>
         </div>
 
-        <!-- Galeri Grid -->
-        <div id="galleryContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            
-            <!-- Card -->
-            <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="mobile" data-title="Aplikasi Smart Kampus">
-                <div class="bg-gray-300 h-40 rounded-lg"></div>
-                <h3 class="mt-2 text-sm font-semibold">Aplikasi Smart Kampus</h3>
-                <span class="text-xs bg-orange-500 text-white px-2 py-1 rounded">Mobile Dev</span>
-            </div>
+        <section class="bg-white border border-gray-100 rounded-xl shadow-sm p-6">
+            <div id="galleryContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                
+                <!-- Card -->
+                <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="mobile" data-title="Aplikasi Smart Kampus">
+                    <div class="bg-gray-300 h-40 rounded-lg"></div>
+                    <h3 class="mt-2 text-sm font-semibold">Aplikasi Smart Kampus</h3>
+                    <span class="text-xs bg-orange-500 text-white px-2 py-1 rounded">Mobile Dev</span>
+                </div>
 
-            <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="web" data-title="Sistem Akademik Online">
-                <div class="bg-gray-300 h-40 rounded-lg"></div>
-                <h3 class="mt-2 text-sm font-semibold">Sistem Akademik Online</h3>
-                <span class="text-xs bg-blue-500 text-white px-2 py-1 rounded">Web Dev</span>
-            </div>
+                <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="web" data-title="Sistem Akademik Online">
+                    <div class="bg-gray-300 h-40 rounded-lg"></div>
+                    <h3 class="mt-2 text-sm font-semibold">Sistem Akademik Online</h3>
+                    <span class="text-xs bg-blue-500 text-white px-2 py-1 rounded">Web Dev</span>
+                </div>
 
-            <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="uiux" data-title="UI Aplikasi Edukasi">
-                <div class="bg-gray-300 h-40 rounded-lg"></div>
-                <h3 class="mt-2 text-sm font-semibold">UI Aplikasi Edukasi</h3>
-                <span class="text-xs bg-purple-500 text-white px-2 py-1 rounded">UI/UX</span>
-            </div>
+                <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="uiux" data-title="UI Aplikasi Edukasi">
+                    <div class="bg-gray-300 h-40 rounded-lg"></div>
+                    <h3 class="mt-2 text-sm font-semibold">UI Aplikasi Edukasi</h3>
+                    <span class="text-xs bg-purple-500 text-white px-2 py-1 rounded">UI/UX</span>
+                </div>
 
-            <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="iot" data-title="Sistem Sensor Keamanan">
-                <div class="bg-gray-300 h-40 rounded-lg"></div>
-                <h3 class="mt-2 text-sm font-semibold">Sistem Sensor Keamanan</h3>
-                <span class="text-xs bg-green-600 text-white px-2 py-1 rounded">IoT</span>
-            </div>
+                <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="iot" data-title="Sistem Sensor Keamanan">
+                    <div class="bg-gray-300 h-40 rounded-lg"></div>
+                    <h3 class="mt-2 text-sm font-semibold">Sistem Sensor Keamanan</h3>
+                    <span class="text-xs bg-green-600 text-white px-2 py-1 rounded">IoT</span>
+                </div>
 
-            <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="mobile" data-title="Aplikasi Absensi Mahasiswa">
-                <div class="bg-gray-300 h-40 rounded-lg"></div>
-                <h3 class="mt-2 text-sm font-semibold">Aplikasi Absensi Mahasiswa</h3>
-                <span class="text-xs bg-orange-500 text-white px-2 py-1 rounded">Mobile Dev</span>
-            </div>
+                <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="mobile" data-title="Aplikasi Absensi Mahasiswa">
+                    <div class="bg-gray-300 h-40 rounded-lg"></div>
+                    <h3 class="mt-2 text-sm font-semibold">Aplikasi Absensi Mahasiswa</h3>
+                    <span class="text-xs bg-orange-500 text-white px-2 py-1 rounded">Mobile Dev</span>
+                </div>
 
-            <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="web" data-title="Website Pendaftaran Kegiatan">
-                <div class="bg-gray-300 h-40 rounded-lg"></div>
-                <h3 class="mt-2 text-sm font-semibold">Website Pendaftaran Kegiatan</h3>
-                <span class="text-xs bg-blue-500 text-white px-2 py-1 rounded">Web Dev</span>
-            </div>
+                <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="web" data-title="Website Pendaftaran Kegiatan">
+                    <div class="bg-gray-300 h-40 rounded-lg"></div>
+                    <h3 class="mt-2 text-sm font-semibold">Website Pendaftaran Kegiatan</h3>
+                    <span class="text-xs bg-blue-500 text-white px-2 py-1 rounded">Web Dev</span>
+                </div>
 
-        </div>
-        
-    </section>
-</div>
+            </div>
+        </section>
+</main>
 
 <!-- Script Filter -->
 <script>
