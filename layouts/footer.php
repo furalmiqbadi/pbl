@@ -45,7 +45,7 @@
 
             <!-- Logo & Maskot + Login Admin -->
             <div class="flex flex-col items-center">
-                <img src="/pbl/assets/images/mmtLogo.png" alt="Lab MMT Maskot" class="w-40 object-contain">
+                <img src="../assets/images/mmtLogo.png" alt="Lab MMT Maskot" class="w-40 object-contain">
                 <a href="login.php" class="text-sm text-gray-300 hover:text-orange-500 transition underline mt-3">Masuk</a>
             </div>
         </div>
