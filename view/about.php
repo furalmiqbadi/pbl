@@ -80,6 +80,9 @@ $creatives = [
             font-family: 'Poppins', sans-serif;
         }
     </style>
+</head>
+<body class="bg-white text-gray-800">
+    <?php include '../layouts/header.php'; ?>
 
     <main class="about-content">
     <section class="max-w-6xl mx-auto px-4 py-12 text-center">
@@ -161,8 +164,7 @@ $creatives = [
             <?php endforeach; ?>
         </div>
     </section>
-    </main>
-<?php include '../layouts/footer.php'; ?>
+<?php include 'layouts/footer.php'; ?>
 
 </body>
 </html>

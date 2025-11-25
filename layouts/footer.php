@@ -47,7 +47,7 @@
             <!-- Logo & Maskot + Login Admin -->
             <div class="flex flex-col items-center">
                 <img src="<?php echo $basePath; ?>/assets/images/mmtLogo.png" alt="Lab MMT Maskot" class="w-40 object-contain">
-                <a href="<?php echo $basePath; ?>/login.php" class="text-sm text-gray-300 hover:text-orange-500 transition underline mt-3">Masuk</a>
+                <a href="<?php echo $basePath; ?>/view/login.php" class="text-sm text-gray-300 hover:text-orange-500 transition underline mt-3">Masuk</a>
             </div>
         </div>
 
@@ -84,7 +84,6 @@
         overlay.classList.toggle('hidden');
     }
 
-    // (khusus admin)
     const sidebarLinks = document.querySelectorAll('#sidebar a');
     if (sidebarLinks.length > 0) {
         sidebarLinks.forEach(link => {
