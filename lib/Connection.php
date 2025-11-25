@@ -2,10 +2,9 @@
 class Connection {
     private static $instance = null;
 
-    public static function getConnection() {
+    public static function getConnection(): ?PDO {
         if (self::$instance === null) {
-
-            $host = 'localhost';        
+            $host = 'localhost';
             $port = '5432';
             $dbname = 'pbl';       
             $user = 'postgres';        
@@ -18,12 +17,9 @@ class Connection {
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 ]);
-
-                // 🔥 Pesan berhasil (hanya muncul saat koneksi pertama kali dibuat)
-                echo "<p style='color: green; font-weight: bold;'>Koneksi ke database berhasil!</p>";
-
             } catch (PDOException $e) {
-                die("Database connection error: " . $e->getMessage());
+                // Kembalikan null supaya aplikasi bisa jatuh ke data dummy jika DB tidak tersedia
+                return null;
             }
         }
 
