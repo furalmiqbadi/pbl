@@ -1,24 +1,35 @@
 <main class="max-w-6xl mx-auto px-4 py-12 space-y-16">
-    <!-- Awal -->
+    <!-- Hero -->
     <section class="grid md:grid-cols-2 gap-12 items-center">
         <div class="space-y-4">
-            <p class="text-xl text-orange-600 font-semibold">Selamat Datang di</p>
+            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#feedd8] text-orange-700 font-semibold text-sm shadow-sm border border-orange-200">
+                <span class="h-2 w-2 rounded-full bg-orange-500"></span>
+                Selamat Datang di
+            </span>
             <h1 class="text-4xl md:text-5xl font-extrabold leading-tight text-gray-900">
                 <?php echo h($hero['title'] ?? 'Lab Multimedia'); ?>
             </h1>
             <p class="text-gray-600 max-w-xl"><?php echo h($hero['subtitle'] ?? ''); ?></p>
-            <a href="view/about.php" class="inline-block bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold smooth hover:bg-orange-600">
+            <a href="view/about.php" class="inline-flex items-center gap-2 bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold smooth hover:bg-orange-600 shadow-md">
                 <?php echo h($hero['cta'] ?? 'Kenali Kami'); ?>
+                <span class="text-xl leading-none">&rarr;</span>
             </a>
         </div>
         <div class="flex justify-center">
-            <img src="<?php echo h($hero['image'] ?? 'assets/images/mmtLogo.png'); ?>" alt="Hero" class="w-96 h-96 md:w-[500px] md:h-[500px] object-contain">
+            <img src="<?php echo h($hero['image'] ?? 'assets/images/mmtLogo.png'); ?>" alt="Hero" class="w-96 h-96 md:w-[540px] md:h-[540px] object-contain drop-shadow-[0_25px_45px_rgba(0,0,0,0.08)]">
         </div>
     </section>
 
     <!-- Fokus Utama -->
     <section class="space-y-10">
-        <h2 class="text-3xl font-bold text-center text-gray-800">Fokus Utama Kami</h2>
+        <div class="text-center space-y-2">
+            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#feedd8] text-orange-700 font-semibold text-sm shadow-sm border border-orange-200">
+                <span class="h-2 w-2 rounded-full bg-orange-500"></span>
+                Apa yang kami dalami
+            </span>
+            <h2 class="text-3xl font-bold text-gray-800">Fokus Utama Kami</h2>
+            <p class="text-gray-600">Game, UI/UX, dan AR/VR yang saling melengkapi.</p>
+        </div>
         <div class="grid md:grid-cols-3 gap-6 items-stretch">
             <?php foreach ($fokusItems as $fokus): ?>
             <div class="relative bg-white rounded-2xl card-outline p-8 pt-14 flex flex-col items-center text-center h-full">
@@ -34,14 +45,14 @@
 
     <!-- Galeri -->
     <section class="space-y-6">
-        <h2 class="text-3xl font-bold text-center text-gray-800">Galeri</h2>
-        <?php
-            $galleryTop = array_slice($galleryItems, 0, 8);
-            $galleryBottom = array_slice($galleryItems, 8, 8);
-            if (count($galleryBottom) < 8) {
-                $galleryBottom = $galleryTop;
-            }
-        ?>
+        <div class="text-center space-y-2">
+            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#feedd8] text-orange-700 font-semibold text-sm shadow-sm border border-orange-200">
+                <span class="h-2 w-2 rounded-full bg-orange-500"></span>
+                Tangkap Momen
+            </span>
+            <h2 class="text-3xl font-bold text-center text-gray-800">Galeri</h2>
+            <p class="text-gray-600">Cuplikan karya, eksperimen, dan aktivitas terbaru.</p>
+        </div>
         <div class="space-y-3">
             <div class="gallery-row rounded-2xl border border-slate-200/60 bg-white/70 backdrop-blur" id="gallery-row-top">
                 <div id="gallery-track-top" class="gallery-track"></div>
@@ -54,34 +65,67 @@
 
     <!-- Karya Unggulan -->
     <section class="space-y-6">
-        <div class="flex items-center justify-between">
+        <?php
+            $categories = ['Semua'];
+            foreach ($karyaItems as $item) {
+                $cat = $item['category'] ?? 'Lainnya';
+                if (!in_array($cat, $categories, true)) {
+                    $categories[] = $cat;
+                }
+            }
+        ?>
+        <div class="space-y-3 text-center">
+            <div class="flex items-center justify-center">
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#feedd8] text-orange-700 font-semibold text-sm shadow-sm border border-orange-200">
+                    <span class="h-2 w-2 rounded-full bg-orange-500"></span>
+                    Karya Unggulan
+                </span>
+            </div>
             <h2 class="text-3xl font-bold text-gray-800">Karya Unggulan Kami</h2>
+            <p class="text-gray-600">Pilihan project terbaik dari Game, UI/UX, dan AR/VR.</p>
+            <div class="flex flex-wrap gap-2 justify-center">
+                <?php foreach ($categories as $index => $cat): ?>
+                    <button data-filter="<?php echo h($cat); ?>" class="karya-filter px-4 py-2 rounded-full text-sm font-semibold border <?php echo $index === 0 ? 'bg-orange-500 text-white border-orange-500 shadow-sm' : 'bg-white text-gray-700 border-gray-200 hover:border-orange-200'; ?>">
+                        <?php echo h($cat); ?>
+                    </button>
+                <?php endforeach; ?>
+            </div>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-6">
+        <div class="grid md:grid-cols-3 gap-6" id="karya-grid">
             <?php foreach (array_slice($karyaItems, 0, 3) as $karya): ?>
-            <div class="bg-white rounded-xl card-outline overflow-hidden">
-                <?php if (!empty($karya['image'])): ?>
-                    <img src="<?php echo h($karya['image']); ?>" alt="<?php echo h($karya['title'] ?? ''); ?>" class="w-full h-44 object-cover bg-gray-200">
-                <?php else: ?>
-                    <div class="w-full h-44 bg-gray-200"></div>
-                <?php endif; ?>
+            <div class="bg-white rounded-2xl shadow-[0_12px_35px_-18px_rgba(15,23,42,0.35)] overflow-hidden border border-slate-200/70">
+                <div class="w-full h-44 bg-gray-200 overflow-hidden">
+                    <?php if (!empty($karya['image'])): ?>
+                        <img src="<?php echo h($karya['image']); ?>" alt="<?php echo h($karya['title'] ?? ''); ?>" class="w-full h-full object-cover">
+                    <?php endif; ?>
+                </div>
                 <div class="p-4 space-y-2">
-                    <p class="pill text-xs inline-block"><?php echo h($karya['category'] ?? ''); ?></p>
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#feedd8] text-orange-700 text-xs font-semibold border border-orange-200">
+                        <span class="h-2 w-2 rounded-full bg-orange-500"></span>
+                        <?php echo h($karya['category'] ?? ''); ?>
+                    </span>
                     <h3 class="text-lg font-semibold text-gray-800"><?php echo h($karya['title'] ?? ''); ?></h3>
+                    <p class="text-sm text-gray-500">Detail singkat akan tampil di sini.</p>
                 </div>
             </div>
             <?php endforeach; ?>
         </div>
         <div class="text-center">
-            <a href="view/catalog.php" class="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold smooth hover:bg-orange-600 inline-block">Lihat Selengkapnya →</a>
+            <a href="view/catalog.php" class="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold smooth hover:bg-orange-600 inline-block">Lihat Selengkapnya &rarr;</a>
         </div>
 
     </section>
 
     <!-- Artikel & Berita -->
     <section class="space-y-6">
-        <h2 class="text-3xl font-bold text-center text-gray-800">Artikel & Berita</h2>
+        <div class="text-center space-y-2">
+            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#feedd8] text-orange-700 font-semibold text-sm shadow-sm border border-orange-200">
+                <span class="h-2 w-2 rounded-full bg-orange-500"></span>
+                Cerita Kami
+            </span>
+            <h2 class="text-3xl font-bold text-center text-gray-800">Artikel & Berita</h2>
+        </div>
         <div class="grid md:grid-cols-3 gap-6">
             <?php foreach ($artikelItems as $artikel): ?>
             <article class="bg-white rounded-xl card-outline overflow-hidden">
@@ -99,7 +143,7 @@
             <?php endforeach; ?>
         </div>
         <div class="text-center">
-            <a href="view/news.php" class="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold smooth hover:bg-orange-600 inline-block">Lihat Selengkapnya →</a>
+            <a href="view/news.php" class="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold smooth hover:bg-orange-600 inline-block">Lihat Selengkapnya &rarr;</a>
         </div>
     </section>
 </main>

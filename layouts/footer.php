@@ -45,7 +45,7 @@
             </div>
 
             <!-- Logo & Portal Admin -->
-            <div class="flex flex-col items-center md:items-end text-right space-y-3 md:h-full md:justify-end">
+            <div class="flex flex-col items-center md:items-center text-center space-y-3">
                 <img src="<?php echo $basePath; ?>/assets/images/mmtLogo.png" alt="Lab MMT Maskot" class="w-32 h-32 object-contain">
                 <a href="<?php echo $basePath; ?>/view/login.php" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-orange-300 text-orange-200 hover:text-white hover:border-white transition text-sm font-semibold">
                     Portal Admin

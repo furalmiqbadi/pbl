@@ -10,7 +10,7 @@ $navItems = [
     ['label' => 'Galeri', 'href' => $basePath . '/view/gallery.php'],
 ];
 ?>
-<header id="header" class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200 shadow-sm transition-transform duration-300 will-change-transform">
+<header id="header" class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-[0_6px_20px_-14px_rgba(15,23,42,0.35)] transition-transform duration-300 will-change-transform">
     <div class="max-w-6xl mx-auto px-4">
         <div class="flex items-center justify-between h-16">
             <!-- Logo -->

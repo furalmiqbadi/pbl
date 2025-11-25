@@ -193,4 +193,15 @@ class HomeModel {
 
         return $fallback;
     }
+
+    public function getGalleryRows(): array {
+        $items = $this->getGallery();
+        // Pastikan tersedia minimal 16 item untuk 2 baris penuh
+        while (count($items) < 16) {
+            $items = array_merge($items, $items);
+        }
+        $top = array_slice($items, 0, 8);
+        $bottom = array_slice($items, 8, 8);
+        return ['top' => $top, 'bottom' => $bottom];
+    }
 }
