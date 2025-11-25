@@ -1,23 +1,37 @@
-<?php include '../layouts/header.php'; ?>
-<?php include '../layouts/sidebar.php'; ?>
+<?php 
+include '../layouts/header.php';
+
+// Dummy karya
+$karya = [
+    ["judul" => "Aplikasi Smart Kampus", "kategori" => "mobile dev"],
+    ["judul" => "Aplikasi Smart Kampus", "kategori" => "mobile dev"],
+    ["judul" => "Aplikasi Smart Kampus", "kategori" => "mobile dev"],
+    ["judul" => "Aplikasi Smart Kampus", "kategori" => "uiux"],
+    ["judul" => "Aplikasi Smart Kampus", "kategori" => "web"],
+    ["judul" => "Aplikasi Smart Kampus", "kategori" => "iot"],
+];
+?>
 
 <!-- Tailwind CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 
-<div class="p-6 sm:ml-64 mt-14">
-    <section class="max-w-7xl mx-auto">
+<div class="px-4 py-10 max-w-7xl mx-auto">
 
-        <h1 class="text-2xl font-bold text-center">Galeri Karya Mahasiswa</h1>
-        <p class="text-sm text-gray-500 text-center mb-6">Telusuri inovasi terbaru dari mahasiswa Lab MMT</p>
+    <!-- Judul -->
+    <h1 class="text-3xl font-bold text-center">Galeri Karya Mahasiswa</h1>
+    <p class="text-sm text-gray-500 text-center mb-8">
+        Telusuri inovasi terbaru dari mahasiswa Lab MMT
+    </p>
 
         <!-- Filter -->
-        <div class="flex flex-wrap gap-3 justify-center items-center mb-6">
+        <div class="flex flex-wrap gap-3 justify-center items-center mb-10">
             <input id="searchInput" type="text" placeholder="Cari judul proyek..." 
-            class="px-3 py-2 border rounded-lg text-sm w-60">
+            class="px-4 py-2 border rounded-lg text-sm w-60">
 
-            <select id="categoryFilter" class="px-3 py-2 border rounded-lg text-sm">
+            <select id="categoryFilter" 
+                class="px-4 py-2 border rounded-lg text-sm">
                 <option value="semua">Kategori: Semua</option>
-                <option value="mobile">Mobile Dev</option>
+                <option value="mobile dev">Mobile Dev</option>
                 <option value="web">Web Dev</option>
                 <option value="uiux">UI/UX</option>
                 <option value="iot">IoT</option>
@@ -25,48 +39,41 @@
         </div>
 
         <!-- Galeri Grid -->
-        <div id="galleryContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div id="galleryContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             
             <!-- Card -->
-            <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="mobile" data-title="Aplikasi Smart Kampus">
-                <div class="bg-gray-300 h-40 rounded-lg"></div>
-                <h3 class="mt-2 text-sm font-semibold">Aplikasi Smart Kampus</h3>
-                <span class="text-xs bg-orange-500 text-white px-2 py-1 rounded">Mobile Dev</span>
-            </div>
+            <?php foreach ($karya as $k): ?>
+            <div 
+                class="gallery-item bg-white border rounded-xl shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition"
+                data-category="<?= $k["kategori"] ?>"
+                data-title="<?= strtolower($k["judul"]) ?>"
+                onclick="window.location.href='detailKarya.php'"
+            >
+                <!-- Thumbnail -->
+                <div class="w-full h-44 bg-gray-200"></div>
 
-            <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="web" data-title="Sistem Akademik Online">
-                <div class="bg-gray-300 h-40 rounded-lg"></div>
-                <h3 class="mt-2 text-sm font-semibold">Sistem Akademik Online</h3>
-                <span class="text-xs bg-blue-500 text-white px-2 py-1 rounded">Web Dev</span>
-            </div>
+                <!-- Content -->
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold"><?= $k["judul"] ?></h3>
 
-            <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="uiux" data-title="UI Aplikasi Edukasi">
-                <div class="bg-gray-300 h-40 rounded-lg"></div>
-                <h3 class="mt-2 text-sm font-semibold">UI Aplikasi Edukasi</h3>
-                <span class="text-xs bg-purple-500 text-white px-2 py-1 rounded">UI/UX</span>
-            </div>
+                    <!-- Badge kategori -->
+                    <?php 
+                        $color = [
+                            "mobile dev" => "bg-orange-500",
+                            "web" => "bg-blue-500",
+                            "uiux" => "bg-purple-500",
+                            "iot" => "bg-green-600"
+                        ][$k["kategori"]];
+                    ?>
 
-            <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="iot" data-title="Sistem Sensor Keamanan">
-                <div class="bg-gray-300 h-40 rounded-lg"></div>
-                <h3 class="mt-2 text-sm font-semibold">Sistem Sensor Keamanan</h3>
-                <span class="text-xs bg-green-600 text-white px-2 py-1 rounded">IoT</span>
+                    <span class="text-xs text-white px-3 py-1 rounded mt-2 inline-block <?= $color ?>">
+                        <?= strtoupper($k["kategori"]) ?>
+                    </span>
+                </div>
             </div>
-
-            <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="mobile" data-title="Aplikasi Absensi Mahasiswa">
-                <div class="bg-gray-300 h-40 rounded-lg"></div>
-                <h3 class="mt-2 text-sm font-semibold">Aplikasi Absensi Mahasiswa</h3>
-                <span class="text-xs bg-orange-500 text-white px-2 py-1 rounded">Mobile Dev</span>
-            </div>
-
-            <div class="gallery-item border rounded-lg shadow-sm p-3" data-category="web" data-title="Website Pendaftaran Kegiatan">
-                <div class="bg-gray-300 h-40 rounded-lg"></div>
-                <h3 class="mt-2 text-sm font-semibold">Website Pendaftaran Kegiatan</h3>
-                <span class="text-xs bg-blue-500 text-white px-2 py-1 rounded">Web Dev</span>
-            </div>
+            <?php endforeach; ?>
 
         </div>
-        
-    </section>
 </div>
 
 <!-- Script Filter -->

@@ -7,7 +7,7 @@ class Connection {
 
             $host = 'localhost';        
             $port = '5432';
-            $dbname = 'pbl_mmt';       
+            $dbname = 'pbl';       
             $user = 'postgres';        
             $password = '123';         
 

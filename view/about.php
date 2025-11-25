@@ -71,13 +71,14 @@ $creatives = [
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Poppins', sans-serif; }
+        .about-content {
+            font-family: 'Poppins', sans-serif;
+        }
     </style>
 </head>
 <body class="bg-white text-gray-800">
-    <?php include '../layouts/header.php'; ?>
 
-
+    <main class="about-content">
     <section class="max-w-6xl mx-auto px-4 py-12 text-center">
         <h1 class="text-4xl font-bold text-gray-900 mb-4">Tentang Lab MMT</h1>
         <p class="text-gray-500 text-sm max-w-2xl mx-auto">
