@@ -48,7 +48,7 @@ $karya_lain = [
 <div class="max-w-6xl mx-auto px-4 py-8">
 
     <!-- Tombol Kembali -->
-    <a href="karya.php"
+    <a href="catalog.php"
        class="inline-block bg-orange-500 text-white px-5 py-2 rounded-lg font-medium mb-6 hover:bg-orange-600">
         ← Kembali ke Karya
     </a>
