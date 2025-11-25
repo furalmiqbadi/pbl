@@ -75,14 +75,12 @@ $creatives = [
     <?php include '../layouts/header.php'; ?>
 
     <style>
-        /* Scope font to about page content so header keeps its own styling */
         .about-content {
             font-family: 'Poppins', sans-serif;
         }
     </style>
 </head>
 <body class="bg-white text-gray-800">
-    <?php include '../layouts/header.php'; ?>
 
     <main class="about-content">
     <section class="max-w-6xl mx-auto px-4 py-12 text-center">
