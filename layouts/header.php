@@ -1,4 +1,3 @@
-﻿<!-- HEADER.PHP -->
 <?php
 $basePath = '/pbl';
 $currentPage = basename($_SERVER['SCRIPT_NAME']);
@@ -10,23 +9,21 @@ $navItems = [
     ['label' => 'Galeri', 'href' => $basePath . '/view/gallery.php'],
 ];
 ?>
-<header id="header" class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-[0_6px_20px_-14px_rgba(15,23,42,0.35)] transition-transform duration-300 will-change-transform">
-    <div class="max-w-6xl mx-auto px-4">
-        <div class="flex items-center justify-between h-16">
-            <!-- Logo -->
-            <a href="<?php echo $basePath; ?>/index.php" class="flex items-center space-x-3 group">
-                <div class="flex items-center space-x-3 bg-white px-3 py-2 rounded-xl shadow-sm">
-                    <img src="<?php echo $basePath; ?>/assets/images/jtiLogo.png" alt="Logo JTI" class="h-12 w-12 object-contain" onerror="this.src='<?php echo $basePath; ?>/assets/images/image.png'">
-                    <span class="w-px h-12 bg-gray-200"></span>
-                    <img src="<?php echo $basePath; ?>/assets/images/mmtLogo.png" alt="Lab MMT Maskot" class="h-12 w-12 object-contain">
+<header id="header" class="fixed w-full top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200 shadow-[0_6px_20px_-14px_rgba(15,23,42,0.35)] transition-transform duration-300 will-change-transform h-16">
+    <div class="max-w-6xl mx-auto px-4 h-full">
+        <div class="flex items-center justify-between h-full">
+            <a href="<?php echo $basePath; ?>/index.php" class="flex items-center space-x-2 group">
+                <div class="flex items-center space-x-2 px-2 py-1.5">
+                    <img src="<?php echo $basePath; ?>/assets/images/jtiLogo.png" alt="Logo JTI" class="h-7 w-7 object-contain" onerror="this.src='<?php echo $basePath; ?>/assets/images/image.png'">
+                    <span class="w-px h-10 bg-gray-200"></span>
+                    <img src="<?php echo $basePath; ?>/assets/images/mmtLogo.png" alt="Lab MMT Maskot" class="h-10 w-10 object-contain">
                 </div>
-                <div class="flex flex-col leading-tight">
+                <div class="flex flex-col leading-tight ml-1">
                     <span class="text-sm font-semibold text-slate-500 group-hover:text-orange-600 transition">Lab Multimedia</span>
-                    <span class="text-xl font-extrabold text-orange-600">MMT</span>
+                    <span class="text-xl font-extrabold text-orange-600 leading-tight">MMT</span>
                 </div>
             </a>
 
-            <!-- Navbar Desktop -->
             <nav class="hidden md:flex items-center space-x-2">
                 <?php foreach ($navItems as $item): 
                     $isActive = $currentPage === basename($item['href']);
@@ -40,7 +37,6 @@ $navItems = [
                 <?php endforeach; ?>
             </nav>
 
-            <!-- Mobile Menu Button -->
             <button id="mobile-menu-btn" class="md:hidden text-gray-700 focus:outline-none p-2 rounded-lg border border-slate-200">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -48,8 +44,7 @@ $navItems = [
             </button>
         </div>
 
-        <!-- Mobile Menu -->
-        <nav id="mobile-menu" class="hidden md:hidden pb-4 space-y-1 border-t border-slate-200 pt-3">
+        <nav id="mobile-menu" class="hidden md:hidden pb-4 space-y-1 border-t border-slate-200 pt-3 bg-white/90 backdrop-blur absolute left-0 right-0 px-4 shadow-lg">
             <?php foreach ($navItems as $item): 
                 $isActive = $currentPage === basename($item['href']);
                 $activeClass = $isActive
@@ -72,13 +67,20 @@ $navItems = [
         let lastY = window.scrollY;
         window.addEventListener('scroll', () => {
             const currentY = window.scrollY;
-            const goingDown = currentY > lastY && currentY > 80;
+            const goingDown = currentY > lastY && currentY > 50; 
             header.classList.toggle('-translate-y-full', goingDown);
             if (!goingDown) {
                 header.classList.remove('-translate-y-full');
             }
             lastY = currentY;
         }, { passive: true });
+
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        if(btn && menu) {
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+            });
+        }
     })();
 </script>
-

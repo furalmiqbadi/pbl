@@ -56,7 +56,7 @@
 
         <!-- Copyright -->
         <div class="border-t border-gray-700 mt-8 pt-6 text-center">
-            <p class="text-sm text-gray-400">┬⌐ 2025 Lab Multimedia MMT. Semua hak cipta dilindungi</p>
+            <p class="text-sm text-gray-400">@ 2025 Lab Multimedia MMT.</p>
         </div>
     </div>
 </footer>
