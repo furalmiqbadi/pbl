@@ -59,7 +59,7 @@ $karya = [
                     <!-- Badge kategori -->
                     <?php 
                         $color = [
-                            "mobile Dev" => "bg-orange-500",
+                            "mobile dev" => "bg-orange-500",
                             "web" => "bg-blue-500",
                             "uiux" => "bg-purple-500",
                             "iot" => "bg-green-600"
