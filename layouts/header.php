@@ -17,9 +17,7 @@ $navItems = [
             <a href="<?php echo $basePath; ?>/index.php" class="flex items-center space-x-3">
                 <div class="flex items-center space-x-3 bg-white px-2 py-1 rounded-md">
                     <img src="<?php echo $basePath; ?>/assets/images/jtiLogo.png" alt="Logo JTI" class="h-10 w-10 object-contain" onerror="this.src='<?php echo $basePath; ?>/assets/images/image.png'">
-                    <img src="../assets/images/jtiLogo.png" alt="Logo JTI" class="h-10 w-10 object-contain" onerror="this.src='/pbl/assets/images/image.png'">
                     <span class="w-px h-10 bg-gray-300"></span>
-                    <img src="../assets/images/mmtLogo.png" alt="Lab MMT Maskot" class="h-12 w-12 object-contain">
                     <img src="<?php echo $basePath; ?>/assets/images/mmtLogo.png" alt="Lab MMT Maskot" class="h-12 w-12 object-contain">
                 </div>
                 <span class="ml-1 text-xl font-bold text-orange-600">LAB MMT</span>
