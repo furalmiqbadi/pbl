@@ -6,9 +6,9 @@ class Connection {
         if (self::$instance === null) {
             $host = 'localhost';
             $port = '5432';
-            $dbname = 'pbl_mmt';
-            $user = 'postgres';
-            $password = '123';
+            $dbname = 'pbl';       
+            $user = 'postgres';        
+            $password = '123';         
 
             $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;";
 
