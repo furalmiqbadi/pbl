@@ -3,9 +3,9 @@ include '../layouts/header.php';
 
 // Dummy karya
 $karya = [
-    ["judul" => "Aplikasi Smart Kampus", "kategori" => "mobile Dev"],
-    ["judul" => "Aplikasi Smart Kampus", "kategori" => "mobile Dev"],
-    ["judul" => "Aplikasi Smart Kampus", "kategori" => "mobile Dev"],
+    ["judul" => "Aplikasi Smart Kampus", "kategori" => "mobile dev"],
+    ["judul" => "Aplikasi Smart Kampus", "kategori" => "mobile dev"],
+    ["judul" => "Aplikasi Smart Kampus", "kategori" => "mobile dev"],
     ["judul" => "Aplikasi Smart Kampus", "kategori" => "uiux"],
     ["judul" => "Aplikasi Smart Kampus", "kategori" => "web"],
     ["judul" => "Aplikasi Smart Kampus", "kategori" => "iot"],
