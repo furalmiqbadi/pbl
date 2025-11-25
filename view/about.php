@@ -77,7 +77,7 @@ $creatives = [
     </style>
 </head>
 <body class="bg-white text-gray-800">
-
+    <?php include '../layouts/header.php'; ?>
     <main class="about-content">
     <section class="max-w-6xl mx-auto px-4 py-12 text-center">
         <h1 class="text-4xl font-bold text-gray-900 mb-4">Tentang Lab MMT</h1>
