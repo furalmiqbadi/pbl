@@ -9,127 +9,105 @@ class HomeModel {
     }
 
     public function getHero(): array {
-        $fallback = [
-            'title' => 'Selamat Datang di Lab Multimedia',
-            'subtitle' => 'Bangun pengalaman interaktif lewat game, UI/UX, dan AR/VR.',
-            'cta' => 'Kenali Kami',
-            'image' => 'assets/images/mmtLogo.png',
-        ];
-
         if ($this->db === null) {
-            return $fallback;
+            return [];
         }
 
         try {
-            $sql = "SELECT title, subtitle, cta_label, cta, image_path, image FROM hero LIMIT 1";
+            // Gunakan deskripsi sebagai teks hero, gambar ambil dari nilai (jika ada)
+            $sql = "SELECT judul, isi_deskripsi FROM deskripsi ORDER BY id LIMIT 1";
             $stmt = $this->db->query($sql);
+            $hero = ['title' => '', 'subtitle' => '', 'cta' => 'Kenali Kami', 'image' => 'assets/images/mmtLogo.png'];
             if ($stmt) {
                 $row = $stmt->fetch();
                 if ($row) {
-                    return [
-                        'title' => trim($row['title'] ?? '') ?: $fallback['title'],
-                        'subtitle' => trim($row['subtitle'] ?? '') ?: $fallback['subtitle'],
-                        'cta' => trim($row['cta_label'] ?? $row['cta'] ?? '') ?: $fallback['cta'],
-                        'image' => trim($row['image_path'] ?? $row['image'] ?? '') ?: $fallback['image'],
-                    ];
+                    $hero['title'] = trim($row['judul'] ?? '');
+                    $hero['subtitle'] = trim($row['isi_deskripsi'] ?? '');
                 }
             }
-        } catch (Throwable $e) {
-            // gunakan fallback
-        }
 
-        return $fallback;
+            $imgStmt = $this->db->query("SELECT gambar_nilai FROM nilai ORDER BY id LIMIT 1");
+            if ($imgStmt) {
+                $imgRow = $imgStmt->fetch();
+                if ($imgRow) {
+                    $hero['image'] = trim($imgRow['gambar_nilai'] ?? '');
+                }
+            }
+
+            return $hero;
+        } catch (Throwable $e) {
+            return [];
+        }
     }
 
     public function getFokus(): array {
-        $fallback = [
-            ['title' => 'Game Development', 'text' => 'Rancang gameplay, art, dan deployment multi-platform.'],
-            ['title' => 'UI/UX Design', 'text' => 'Prototyping, usability testing, dan design system yang konsisten.'],
-            ['title' => 'AR/VR', 'text' => 'Immersive experience untuk training, edukasi, dan hiburan.'],
-        ];
-
         if ($this->db === null) {
-            return $fallback;
+            return [];
         }
 
         try {
-            $sql = "SELECT title, description, text FROM fokus ORDER BY COALESCE(position, sort_order, 999999), id";
+            $sql = "SELECT judul, gambar_nilai FROM nilai ORDER BY id LIMIT 3";
             $stmt = $this->db->query($sql);
             if ($stmt) {
                 $rows = $stmt->fetchAll();
                 $data = [];
                 foreach ($rows as $row) {
                     $data[] = [
-                        'title' => trim($row['title'] ?? '') ?: 'Tanpa Judul',
-                        'text' => trim($row['description'] ?? $row['text'] ?? '') ?: '',
+                        'title' => trim($row['judul'] ?? ''),
+                        'text' => '', // detail belum ada di tabel nilai
+                        'image' => trim($row['gambar_nilai'] ?? ''),
                     ];
                 }
-                if (!empty($data)) {
-                    return $data;
-                }
+                return $data;
             }
         } catch (Throwable $e) {
-            // fallback
+            return [];
         }
 
-        return $fallback;
+        return [];
     }
 
     public function getKarya(): array {
-        $fallback = [
-            ['title' => 'Project A', 'category' => 'Game', 'image' => 'assets/images/jtiLogo.png'],
-            ['title' => 'Project B', 'category' => 'UI/UX', 'image' => 'assets/images/jtiLogo.png'],
-            ['title' => 'Project C', 'category' => 'AR/VR', 'image' => 'assets/images/jtiLogo.png'],
-        ];
-
         if ($this->db === null) {
-            return $fallback;
+            return [];
         }
 
         try {
-            $sql = "SELECT title, category, image_path, thumbnail, image FROM karya ORDER BY created_at DESC, id DESC";
+            $sql = "SELECT dp.judul, dp.isi_proyek, dp.gambar_proyek, k.nama_kategori FROM daftar_proyek dp LEFT JOIN kategori k ON dp.kategori_id = k.id ORDER BY dp.id DESC";
             $stmt = $this->db->query($sql);
             if ($stmt) {
                 $rows = $stmt->fetchAll();
                 $data = [];
                 foreach ($rows as $row) {
                     $data[] = [
-                        'title' => trim($row['title'] ?? '') ?: 'Tanpa Judul',
-                        'category' => trim($row['category'] ?? '') ?: 'Lainnya',
-                        'image' => trim($row['image_path'] ?? $row['thumbnail'] ?? $row['image'] ?? ''),
+                        'title' => trim($row['judul'] ?? ''),
+                        'category' => trim($row['nama_kategori'] ?? ''),
+                        'image' => trim($row['gambar_proyek'] ?? ''),
                     ];
                 }
-                if (!empty($data)) {
-                    return $data;
-                }
+                return $data;
             }
         } catch (Throwable $e) {
-            // fallback
+            return [];
         }
 
-        return $fallback;
+        return [];
     }
 
     public function getArtikel(): array {
-        $fallback = [
-            ['title' => 'Artikel 1', 'date' => '2025-08-12', 'excerpt' => 'Consectetur adipiscing elit. Integer semper mattis nulla.', 'image' => 'assets/images/jtiLogo.png'],
-            ['title' => 'Artikel 2', 'date' => '2025-08-12', 'excerpt' => 'Aliquam erat volutpat. Proin sit amet eros sed lorem.', 'image' => 'assets/images/jtiLogo.png'],
-            ['title' => 'Artikel 3', 'date' => '2025-08-12', 'excerpt' => 'Pellentesque vel feugiat turpis purus.', 'image' => 'assets/images/jtiLogo.png'],
-        ];
-
         if ($this->db === null) {
-            return $fallback;
+            return [];
         }
 
         try {
-            $sql = "SELECT title, published_at, date, excerpt, summary, image_path, image FROM artikel ORDER BY published_at DESC, id DESC";
+            $sql = "SELECT ba.judul, ba.isi_berita, ba.gambar_berita, ba.created_at, k.nama_kategori FROM berita_artikel ba LEFT JOIN kategori k ON ba.kategori_id = k.id ORDER BY ba.created_at DESC, ba.id DESC LIMIT 3";
             $stmt = $this->db->query($sql);
             if ($stmt) {
                 $rows = $stmt->fetchAll();
                 $data = [];
                 foreach ($rows as $row) {
-                    $rawDate = $row['published_at'] ?? $row['date'] ?? null;
-                    $displayDate = $rawDate;
+                    $rawDate = $row['created_at'] ?? null;
+                    $displayDate = '';
                     if ($rawDate) {
                         $timestamp = strtotime($rawDate);
                         if ($timestamp !== false) {
@@ -138,68 +116,49 @@ class HomeModel {
                     }
 
                     $data[] = [
-                        'title' => trim($row['title'] ?? '') ?: 'Tanpa Judul',
+                        'title' => trim($row['judul'] ?? ''),
                         'date' => $displayDate ?: '',
-                        'excerpt' => trim($row['excerpt'] ?? $row['summary'] ?? '') ?: '',
-                        'image' => trim($row['image_path'] ?? $row['image'] ?? ''),
+                        'excerpt' => trim($row['isi_berita'] ?? ''),
+                        'image' => trim($row['gambar_berita'] ?? ''),
                     ];
                 }
-                if (!empty($data)) {
-                    return $data;
-                }
+                return $data;
             }
         } catch (Throwable $e) {
-            // fallback
+            return [];
         }
 
-        return $fallback;
+        return [];
     }
 
     public function getGallery(): array {
-        $fallback = [
-            ['image' => 'assets/images/jtiLogo.png'],
-            ['image' => 'assets/images/mmtLogo.png'],
-            ['image' => 'assets/images/jtiLogo.png'],
-            ['image' => 'assets/images/mmtLogo.png'],
-            ['image' => 'assets/images/jtiLogo.png'],
-            ['image' => 'assets/images/mmtLogo.png'],
-            ['image' => 'assets/images/jtiLogo.png'],
-            ['image' => 'assets/images/mmtLogo.png'],
-        ];
-
         if ($this->db === null) {
-            return $fallback;
+            return [];
         }
 
         try {
-            $sql = "SELECT image_path, image FROM gallery ORDER BY created_at DESC, id DESC";
+            $sql = "SELECT gambar_galeri FROM galeri ORDER BY id DESC LIMIT 16";
             $stmt = $this->db->query($sql);
             if ($stmt) {
                 $rows = $stmt->fetchAll();
                 $data = [];
                 foreach ($rows as $row) {
-                    $src = trim($row['image_path'] ?? $row['image'] ?? '');
+                    $src = trim($row['gambar_galeri'] ?? '');
                     if ($src !== '') {
                         $data[] = ['image' => $src];
                     }
                 }
-                if (!empty($data)) {
-                    return $data;
-                }
+                return $data;
             }
         } catch (Throwable $e) {
-            // fallback
+            return [];
         }
 
-        return $fallback;
+        return [];
     }
 
     public function getGalleryRows(): array {
         $items = $this->getGallery();
-        // Pastikan tersedia minimal 16 item untuk 2 baris penuh
-        while (count($items) < 16) {
-            $items = array_merge($items, $items);
-        }
         $top = array_slice($items, 0, 8);
         $bottom = array_slice($items, 8, 8);
         return ['top' => $top, 'bottom' => $bottom];
