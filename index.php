@@ -12,7 +12,8 @@ $hero = $data['hero'] ?? [];
 $fokusItems = $data['fokus'] ?? [];
 $karyaItems = $data['karya'] ?? [];
 $artikelItems = $data['artikel'] ?? [];
-$galleryItems = $data['gallery'] ?? [];
+$galleryTop = $data['galleryTop'] ?? [];
+$galleryBottom = $data['galleryBottom'] ?? [];
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -45,8 +46,9 @@ $galleryItems = $data['gallery'] ?? [];
 <script>
 // Galeri marquee: 4 tampilan, auto geser, pause on hover
 document.addEventListener('DOMContentLoaded', () => {
-    const galleryTopData = <?php echo json_encode(array_slice($galleryItems, 0, 8), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
-    const galleryBottomData = <?php echo json_encode(array_slice($galleryItems, 8, 8) ?: array_slice($galleryItems, 0, 8), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
+    const galleryTopData = <?php echo json_encode($galleryTop, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
+    const galleryBottomData = <?php echo json_encode($galleryBottom, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
+    const karyaData = <?php echo json_encode($karyaItems, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
 
     function startGalleryMarquee(rowId, trackId, data, direction = 1) {
         const row = document.getElementById(rowId);
@@ -99,6 +101,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     startGalleryMarquee('gallery-row-top', 'gallery-track-top', [...galleryTopData], 1);
     startGalleryMarquee('gallery-row-bottom', 'gallery-track-bottom', [...galleryBottomData], -1);
+
+    // Filter karya
+    const filterButtons = document.querySelectorAll('.karya-filter');
+    const karyaGrid = document.getElementById('karya-grid');
+
+    function renderKarya(list) {
+        karyaGrid.innerHTML = list.slice(0, 3).map(k => `
+            <div class="bg-white rounded-2xl shadow-[0_12px_35px_-18px_rgba(15,23,42,0.35)] overflow-hidden border border-slate-200/70">
+                <div class="w-full h-44 bg-gray-200 overflow-hidden">
+                    ${k.image ? `<img src="${k.image}" alt="${k.title || ''}" class="w-full h-full object-cover">` : ''}
+                </div>
+                <div class="p-4 space-y-2">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#feedd8] text-orange-700 text-xs font-semibold border border-orange-200">${k.category || ''}</span>
+                    <h3 class="text-lg font-semibold text-gray-800">${k.title || ''}</h3>
+                    <p class="text-sm text-gray-500">Detail singkat akan tampil di sini.</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    renderKarya(karyaData);
+
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterButtons.forEach(b => b.classList.remove('bg-orange-500','text-white','border-orange-500','shadow-sm'));
+            filterButtons.forEach(b => b.classList.add('bg-white','text-gray-700','border-gray-200'));
+            btn.classList.add('bg-orange-500','text-white','border-orange-500','shadow-sm');
+            btn.classList.remove('bg-white','text-gray-700','border-gray-200');
+
+            const filter = btn.dataset.filter;
+            const filtered = filter === 'Semua' ? karyaData : karyaData.filter(k => k.category === filter);
+            renderKarya(filtered);
+        });
+    });
 });
 </script>
 </body>
