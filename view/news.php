@@ -3,215 +3,167 @@
 <!-- Tailwind CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 
-<main class="max-w-7xl mx-auto px-4 py-16 space-y-10">
-
-    <!-- Judul & Subjudul -->
-    <section class="space-y-2 text-center">
-        <h1 class="text-3xl font-bold text-gray-900">Artikel & Berita Terkini</h1>
-        <p class="text-sm text-gray-500">
-            Ikuti kegiatan terbaru, prestasi mahasiswa, dan wawasan teknologi dari Lab MMT
+<!-- 1. HERO SECTION -->
+<section class="bg-white pt-24 pb-12 text-center">
+    <div class="max-w-screen-md mx-auto px-4">
+        <h1 class="font-heading font-bold text-3xl md:text-4xl text-brand-dark mb-2">
+            Artikel & Berita Terkini
+        </h1>
+        <p class="font-sans text-gray-500 text-sm md:text-base">
+            Ikuti kegiatan terbaru, prestasi mahasiswa, dan wawasan <br class="hidden md:block"> teknologi dari Lab MMT
         </p>
-    </section>
+    </div>
+</section>
 
-    <!-- Search + Filter Container -->
-    <div class="w-full">
-        <div class="flex flex-col md:flex-row bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+<!-- 2. SEARCH & FILTER BAR (Form GET ke index.php?page=news) -->
+<section class="bg-white pb-10 relative z-20">
+    <div class="max-w-screen-xl mx-auto px-4">
 
-            <!-- Search -->
-            <div class="relative flex-1 border-b md:border-b-0 md:border-r border-gray-200">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                    <!-- Icon search -->
+        <form action="index.php" method="GET" class="flex flex-col md:flex-row gap-4 max-w-4xl mx-auto">
+            <!-- Hidden Input agar tetap di halaman news -->
+            <input type="hidden" name="page" value="news">
+
+            <!-- Input Pencarian -->
+            <div class="relative flex-grow">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
-                </span>
-
-                <input id="searchInput" type="text" placeholder="Cari judul proyek..."
-                    class="w-full pl-12 pr-4 py-3 text-sm text-gray-700 bg-white focus:ring-0 outline-none" />
+                </div>
+                <input type="text" name="search"
+                    value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
+                    class="block w-full pl-10 p-3 text-sm text-gray-900 bg-white border border-gray-200 rounded-lg focus:ring-brand-orange focus:border-brand-orange shadow-sm outline-none transition-all"
+                    placeholder="Cari judul berita...">
             </div>
 
             <!-- Dropdown Kategori -->
-            <div class="relative w-full md:w-64">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 text-xs font-medium">
-                    Kategori:
-                </span>
-
-                <select id="categoryFilter"
-                    class="w-full pl-20 pr-10 py-3 text-sm font-semibold bg-white text-gray-700 focus:ring-0 outline-none appearance-none cursor-pointer">
-                    <option value="semua">Semua</option>
-                    <option value="prestasi">Prestasi</option>
-                    <option value="workshop">Workshop</option>
-                    <option value="kegiatan">Kegiatan</option>
-                </select>
-
-                <!-- Icon Arrow -->
-                <span class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-gray-500">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </span>
-            </div>
-
-        </div>
-    </div>
-
-    <!--Artikel Utama-->
-    <div class="mt-12">
-        <div class="border border-gray-200 rounded-xl p-6 flex flex-col md:flex-row gap-6">
-
-            <!-- Gambar Besar -->
-            <img src="https://via.placeholder.com/400x250.png?text=Thumbnail" alt="Dummy Thumbnail"
-                class="h-56 w-full object-cover rounded-lg" />
-
-            <!-- Teks Artikel -->
-            <div class="w-full md:w-1/2 flex flex-col justify-between">
-                <div>
-                    <p class="text-xs text-orange-500 font-semibold mb-2">Baru Saja • 12 Nov 2025</p>
-
-                    <h2 class="text-xl font-bold text-gray-800 leading-snug">
-                        Mahasiswa Lab MMT Juara 1 Kompetisi AR Nasional
-                    </h2>
-
-                    <p class="mt-3 text-sm text-gray-600">
-                        Tim riset Augmented Reality Lab MMT berhasil mengalahkan 50 universitas lain dengan inovasi
-                        aplikasi edukasi sejarah berbasis lokasi. Simak kisah perjuangan mereka.
-                    </p>
+            <div class="relative min-w-[180px]">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span class="text-gray-400 text-xs font-medium capitalize tracking-wide">Kategori:</span>
                 </div>
 
-                <button
-                    class="mt-4 w-fit bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-lg">
-                    Lihat Selengkapnya →
-                </button>
+                <select name="category" onchange="this.form.submit()"
+                    class="block w-full pl-20 p-3 text-sm text-brand-dark font-semibold bg-white border border-gray-200 rounded-lg focus:ring-brand-orange focus:border-brand-orange shadow-sm cursor-pointer appearance-none outline-none transition-all">
+                    <option value="semua">Semua</option>
+                    <?php foreach ($categories as $cat): ?>
+                        <option value="<?php echo $cat['nama_kategori']; ?>" <?php echo (isset($_GET['category']) && $_GET['category'] == $cat['nama_kategori']) ? 'selected' : ''; ?>>
+                            <?php echo $cat['nama_kategori']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+
+                <!-- Custom Arrow Icon -->
+                <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</section>
+
+<!-- 3. FEATURED POST (Artikel Terbaru) -->
+<?php if (!empty($featuredNews) && !isset($_GET['search'])): // Hanya tampil jika tidak sedang mencari ?>
+    <section class="bg-white pb-12">
+        <div class="max-w-screen-xl mx-auto px-4">
+
+            <div
+                class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden p-6 md:p-8 hover:shadow-md transition-shadow duration-300">
+                <div class="flex flex-col lg:flex-row gap-8 items-center">
+
+                    <!-- Gambar -->
+                    <div class="w-full lg:w-1/2 h-64 lg:h-80 rounded-xl overflow-hidden bg-gray-100 relative group">
+                        <img src="<?php echo !empty($featuredNews['gambar_berita']) ? $featuredNews['gambar_berita'] : 'https://placehold.co/800x500?text=No+Image'; ?>"
+                            class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                    </div>
+
+                    <!-- Konten Teks -->
+                    <div class="w-full lg:w-1/2 flex flex-col items-start text-left">
+                        <div
+                            class="text-xs font-bold text-brand-orange mb-3 uppercase tracking-wider flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-brand-orange animate-pulse"></span>
+                            Terbaru • <?php echo date('d M Y', strtotime($featuredNews['created_at'])); ?>
+                        </div>
+
+                        <h2
+                            class="font-heading font-bold text-2xl md:text-3xl text-brand-dark mb-4 leading-tight hover:text-brand-orange transition-colors cursor-pointer">
+                            <a href="#"><?php echo $featuredNews['judul']; ?></a>
+                        </h2>
+
+                        <p class="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3">
+                            <?php echo substr(strip_tags($featuredNews['isi_berita']), 0, 150) . '...'; ?>
+                        </p>
+
+                        <a href="#"
+                            class="inline-flex items-center justify-center bg-brand-orange hover:bg-orange-600 text-white text-sm font-semibold py-3 px-6 rounded-lg transition-all shadow-md shadow-orange-200 transform hover:-translate-y-0.5">
+                            Lihat Selengkapnya
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+
+                </div>
             </div>
 
         </div>
-    </div>
+    </section>
+<?php endif; ?>
 
-    <!-- ========================= -->
-    <!--     GRID 3 KOLOM         -->
-    <!-- ========================= -->
+<!-- 4. GRID ARTIKEL LAINNYA -->
+<section class="bg-white pb-24">
+    <div class="max-w-screen-xl mx-auto px-4">
 
-    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <?php if (empty($newsList)): ?>
+            <div class="text-center py-10">
+                <p class="text-gray-500 text-lg">Belum ada berita yang ditemukan.</p>
+            </div>
+        <?php else: ?>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        <!-- CARD TEMPLATE (Copy 6x) -->
-        <!-- Card 1 -->
-        <div class="border border-gray-200 rounded-xl p-4 flex flex-col">
-            <img src="https://via.placeholder.com/400x250.png?text=Thumbnail" alt="Dummy Thumbnail"
-                class="h-40 w-full object-cover rounded-lg" />
+                <?php foreach ($newsList as $news): ?>
+                    <!-- Kartu Artikel -->
+                    <article
+                        class="flex flex-col h-full bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all duration-300 group">
+                        <!-- Gambar -->
+                        <div class="h-48 rounded-xl overflow-hidden bg-gray-100 mb-4 relative">
+                            <img src="<?php echo !empty($news['gambar_berita']) ? $news['gambar_berita'] : 'https://placehold.co/600x400?text=No+Image'; ?>"
+                                class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                            <!-- Badge Kategori -->
+                            <span
+                                class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-brand-dark text-[10px] font-bold px-2 py-1 rounded shadow-sm">
+                                <?php echo $news['nama_kategori'] ?? 'Umum'; ?>
+                            </span>
+                        </div>
+                        <!-- Konten -->
+                        <div class="flex flex-col flex-grow">
+                            <h3
+                                class="font-heading font-bold text-lg text-brand-dark mb-2 group-hover:text-brand-orange transition-colors line-clamp-2">
+                                <a href="#"><?php echo $news['judul']; ?></a>
+                            </h3>
+                            <div class="text-xs font-medium text-gray-400 mb-3 flex items-center gap-1">
+                                <i class="ph ph-calendar-blank"></i>
+                                <?php echo date('d M Y', strtotime($news['created_at'])); ?>
+                            </div>
+                            <p class="text-gray-500 text-sm line-clamp-3 mb-4 flex-grow">
+                                <?php echo substr(strip_tags($news['isi_berita']), 0, 100) . '...'; ?>
+                            </p>
+                            <a href="#"
+                                class="inline-block w-full text-center bg-brand-orange hover:bg-orange-600 text-white text-xs font-semibold py-3 px-4 rounded-lg transition-colors mt-auto">
+                                Lihat Selengkapnya →
+                            </a>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
 
-            <h3 class="mt-4 font-semibold text-gray-800">Workshop UI/UX Design Dasar</h3>
-
-            <p class="text-xs text-gray-500 mt-1">12 Nov 2025</p>
-
-            <p class="text-sm text-gray-600 mt-2">
-                Pelajari dasar-dasar desain antarmuka pengguna dan membuat layout yang untuk aplikasi mobile.
-            </p>
-
-            <button
-                class="mt-4 w-fit bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-lg">
-                Lihat Selengkapnya →
-            </button>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="border border-gray-200 rounded-xl p-4 flex flex-col">
-            <img src="https://via.placeholder.com/400x250.png?text=Thumbnail" alt="Dummy Thumbnail"
-                class="h-40 w-full object-cover rounded-lg" />
-
-            <h3 class="mt-4 font-semibold text-gray-800">Workshop UI/UX Design Dasar</h3>
-
-            <p class="text-xs text-gray-500 mt-1">12 Nov 2025</p>
-
-            <p class="text-sm text-gray-600 mt-2">
-                Pelajari dasar-dasar desain antarmuka pengguna dan membuat layout yang untuk aplikasi mobile.
-            </p>
-
-            <button
-                class="mt-4 w-fit bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-lg">
-                Lihat Selengkapnya →
-            </button>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="border border-gray-200 rounded-xl p-4 flex flex-col">
-            <img src="https://via.placeholder.com/400x250.png?text=Thumbnail" alt="Dummy Thumbnail"
-                class="h-40 w-full object-cover rounded-lg" />
-
-            <h3 class="mt-4 font-semibold text-gray-800">Workshop UI/UX Design Dasar</h3>
-
-            <p class="text-xs text-gray-500 mt-1">12 Nov 2025</p>
-
-            <p class="text-sm text-gray-600 mt-2">
-                Pelajari dasar-dasar desain antarmuka pengguna dan membuat layout yang untuk aplikasi mobile.
-            </p>
-
-            <button
-                class="mt-4 w-fit bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-lg">
-                Lihat Selengkapnya →
-            </button>
-        </div>
-
-
-        <!-- Card 4 -->
-        <div class="border border-gray-200 rounded-xl p-4 flex flex-col">
-            <img src="https://via.placeholder.com/400x250.png?text=Thumbnail" alt="Dummy Thumbnail"
-                class="h-40 w-full object-cover rounded-lg" />
-
-            <h3 class="mt-4 font-semibold text-gray-800">Workshop UI/UX Design Dasar</h3>
-
-            <p class="text-xs text-gray-500 mt-1">12 Nov 2025</p>
-
-            <p class="text-sm text-gray-600 mt-2">
-                Pelajari dasar-dasar desain antarmuka pengguna dan membuat layout yang untuk aplikasi mobile.
-            </p>
-
-            <button
-                class="mt-4 w-fit bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-lg">
-                Lihat Selengkapnya →
-            </button>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="border border-gray-200 rounded-xl p-4 flex flex-col">
-            <img src="https://via.placeholder.com/400x250.png?text=Thumbnail" alt="Dummy Thumbnail"
-                class="h-40 w-full object-cover rounded-lg" />
-
-            <h3 class="mt-4 font-semibold text-gray-800">Workshop UI/UX Design Dasar</h3>
-
-            <p class="text-xs text-gray-500 mt-1">12 Nov 2025</p>
-
-            <p class="text-sm text-gray-600 mt-2">
-                Pelajari dasar-dasar desain antarmuka pengguna dan membuat layout yang untuk aplikasi mobile.
-            </p>
-
-            <button
-                class="mt-4 w-fit bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-lg">
-                Lihat Selengkapnya →
-            </button>
-        </div>
-
-        <!-- Card 6 -->
-        <div class="border border-gray-200 rounded-xl p-4 flex flex-col">
-            <img src="https://via.placeholder.com/400x250.png?text=Thumbnail" alt="Dummy Thumbnail"
-                class="h-40 w-full object-cover rounded-lg" />
-
-            <h3 class="mt-4 font-semibold text-gray-800">Workshop UI/UX Design Dasar</h3>
-
-            <p class="text-xs text-gray-500 mt-1">12 Nov 2025</p>
-
-            <p class="text-sm text-gray-600 mt-2">
-                Pelajari dasar-dasar desain antarmuka pengguna dan membuat layout yang untuk aplikasi mobile.
-            </p>
-
-            <button
-                class="mt-4 w-fit bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-lg">
-                Lihat Selengkapnya →
-            </button>
-        </div>
+            </div>
+        <?php endif; ?>
 
     </div>
-
-</main>
+</section>
 
 <?php include '../layouts/footer.php'; ?>
