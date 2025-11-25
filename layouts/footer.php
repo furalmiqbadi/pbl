@@ -1,5 +1,4 @@
 <!-- ========== FOOTER.PHP ========== -->
-<?php $basePath = '/pbl'; ?>
 <footer class="bg-gray-800 text-white mt-12">
     <div class="container mx-auto px-4 py-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -36,18 +35,18 @@
             <div>
                 <h3 class="text-lg font-semibold mb-4">Menu Cepat</h3>
                 <ul class="space-y-2">
-                    <li><a href="<?php echo $basePath; ?>/index.php" class="text-sm hover:text-orange-500 transition">Beranda</a></li>
-                    <li><a href="<?php echo $basePath; ?>/view/about.php" class="text-sm hover:text-orange-500 transition">Tentang Kami</a></li>
-                    <li><a href="<?php echo $basePath; ?>/view/catalog.php" class="text-sm hover:text-orange-500 transition">Karya</a></li>
-                    <li><a href="<?php echo $basePath; ?>/view/news.php" class="text-sm hover:text-orange-500 transition">Berita</a></li>
-                    <li><a href="<?php echo $basePath; ?>/view/gallery.php" class="text-sm hover:text-orange-500 transition">Galeri</a></li>
+                    <li><a href="index.php" class="text-sm hover:text-orange-500 transition">Beranda</a></li>
+                    <li><a href="view/about.php" class="text-sm hover:text-orange-500 transition">Tentang Kami</a></li>
+                    <li><a href="view/catalog.php" class="text-sm hover:text-orange-500 transition">Karya</a></li>
+                    <li><a href="view/news.php" class="text-sm hover:text-orange-500 transition">Berita</a></li>
+                    <li><a href="view/gallery.php" class="text-sm hover:text-orange-500 transition">Galeri</a></li>
                 </ul>
             </div>
 
             <!-- Logo & Maskot + Login Admin -->
             <div class="flex flex-col items-center">
-                <img src="<?php echo $basePath; ?>/assets/images/mmtLogo.png" alt="Lab MMT Maskot" class="w-40 object-contain">
-                <a href="<?php echo $basePath; ?>/view/login.php" class="text-sm text-gray-300 hover:text-orange-500 transition underline mt-3">Masuk</a>
+                <img src="../assets/images/mmtLogo.png" alt="Lab MMT Maskot" class="w-40 object-contain">
+                <a href="login.php" class="text-sm text-gray-300 hover:text-orange-500 transition underline mt-3">Masuk</a>
             </div>
         </div>
 
@@ -84,6 +83,7 @@
         overlay.classList.toggle('hidden');
     }
 
+    // (khusus admin)
     const sidebarLinks = document.querySelectorAll('#sidebar a');
     if (sidebarLinks.length > 0) {
         sidebarLinks.forEach(link => {

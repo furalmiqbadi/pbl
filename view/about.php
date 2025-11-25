@@ -70,10 +70,6 @@ $creatives = [
     <title>Tentang Lab MMT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="bg-white text-gray-800 about-page">
-    <?php include '../layouts/header.php'; ?>
-
     <style>
         .about-content {
             font-family: 'Poppins', sans-serif;
