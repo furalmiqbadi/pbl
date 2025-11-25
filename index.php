@@ -7,7 +7,7 @@ if (!isset($_SESSION['data_seeded'])) {
         'title' => 'Selamat Datang di Lab Multimedia',
         'subtitle' => 'Bangun pengalaman interaktif lewat game, UI/UX, dan AR/VR.',
         'cta' => 'Jelajahi Karya →',
-        'image' => '../pbl/assets/images/mmtLogo.png',
+        'image' => 'assets/images/mmtLogo.png',
     ];
     $_SESSION['fokus'] = [
         ['icon' => '🎮', 'title' => 'Game Development', 'text' => 'Rancang gameplay, art, dan deployment multi-platform.'],
@@ -15,22 +15,25 @@ if (!isset($_SESSION['data_seeded'])) {
         ['icon' => '🕶️', 'title' => 'AR/VR', 'text' => 'Immersive experience untuk training, edukasi, dan hiburan.'],
     ];
     $_SESSION['karya'] = [
-        ['title' => 'Project A', 'category' => 'Game', 'image' => '/pbl/assets/images/image.png'],
-        ['title' => 'Project B', 'category' => 'UI/UX', 'image' => '/pbl/assets/images/image.png'],
-        ['title' => 'Project C', 'category' => 'AR/VR', 'image' => '/pbl/assets/images/image.png'],
-        ['title' => 'Project D', 'category' => 'Game', 'image' => '/pbl/assets/images/image.png'],
-        ['title' => 'Project E', 'category' => 'UI/UX', 'image' => '/pbl/assets/images/image.png'],
-        ['title' => 'Project F', 'category' => 'AR/VR', 'image' => '/pbl/assets/images/image.png'],
-        ['title' => 'Project G', 'category' => 'Game', 'image' => '/pbl/assets/images/image.png'],
-        ['title' => 'Project H', 'category' => 'UI/UX', 'image' => '/pbl/assets/images/image.png'],
+        ['title' => 'Project A', 'category' => 'Game', 'image' => 'assets/images/jtiLogo.png'],
+        ['title' => 'Project B', 'category' => 'UI/UX', 'image' => 'assets/images/jtiLogo.png'],
+        ['title' => 'Project C', 'category' => 'AR/VR', 'image' => 'assets/images/jtiLogo.png'],
+        ['title' => 'Project D', 'category' => 'Game', 'image' => 'assets/images/jtiLogo.png'],
+        ['title' => 'Project E', 'category' => 'UI/UX', 'image' => 'assets/images/jtiLogo.png'],
+        ['title' => 'Project F', 'category' => 'AR/VR', 'image' => 'assets/images/jtiLogo.png'],
+        ['title' => 'Project G', 'category' => 'Game', 'image' => 'assets/images/jtiLogo.png'],
+        ['title' => 'Project H', 'category' => 'UI/UX', 'image' => 'assets/images/jtiLogo.png'],
     ];
     $_SESSION['artikel'] = [
-        ['title' => 'Artikel 1', 'date' => '2025-08-12', 'excerpt' => 'Consectetur adipiscing elit. Integer semper mattis nulla.', 'image' => '/pbl/assets/images/image.png'],
-        ['title' => 'Artikel 2', 'date' => '2025-08-12', 'excerpt' => 'Aliquam erat volutpat. Proin sit amet eros sed lorem.', 'image' => '/pbl/assets/images/image.png'],
-        ['title' => 'Artikel 3', 'date' => '2025-08-12', 'excerpt' => 'Pellentesque vel feugiat turpis purus.', 'image' => '/pbl/assets/images/image.png'],
+        ['title' => 'Artikel 1', 'date' => '2025-08-12', 'excerpt' => 'Consectetur adipiscing elit. Integer semper mattis nulla.', 'image' => 'assets/images/jtiLogo.png'],
+        ['title' => 'Artikel 2', 'date' => '2025-08-12', 'excerpt' => 'Aliquam erat volutpat. Proin sit amet eros sed lorem.', 'image' => 'assets/images/jtiLogo.png'],
+        ['title' => 'Artikel 3', 'date' => '2025-08-12', 'excerpt' => 'Pellentesque vel feugiat turpis purus.', 'image' => 'assets/images/jtiLogo.png'],
     ];
     $_SESSION['data_seeded'] = true;
 }
+
+// Ensure hero image always uses the latest logo even if session was seeded earlier
+$_SESSION['hero']['image'] = 'assets/images/mmtLogo.png';
 
 function getHero() { return $_SESSION['hero']; }
 function updateHero($data) { $_SESSION['hero'] = array_merge($_SESSION['hero'], $data); }
