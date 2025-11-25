@@ -1,4 +1,4 @@
-<main class="max-w-6xl mx-auto px-4 py-12 space-y-16">
+<main class="max-w-6xl mx-auto px-4 pt-14 pb-12 space-y-16">
     <!-- Hero -->
     <section class="grid md:grid-cols-2 gap-12 items-center">
         <div class="space-y-4">
@@ -33,8 +33,12 @@
         <div class="grid md:grid-cols-3 gap-6 items-stretch">
             <?php foreach ($fokusItems as $fokus): ?>
             <div class="relative bg-white rounded-2xl card-outline p-8 pt-14 flex flex-col items-center text-center h-full">
-                <div class="absolute -top-8 bg-orange-500 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
-                    <span class="text-xl">★</span>
+                <div class="absolute -top-8 bg-orange-500 rounded-full w-16 h-16 flex items-center justify-center shadow-lg overflow-hidden">
+                    <?php if (!empty($fokus['image'])): ?>
+                        <img src="<?php echo h($fokus['image']); ?>" alt="<?php echo h($fokus['title'] ?? ''); ?>" class="w-full h-full object-cover">
+                    <?php else: ?>
+                        <span class="text-xl text-white">★</span>
+                    <?php endif; ?>
                 </div>
                 <h3 class="text-xl font-semibold mb-2 mt-4 text-gray-800"><?php echo h($fokus['title'] ?? ''); ?></h3>
                 <p class="text-gray-600 text-sm leading-relaxed"><?php echo h($fokus['text'] ?? ''); ?></p>
