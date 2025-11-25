@@ -162,7 +162,7 @@ $creatives = [
             <?php endforeach; ?>
         </div>
     </section>
-<?php include 'layouts/footer.php'; ?>
+<?php include '../layouts/footer.php'; ?>
 
 </body>
 </html>
