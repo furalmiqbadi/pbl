@@ -93,4 +93,4 @@ if ($db) {
         <i class="fas fa-user-tie text-2xl text-gray-300 group-hover:text-orange-500 transition"></i>
         <span class="text-sm font-semibold text-center">Tambah Dosen</span>
     </a>
-</div>s
+</div>
