@@ -94,7 +94,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
                 break;
 
             // --- OLD PROYEK (Biarkan saja jika tidak ingin dihapus) ---
-            case 'proyek': include 'proyek.php'; break;
+            case 'karya': include 'karya.php'; break;
             case 'tambah_proyek': include 'tambah_proyek.php'; break;
 
             // --- BERITA ---
@@ -104,10 +104,6 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
             // --- GALERI ---
             case 'galeri': include 'galeri.php'; break;
             case 'tambah_galeri': include 'tambah_galeri.php'; break;
-
-            // --- DOSEN ---
-            case 'dosen': include 'dosen.php'; break;
-            case 'tambah_dosen': include 'tambah_dosen.php'; break;
 
             // --- PROFIL ---
             case 'profil': include 'profil.php'; break;

@@ -89,8 +89,4 @@ if ($db) {
         <i class="fas fa-user-plus text-2xl text-gray-300 group-hover:text-orange-500 transition"></i>
         <span class="text-sm font-semibold text-center">Tambah Mahasiswa</span>
     </a>
-    <a href="dashboard.php?page=tambah_dosen" class="p-6 bg-white border border-gray-200 rounded-xl hover:border-orange-500 hover:text-orange-600 transition flex flex-col items-center justify-center gap-3 group cursor-pointer">
-        <i class="fas fa-user-tie text-2xl text-gray-300 group-hover:text-orange-500 transition"></i>
-        <span class="text-sm font-semibold text-center">Tambah Dosen</span>
-    </a>
 </div>
