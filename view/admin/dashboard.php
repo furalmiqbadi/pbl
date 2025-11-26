@@ -9,11 +9,14 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
 }
 
 // ... require controller mahasiswa ...
-require_once __DIR__ . '/../../controller/SearchController.php'; // Tambahkan ini
+require_once __DIR__ . '/../../controller/SearchController.php'; 
 $searchController = new SearchController();
 
 require_once __DIR__ . '/../../controller/MahasiswaController.php'; 
 $mahasiswaController = new MahasiswaController();
+
+require_once __DIR__ . '/../../controller/KaryaController.php';
+$karyaController = new KaryaController();
 
 // Ambil Halaman
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
@@ -40,13 +43,13 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
         switch ($page) {
             case 'home': include 'home.php'; break;
 
-
+            // --- FITUR MAHASISWA (KODE LAMA TETAP ADA) ---
             case 'mahasiswa':
-            $mahasiswaController->index(); // Controller yang panggil view
+            $mahasiswaController->index(); 
             break;
     
             case 'tambah_mahasiswa':
-            $mahasiswaController->create(); // Controller yang panggil view form
+            $mahasiswaController->create(); 
             break;
 
             case 'edit_mahasiswa':
@@ -62,14 +65,35 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
             break;
 
             case 'store_mahasiswa':
-            $mahasiswaController->store(); // Controller yang proses data
+            $mahasiswaController->store(); 
             break;
 
+            // --- FITUR PENCARIAN (KODE LAMA TETAP ADA) ---
             case 'search':
-            $searchController->index(); // Panggil lewat controller
+            $searchController->index(); 
             break;
 
-            // --- KARYA (Database: daftar_proyek) ---
+            // Routing karya
+            case 'karya':
+                $karyaController->index(); 
+                break;
+            case 'tambah_karya':
+                $karyaController->create(); 
+                break;
+            case 'store_karya':
+                $karyaController->store(); 
+                break;
+            case 'edit_karya':
+                $karyaController->edit(); 
+                break;
+            case 'update_karya':
+                $karyaController->update(); 
+                break;
+            case 'hapus_karya':
+                $karyaController->delete(); 
+                break;
+
+            // --- OLD PROYEK (Biarkan saja jika tidak ingin dihapus) ---
             case 'proyek': include 'proyek.php'; break;
             case 'tambah_proyek': include 'tambah_proyek.php'; break;
 
@@ -80,10 +104,6 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
             // --- GALERI ---
             case 'galeri': include 'galeri.php'; break;
             case 'tambah_galeri': include 'tambah_galeri.php'; break;
-
-            // --- MAHASISWA ---
-            case 'mahasiswa': include 'mahasiswa.php'; break;
-            case 'tambah_mahasiswa': include 'tambah_mahasiswa.php'; break;
 
             // --- DOSEN ---
             case 'dosen': include 'dosen.php'; break;

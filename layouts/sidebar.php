@@ -17,7 +17,7 @@ $activePage = isset($_GET['page']) ? $_GET['page'] : 'home';
             <span class="font-medium">Dashboard</span>
         </a>
 
-        <a href="dashboard.php?page=proyek" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group <?php echo ($activePage == 'proyek' || $activePage == 'tambah_proyek') ? 'bg-orange-600 text-white shadow-lg' : 'text-gray-400 hover:bg-gray-800'; ?>">
+        <a href="dashboard.php?page=karya" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group <?php echo ($activePage == 'karya' || $activePage == 'tambah_karya') ? 'bg-orange-600 text-white shadow-lg' : 'text-gray-400 hover:bg-gray-800'; ?>">
             <i class="fas fa-laptop-code w-5 text-center"></i>
             <span class="font-medium">Kelola Karya</span>
         </a>
