@@ -65,6 +65,12 @@
                 <div id="gallery-track-bottom" class="gallery-track"></div>
             </div>
         </div>
+        <div class="text-center">
+            <a href="view/gallery.php" class="inline-flex items-center gap-2 bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold smooth hover:bg-orange-600 shadow-md">
+                Lihat Selengkapnya
+                <span class="text-xl leading-none">&rarr;</span>
+            </a>
+        </div>
     </section>
 
     <!-- Karya Unggulan -->
@@ -98,7 +104,13 @@
 
         <div class="grid md:grid-cols-3 gap-6" id="karya-grid">
             <?php foreach (array_slice($karyaItems, 0, 3) as $karya): ?>
-            <div class="bg-white rounded-2xl shadow-[0_12px_35px_-18px_rgba(15,23,42,0.35)] overflow-hidden border border-slate-200/70">
+            <?php
+                $karyaLink = 'view/detailKarya.php';
+                if (!empty($karya['id'])) {
+                    $karyaLink .= '?id=' . urlencode((string)$karya['id']);
+                }
+            ?>
+            <a href="<?php echo h($karyaLink); ?>" class="block bg-white rounded-2xl shadow-[0_12px_35px_-18px_rgba(15,23,42,0.35)] overflow-hidden border border-slate-200/70 hover:shadow-lg hover:-translate-y-1 transition">
                 <div class="w-full h-44 bg-gray-200 overflow-hidden">
                     <?php if (!empty($karya['image'])): ?>
                         <img src="<?php echo h($karya['image']); ?>" alt="<?php echo h($karya['title'] ?? ''); ?>" class="w-full h-full object-cover">
@@ -112,7 +124,7 @@
                     <h3 class="text-lg font-semibold text-gray-800"><?php echo h($karya['title'] ?? ''); ?></h3>
                     <p class="text-sm text-gray-500">Detail singkat akan tampil di sini.</p>
                 </div>
-            </div>
+            </a>
             <?php endforeach; ?>
         </div>
         <div class="text-center">
@@ -132,7 +144,13 @@
         </div>
         <div class="grid md:grid-cols-3 gap-6">
             <?php foreach ($artikelItems as $artikel): ?>
-            <article class="bg-white rounded-xl card-outline overflow-hidden">
+            <?php
+                $artikelLink = 'view/news.php';
+                if (!empty($artikel['id'])) {
+                    $artikelLink .= '?id=' . urlencode((string)$artikel['id']);
+                }
+            ?>
+            <a href="<?php echo h($artikelLink); ?>" class="bg-white rounded-xl card-outline overflow-hidden block hover:shadow-lg hover:-translate-y-1 transition">
                 <?php if (!empty($artikel['image'])): ?>
                     <img src="<?php echo h($artikel['image']); ?>" alt="<?php echo h($artikel['title'] ?? ''); ?>" class="w-full h-40 object-cover bg-gray-200">
                 <?php else: ?>
@@ -143,7 +161,7 @@
                     <h3 class="font-semibold text-lg text-gray-800"><?php echo h($artikel['title'] ?? ''); ?></h3>
                     <p class="text-gray-600 text-sm leading-relaxed"><?php echo h($artikel['excerpt'] ?? ''); ?></p>
                 </div>
-            </article>
+            </a>
             <?php endforeach; ?>
         </div>
         <div class="text-center">

@@ -59,7 +59,8 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
         .gallery-row { overflow: hidden; }
         .gallery-track { display: flex; gap: 0; will-change: transform; }
         .gallery-card { flex: 0 0 25%; position: relative; aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden; border: 1px solid #dcdfe5; background: #0f172a; }
-        .gallery-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .gallery-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+        .gallery-card:hover img { transform: scale(1.08); }
     </style>
 </head>
 <body class="text-gray-800">

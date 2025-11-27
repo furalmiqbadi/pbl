@@ -73,13 +73,14 @@ class HomeModel {
         }
 
         try {
-            $sql = "SELECT dp.judul, dp.isi_proyek, dp.gambar_proyek, k.nama_kategori FROM daftar_proyek dp LEFT JOIN kategori k ON dp.kategori_id = k.id ORDER BY dp.id DESC";
+            $sql = "SELECT dp.id, dp.judul, dp.isi_proyek, dp.gambar_proyek, k.nama_kategori FROM daftar_proyek dp LEFT JOIN kategori k ON dp.kategori_id = k.id ORDER BY dp.id DESC";
             $stmt = $this->db->query($sql);
             if ($stmt) {
                 $rows = $stmt->fetchAll();
                 $data = [];
                 foreach ($rows as $row) {
                     $data[] = [
+                        'id' => $row['id'] ?? null,
                         'title' => trim($row['judul'] ?? ''),
                         'category' => trim($row['nama_kategori'] ?? ''),
                         'image' => trim($row['gambar_proyek'] ?? ''),
@@ -100,7 +101,7 @@ class HomeModel {
         }
 
         try {
-            $sql = "SELECT ba.judul, ba.isi_berita, ba.gambar_berita, ba.created_at, k.nama_kategori FROM berita_artikel ba LEFT JOIN kategori k ON ba.kategori_id = k.id ORDER BY ba.created_at DESC, ba.id DESC LIMIT 3";
+            $sql = "SELECT ba.id, ba.judul, ba.isi_berita, ba.gambar_berita, ba.created_at, k.nama_kategori FROM berita_artikel ba LEFT JOIN kategori k ON ba.kategori_id = k.id ORDER BY ba.created_at DESC, ba.id DESC LIMIT 3";
             $stmt = $this->db->query($sql);
             if ($stmt) {
                 $rows = $stmt->fetchAll();
@@ -116,6 +117,7 @@ class HomeModel {
                     }
 
                     $data[] = [
+                        'id' => $row['id'] ?? null,
                         'title' => trim($row['judul'] ?? ''),
                         'date' => $displayDate ?: '',
                         'excerpt' => trim($row['isi_berita'] ?? ''),
