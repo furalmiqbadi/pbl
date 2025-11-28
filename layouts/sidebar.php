@@ -44,7 +44,7 @@ $activePage = isset($_GET['page']) ? $_GET['page'] : 'home';
     </nav>
 
     <div class="p-4 border-t border-gray-800 bg-[#0f172a]">
-        <a href="../../logout.php" class="flex items-center justify-center w-full py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all shadow-lg text-sm font-semibold group">
+        <a href="../logout.php" class="flex items-center justify-center w-full py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all shadow-lg text-sm font-semibold group">
             <i class="fas fa-sign-out-alt mr-2 group-hover:-translate-x-1 transition-transform"></i>
             Logout
         </a>
