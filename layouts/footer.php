@@ -1,4 +1,4 @@
-<!-- ========== FOOTER.PHP ========== -->
+﻿<!-- ========== FOOTER.PHP ========== -->
 <?php $basePath = '/pbl'; ?>
 <footer class="bg-gray-800 text-white mt-12">
     <div class="container mx-auto px-4 py-8">
@@ -44,16 +44,19 @@
                 </ul>
             </div>
 
-            <!-- Logo & Maskot + Login Admin -->
-            <div class="flex flex-col items-center">
-                <img src="<?php echo $basePath; ?>/assets/images/mmtLogo.png" alt="Lab MMT Maskot" class="w-40 object-contain">
-                <a href="<?php echo $basePath; ?>/view/login.php" class="text-sm text-gray-300 hover:text-orange-500 transition underline mt-3">Masuk</a>
+            <!-- Logo & Portal Admin -->
+            <div class="flex flex-col items-center md:items-center text-center space-y-3">
+                <img src="<?php echo $basePath; ?>/assets/images/mmtLogo.png" alt="Lab MMT Maskot" class="w-32 h-32 object-contain">
+                <a href="<?php echo $basePath; ?>/view/login.php" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-orange-300 text-orange-200 hover:text-white hover:border-white transition text-sm font-semibold">
+                    Portal Admin
+                    <span class="text-lg leading-none">&rarr;</span>
+                </a>
             </div>
         </div>
 
         <!-- Copyright -->
         <div class="border-t border-gray-700 mt-8 pt-6 text-center">
-            <p class="text-sm text-gray-400">© 2025 Lab Multimedia MMT. Semua hak cipta dilindungi</p>
+            <p class="text-sm text-gray-400">@ 2025 Lab Multimedia MMT.</p>
         </div>
     </div>
 </footer>
@@ -93,3 +96,4 @@
         });
     }
 </script>
+
