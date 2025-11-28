@@ -9,14 +9,17 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
 }
 
 // ... require controller mahasiswa ...
-require_once __DIR__ . '/../../controller/SearchController.php'; 
+require_once __DIR__ . '/../../controller/SearchController.php';
 $searchController = new SearchController();
 
-require_once __DIR__ . '/../../controller/MahasiswaController.php'; 
+require_once __DIR__ . '/../../controller/MahasiswaController.php';
 $mahasiswaController = new MahasiswaController();
 
 require_once __DIR__ . '/../../controller/KaryaController.php';
 $karyaController = new KaryaController();
+
+require_once __DIR__ . '/../../controller/GaleriController.php';
+$galeriController = new GaleriController();
 
 // Ambil Halaman
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
@@ -24,89 +27,124 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Lab MMT</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style> body { font-family: 'Poppins', sans-serif; } </style>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
+
 <body class="bg-gray-50 flex min-h-screen">
 
     <?php include '../../layouts/sidebar.php'; ?>
-    
+
     <main class="flex-1 ml-64 p-8">
-        
+
         <?php
         switch ($page) {
-            case 'home': include 'home.php'; break;
+            case 'home':
+                include 'home.php';
+                break;
 
             // --- FITUR MAHASISWA (KODE LAMA TETAP ADA) ---
             case 'mahasiswa':
-            $mahasiswaController->index(); 
-            break;
-    
+                $mahasiswaController->index();
+                break;
+
             case 'tambah_mahasiswa':
-            $mahasiswaController->create(); 
-            break;
+                $mahasiswaController->create();
+                break;
 
             case 'edit_mahasiswa':
-            $mahasiswaController->edit();
-            break;
+                $mahasiswaController->edit();
+                break;
 
             case 'update_mahasiswa':
-            $mahasiswaController->update();
-            break;
+                $mahasiswaController->update();
+                break;
 
             case 'hapus_mahasiswa':
-            $mahasiswaController->delete();
-            break;
+                $mahasiswaController->delete();
+                break;
 
             case 'store_mahasiswa':
-            $mahasiswaController->store(); 
-            break;
+                $mahasiswaController->store();
+                break;
 
             // --- FITUR PENCARIAN (KODE LAMA TETAP ADA) ---
             case 'search':
-            $searchController->index(); 
-            break;
+                $searchController->index();
+                break;
 
             // Routing karya
             case 'karya':
-                $karyaController->index(); 
+                $karyaController->index();
                 break;
             case 'tambah_karya':
-                $karyaController->create(); 
+                $karyaController->create();
                 break;
             case 'store_karya':
-                $karyaController->store(); 
+                $karyaController->store();
                 break;
             case 'edit_karya':
-                $karyaController->edit(); 
+                $karyaController->edit();
                 break;
             case 'update_karya':
-                $karyaController->update(); 
+                $karyaController->update();
                 break;
             case 'hapus_karya':
-                $karyaController->delete(); 
+                $karyaController->delete();
                 break;
 
             // --- OLD PROYEK (Biarkan saja jika tidak ingin dihapus) ---
-            case 'karya': include 'karya.php'; break;
-            case 'tambah_proyek': include 'tambah_proyek.php'; break;
+            case 'karya':
+                include 'karya.php';
+                break;
+            case 'tambah_proyek':
+                include 'tambah_proyek.php';
+                break;
 
             // --- BERITA ---
-            case 'berita': include 'berita.php'; break;
-            case 'tambah_berita': include 'tambah_berita.php'; break;
-            
+            case 'berita':
+                include 'berita.php';
+                break;
+            case 'tambah_berita':
+                include 'tambah_berita.php';
+                break;
+
             // --- GALERI ---
-            case 'galeri': include 'galeri.php'; break;
-            case 'tambah_galeri': include 'tambah_galeri.php'; break;
+            case 'galeri':
+                $galeriController->index();
+                break;
+            case 'tambah_galeri':
+                $galeriController->create();
+                break;
+            case 'store_galeri':
+                $galeriController->store();
+                break;
+            case 'edit_galeri':
+                $galeriController->edit();
+                break;
+            case 'update_galeri':
+                $galeriController->update();
+                break;
+            case 'hapus_galeri':
+                $galeriController->delete();
+                break;
 
             // --- PROFIL ---
-            case 'profil': include 'profil.php'; break;
+            case 'profil':
+                include 'profil.php';
+                break;
 
             default:
                 echo "<div class='p-6 bg-red-100 text-red-600 rounded-xl font-bold'>Halaman tidak ditemukan!</div>";
@@ -117,4 +155,5 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
     </main>
 
 </body>
+
 </html>
