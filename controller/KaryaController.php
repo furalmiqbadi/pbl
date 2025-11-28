@@ -15,6 +15,7 @@ class KaryaController {
 
     public function create() {
         $kategoriList = $this->model->getKategoriList();
+        $mahasiswaList = $this->model->getMahasiswaList();
         include __DIR__ . '/../view/admin/tambah_karya.php';
     }
 
@@ -22,7 +23,10 @@ class KaryaController {
         $data = [
             'judul' => $_POST['judul'],
             'kategori_id' => $_POST['kategori_id'],
-            'isi_proyek' => $_POST['isi_proyek'],
+            'isi_proyek' => $_POST['deskripsi'],
+            'tahun' => $_POST['tahun'],
+            'nama_tim' => $_POST['nama_tim'],
+            'mahasiswa_ids' => $_POST['anggota_tim'] ?? [],
             'gambar_proyek' => ''
         ];
 
@@ -30,7 +34,9 @@ class KaryaController {
             $targetDir = __DIR__ . "/../assets/images/uploads/";
             if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
             
-            $fileName = time() . '_' . basename($_FILES["gambar_proyek"]["name"]);
+            $fileExtension = pathinfo($_FILES["gambar_proyek"]["name"], PATHINFO_EXTENSION);
+            $fileName = time() . '_' . uniqid() . '.' . $fileExtension;
+            
             if (move_uploaded_file($_FILES["gambar_proyek"]["tmp_name"], $targetDir . $fileName)) {
                 $data['gambar_proyek'] = "assets/images/uploads/" . $fileName;
             }
@@ -43,10 +49,15 @@ class KaryaController {
         }
     }
 
+    // [PERBAIKAN] Ambil data lengkap untuk form edit
     public function edit() {
         $id = $_GET['id'];
-        $karya = $this->model->getById($id); // Variabel jadi $karya
+        $karya = $this->model->getById($id);
         $kategoriList = $this->model->getKategoriList();
+        $mahasiswaList = $this->model->getMahasiswaList();
+        
+        // Ambil anggota tim yang sudah terpilih sebelumnya (Array ID)
+        $selectedMembers = $this->model->getTeamMembers($id); 
 
         if (!$karya) {
             echo "Data tidak ditemukan!";
@@ -55,18 +66,24 @@ class KaryaController {
         include __DIR__ . '/../view/admin/edit_karya.php';
     }
 
+    // [PERBAIKAN] Proses Update
     public function update() {
         $data = [
             'id' => $_POST['id'],
             'judul' => $_POST['judul'],
             'kategori_id' => $_POST['kategori_id'],
-            'isi_proyek' => $_POST['isi_proyek'],
+            'isi_proyek' => $_POST['deskripsi'], // Sesuaikan name di form
+            'tahun' => $_POST['tahun'],
+            'nama_tim' => $_POST['nama_tim'],
+            'mahasiswa_ids' => $_POST['anggota_tim'] ?? [],
             'gambar_proyek' => ''
         ];
 
         if (!empty($_FILES['gambar_proyek']['name'])) {
             $targetDir = __DIR__ . "/../assets/images/uploads/";
-            $fileName = time() . '_' . basename($_FILES["gambar_proyek"]["name"]);
+            $fileExtension = pathinfo($_FILES["gambar_proyek"]["name"], PATHINFO_EXTENSION);
+            $fileName = time() . '_' . uniqid() . '.' . $fileExtension;
+            
             if (move_uploaded_file($_FILES["gambar_proyek"]["tmp_name"], $targetDir . $fileName)) {
                 $data['gambar_proyek'] = "assets/images/uploads/" . $fileName;
             }

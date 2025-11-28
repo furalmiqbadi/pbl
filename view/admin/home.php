@@ -73,7 +73,7 @@ if ($db) {
 </div>
 
 <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-    <a href="dashboard.php?page=tambah_proyek" class="p-6 bg-white border border-gray-200 rounded-xl hover:border-orange-500 hover:text-orange-600 transition flex flex-col items-center justify-center gap-3 group cursor-pointer">
+    <a href="dashboard.php?page=tambah_karya" class="p-6 bg-white border border-gray-200 rounded-xl hover:border-orange-500 hover:text-orange-600 transition flex flex-col items-center justify-center gap-3 group cursor-pointer">
         <i class="fas fa-plus-circle text-2xl text-gray-300 group-hover:text-orange-500 transition"></i>
         <span class="text-sm font-semibold">Tambah Karya</span>
     </a>
