@@ -21,6 +21,9 @@ $karyaController = new KaryaController();
 require_once __DIR__ . '/../../controller/GaleriController.php';
 $galeriController = new GaleriController();
 
+require_once __DIR__ . '/../../controller/DosenController.php';
+$dosenController = new DosenController();
+
 // Ambil Halaman
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 ?>
@@ -141,6 +144,26 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
                 $galeriController->delete();
                 break;
 
+                case 'dosen':
+                $dosenController->index();
+                break;
+            case 'tambah_dosen':
+                $dosenController->create();
+                break;
+            case 'store_dosen':
+                $dosenController->store();
+                break;
+            case 'edit_dosen':
+                $dosenController->edit();
+                break;
+            case 'update_dosen':
+                $dosenController->update();
+                break;
+            case 'hapus_dosen':
+                $dosenController->delete();
+                break;
+
+                
             // --- PROFIL ---
             case 'profil':
                 include 'profil.php';
