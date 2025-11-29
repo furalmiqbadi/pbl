@@ -9,16 +9,15 @@ class DosenModel {
     }
 
     public function getAll() {
-        $sql = "SELECT * FROM dosen_multimedia ORDER BY id DESC";
+        $sql = "SELECT * FROM dosen_multimedia ORDER BY nama ASC";
         return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // --- FUNGSI SEARCH (BARU) ---
+    // Search
     public function search($keyword) {
         $key = "%" . $keyword . "%";
-        // Cari berdasarkan Nama atau NIDN (Case Insensitive)
         $sql = "SELECT * FROM dosen_multimedia 
-                WHERE nama ILIKE :k OR nidn ILIKE :k 
+                WHERE nama ILIKE :k OR nidn ILIKE :k OR jabatan ILIKE :k
                 ORDER BY id DESC";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':k' => $key]);
@@ -51,9 +50,25 @@ class DosenModel {
         } catch (PDOException $e) { return false; }
     }
 
+    // --- UPDATE: HAPUS GAMBAR SAAT DELETE DATA ---
     public function delete($id) {
-        try { return $this->db->prepare("DELETE FROM dosen_multimedia WHERE id = ?")->execute([$id]); } 
-        catch (PDOException $e) { return false; }
+        try {
+            // 1. Ambil nama file dulu
+            $stmt = $this->db->prepare("SELECT gambar_tim FROM dosen_multimedia WHERE id = ?");
+            $stmt->execute([$id]);
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // 2. Hapus file fisik jika ada
+            if ($data && !empty($data['gambar_tim'])) {
+                $file = __DIR__ . '/../assets/images/uploads/' . $data['gambar_tim'];
+                if ($data['gambar_tim'] != 'default.png' && file_exists($file)) {
+                    unlink($file);
+                }
+            }
+
+            // 3. Hapus data dari DB
+            return $this->db->prepare("DELETE FROM dosen_multimedia WHERE id = ?")->execute([$id]);
+        } catch (PDOException $e) { return false; }
     }
 }
 ?>

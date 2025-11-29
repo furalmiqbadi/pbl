@@ -12,7 +12,7 @@ class MahasiswaModel {
         $sql = "SELECT m.*, p.nama_prodi 
                 FROM mahasiswa m 
                 LEFT JOIN prodi p ON m.prodi_id = p.id 
-                ORDER BY m.id DESC";
+                ORDER BY m.nama ASC";
         return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
