@@ -37,6 +37,11 @@ $activePage = isset($_GET['page']) ? $_GET['page'] : 'home';
             <span class="font-medium">Data Mahasiswa</span>
         </a>
 
+        <a href="dashboard.php?page=dosen" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group <?php echo ($activePage == 'dosen' || $activePage == 'tambah_dosen') ? 'bg-orange-600 text-white shadow-lg' : 'text-gray-400 hover:bg-gray-800'; ?>">
+            <i class="fas fa-chalkboard-teacher w-5 text-center"></i>
+            <span class="font-medium">Data Dosen</span>
+        </a>
+
         <a href="dashboard.php?page=profil" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group <?php echo $activePage == 'profil' ? 'bg-orange-600 text-white shadow-lg' : 'text-gray-400 hover:bg-gray-800'; ?>">
             <i class="fas fa-user-cog w-5 text-center"></i>
             <span class="font-medium">Kelola Profil</span>
