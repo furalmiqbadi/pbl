@@ -8,6 +8,9 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
     exit;
 }
 
+require_once __DIR__ . '/../../controller/ProfilController.php';
+$profilController = new ProfilController();
+
 // ... require controller mahasiswa ...
 require_once __DIR__ . '/../../controller/SearchController.php';
 $searchController = new SearchController();
@@ -164,11 +167,16 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
                 break;
 
                 
-            // --- PROFIL ---
-            case 'profil':
-                include 'profil.php';
-                break;
-
+            case 'profil': $profilController->index(); break;
+                case 'update_deskripsi': $profilController->updateDeskripsi(); break;
+                case 'update_visi_misi': $profilController->updateVisiMisi(); break;
+                case 'save_sejarah': $profilController->saveSejarah(); break;
+                case 'delete_sejarah': $profilController->deleteSejarah(); break;
+                case 'update_struktur': $profilController->updateStruktur(); break;
+                case 'save_nilai': $profilController->saveNilai(); break;
+                case 'delete_nilai': $profilController->deleteNilai(); break;
+                case 'save_partner': $profilController->savePartner(); break;
+                case 'delete_partner': $profilController->deletePartner(); break;
             default:
                 echo "<div class='p-6 bg-red-100 text-red-600 rounded-xl font-bold'>Halaman tidak ditemukan!</div>";
                 break;
