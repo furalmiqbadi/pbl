@@ -10,7 +10,7 @@ $dosen = $data_About['dosen'] ?? [];
 $partner = $data_About['partner'] ?? [];
 ?>
 
-<?php include '../layouts/header.php';?>
+<?php include __DIR__ . '/../layouts/header.php';;?>
 
 <!DOCTYPE html>
 <html lang="id">
@@ -211,6 +211,6 @@ $partner = $data_About['partner'] ?? [];
 
     </main>
     
-    <?php include '../layouts/footer.php';?>
+    <?php include __DIR__ . '/../layouts/footer.php';?>
 </body>
 </html>
