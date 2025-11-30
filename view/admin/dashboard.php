@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 require_once __DIR__ . '/../../lib/Connection.php';
 
@@ -26,6 +27,10 @@ $galeriController = new GaleriController();
 
 require_once __DIR__ . '/../../controller/DosenController.php';
 $dosenController = new DosenController();
+
+require_once __DIR__ . '/../../controller/BackupController.php';
+$backupController = new BackupController();
+
 
 // Ambil Halaman
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
@@ -179,6 +184,18 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
                 case 'delete_partner': $profilController->deletePartner(); break;
             default:
                 echo "<div class='p-6 bg-red-100 text-red-600 rounded-xl font-bold'>Halaman tidak ditemukan!</div>";
+                break;
+
+            case 'backup':
+                $backupController->index(); // Menampilkan UI modul
+                break;
+                
+            case 'run_backup':
+                $backupController->runBackup(); // Memicu proses backup
+                break;
+
+            case 'restore_data':
+                $backupController->runRestore(); // Memicu proses restore
                 break;
         }
         ?>
