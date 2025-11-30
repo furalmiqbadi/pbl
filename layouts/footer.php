@@ -1,9 +1,12 @@
-﻿<!-- ========== FOOTER.PHP ========== -->
-<?php $basePath = '/pbl'; ?>
+﻿<?php 
+if (!isset($basePath)) {
+    $basePath = '/pbl';
+}
+?>
 <footer class="bg-gray-800 text-white mt-12">
     <div class="container mx-auto px-4 py-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Kontak Kami -->
+            
             <div>
                 <h3 class="text-lg font-semibold mb-4">Kontak Kami</h3>
                 <div class="space-y-3">
@@ -32,21 +35,20 @@
                 </div>
             </div>
 
-            <!-- Menu Cepat -->
             <div>
                 <h3 class="text-lg font-semibold mb-4">Menu Cepat</h3>
                 <ul class="space-y-2">
-                    <li><a href="<?php echo $basePath; ?>/index.php" class="text-sm hover:text-orange-500 transition">Beranda</a></li>
-                    <li><a href="<?php echo $basePath; ?>/view/about.php" class="text-sm hover:text-orange-500 transition">Tentang Kami</a></li>
-                    <li><a href="<?php echo $basePath; ?>/view/catalog.php" class="text-sm hover:text-orange-500 transition">Karya</a></li>
-                    <li><a href="<?php echo $basePath; ?>/view/news.php" class="text-sm hover:text-orange-500 transition">Berita</a></li>
-                    <li><a href="<?php echo $basePath; ?>/view/gallery.php" class="text-sm hover:text-orange-500 transition">Galeri</a></li>
+                    <li><a href="<?php echo $basePath; ?>/index.php?page=home" class="text-sm hover:text-orange-500 transition">Beranda</a></li>
+                    <li><a href="<?php echo $basePath; ?>/index.php?page=about" class="text-sm hover:text-orange-500 transition">Tentang Kami</a></li>
+                    <li><a href="<?php echo $basePath; ?>/index.php?page=catalog" class="text-sm hover:text-orange-500 transition">Karya</a></li>
+                    <li><a href="<?php echo $basePath; ?>/index.php?page=news" class="text-sm hover:text-orange-500 transition">Berita</a></li>
+                    <li><a href="<?php echo $basePath; ?>/index.php?page=gallery" class="text-sm hover:text-orange-500 transition">Galeri</a></li>
                 </ul>
             </div>
 
-            <!-- Logo & Portal Admin -->
             <div class="flex flex-col items-center md:items-center text-center space-y-3">
                 <img src="<?php echo $basePath; ?>/assets/images/mmtLogo.png" alt="Lab MMT Maskot" class="w-32 h-32 object-contain">
+                
                 <a href="<?php echo $basePath; ?>/view/login.php" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-orange-300 text-orange-200 hover:text-white hover:border-white transition text-sm font-semibold">
                     Portal Admin
                     <span class="text-lg leading-none">&rarr;</span>
@@ -54,27 +56,13 @@
             </div>
         </div>
 
-        <!-- Copyright -->
         <div class="border-t border-gray-700 mt-8 pt-6 text-center">
-            <p class="text-sm text-gray-400">@ 2025 Lab Multimedia MMT.</p>
+            <p class="text-sm text-gray-400">@ 2025 Lab Multimedia MMT. Semua hak cipta dilindungi.</p>
         </div>
     </div>
 </footer>
 
-<!-- Script umum (mobile menu + sidebar) -->
 <script>
-    // Mobile Menu 
-    const mobileBtn = document.getElementById('mobile-menu-btn');
-    if (mobileBtn) {
-        mobileBtn.addEventListener('click', function () {
-            const menu = document.getElementById('mobile-menu');
-            if (menu) {
-                menu.classList.toggle('hidden');
-            }
-        });
-    }
-
-    // Sidebar
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
@@ -96,4 +84,3 @@
         });
     }
 </script>
-

@@ -1,5 +1,5 @@
 <?php
-include '../layouts/header.php';
+include __DIR__ . '/../layouts/header.php';
 
 // Dummy karya
 $karya = [
@@ -105,4 +105,4 @@ $karya = [
     categoryFilter.addEventListener("change", filterGallery);
 </script>
 
-<?php include '../layouts/footer.php'; ?>
+<?php include __DIR__ . '/../layouts/footer.php'; ?>
