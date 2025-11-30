@@ -86,7 +86,7 @@ if ($db) {
     </a>
     <a href="dashboard.php?page=tambah_berita" class="p-4 bg-white border border-gray-200 rounded-xl hover:bg-orange-50 hover:border-orange-200 transition flex flex-col items-center gap-2 group shadow-sm hover:shadow-md">
         <i class="fas fa-pen-nib text-orange-400 group-hover:text-orange-600 text-2xl mb-1 transition"></i> 
-        <span class="text-xs font-bold text-gray-600 group-hover:text-orange-700">Tulis Berita</span>
+            <span class="text-xs font-bold text-gray-600 group-hover:text-orange-700">Tulis Berita & Artikel</span>
     </a>
     <a href="dashboard.php?page=tambah_galeri" class="p-4 bg-white border border-gray-200 rounded-xl hover:bg-purple-50 hover:border-purple-200 transition flex flex-col items-center gap-2 group shadow-sm hover:shadow-md">
         <i class="fas fa-camera text-purple-400 group-hover:text-purple-600 text-2xl mb-1 transition"></i> 
@@ -94,11 +94,11 @@ if ($db) {
     </a>
     <a href="dashboard.php?page=tambah_mahasiswa" class="p-4 bg-white border border-gray-200 rounded-xl hover:bg-green-50 hover:border-green-200 transition flex flex-col items-center gap-2 group shadow-sm hover:shadow-md">
         <i class="fas fa-user-plus text-green-400 group-hover:text-green-600 text-2xl mb-1 transition"></i> 
-        <span class="text-xs font-bold text-gray-600 group-hover:text-green-700">Data Mahasiswa</span>
+        <span class="text-xs font-bold text-gray-600 group-hover:text-green-700">Tambah Mahasiswa</span>
     </a>
     <a href="dashboard.php?page=tambah_dosen" class="p-4 bg-white border border-gray-200 rounded-xl hover:bg-red-50 hover:border-red-200 transition flex flex-col items-center gap-2 group shadow-sm hover:shadow-md">
         <i class="fas fa-user-tie text-red-400 group-hover:text-red-600 text-2xl mb-1 transition"></i> 
-        <span class="text-xs font-bold text-gray-600 group-hover:text-red-700">Data Dosen</span>
+        <span class="text-xs font-bold text-gray-600 group-hover:text-red-700">Tambah Dosen</span>
     </a>
 </div>
 
