@@ -135,7 +135,7 @@
                             <?php echo h($karya['category'] ?? ''); ?>
                         </span>
                         <h3 class="text-lg font-semibold text-gray-800"><?php echo h($karya['title'] ?? ''); ?></h3>
-                        <p class="text-sm text-gray-500">Detail singkat akan tampil di sini.</p>
+                        <p class="text-sm text-gray-500 line-clamp-2"><?php echo h($karya['excerpt'] ?? 'Detail singkat akan tampil di sini.'); ?></p>
                     </div>
                 </a>
             <?php endforeach; ?>
@@ -176,7 +176,7 @@
                     <div class="p-4 space-y-2">
                         <p class="text-sm text-orange-500 font-semibold"><?php echo h($artikel['date'] ?? ''); ?></p>
                         <h3 class="font-semibold text-lg text-gray-800"><?php echo h($artikel['title'] ?? ''); ?></h3>
-                        <p class="text-gray-600 text-sm leading-relaxed"><?php echo h($artikel['excerpt'] ?? ''); ?></p>
+                        <p class="text-gray-600 text-sm leading-relaxed line-clamp-2"><?php echo h($artikel['excerpt'] ?? ''); ?></p>
                     </div>
                 </a>
             <?php endforeach; ?>
