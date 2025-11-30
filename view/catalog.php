@@ -56,56 +56,35 @@ try {
             </select>
     </div>
 
-    <!-- Galeri Grid -->
-    <div id="galleryContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+    <!-- Tampilan Karya -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <?php if (count($karya) > 0): ?>
+                <?php foreach ($karya as $k): ?>
+                    <div 
+                        class="gallery-item bg-white border rounded-xl shadow-sm overflow-hidden p-4 cursor-pointer hover:shadow-md transition"
+                        data-title="<?= strtolower(htmlspecialchars($k['judul'])) ?>"
+                        data-category="<?= strtolower(htmlspecialchars($k['nama_kategori'])) ?>"
+                        onclick="window.location.href='detailKarya.php?id=<?= $k['id'] ?>'"
+                    >
+                        <?php 
+                            $img_path_lain = !empty($k['gambar_proyek']) ? '../assets/images/uploads/' . htmlspecialchars($k['gambar_proyek']) : 'https://via.placeholder.com/400x160?text=No+Image';
+                        ?>
+                        <div class="w-full h-40 bg-gray-200 rounded overflow-hidden">
+                            <img src="<?= $img_path_lain ?>" alt="<?= htmlspecialchars($k['judul']) ?>" class="w-full h-full object-cover">
+                        </div>
 
-        <!-- Card -->
-        <?php if (count($karya) > 0): ?>
-            <?php foreach ($karya as $k): 
-                $kategori_display = $k["nama_kategori"] ?? 'Tanpa Kategori'; 
-                $kategori_slug = strtolower($kategori_display);
-            ?>
-            <div
-                class="gallery-item bg-white border rounded-xl shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition"
-                data-category="<?= $kategori_slug ?>"
-                data-title="<?= strtolower($k["judul"]) ?>"
-                onclick="window.location.href='detailKarya.php?id=<?= $k['id'] ?>'"
-            >
-
-                <!-- Thumbnail -->
-                <div class="w-full h-44 bg-gray-200 overflow-hidden">
-                    <?php if (!empty($k["gambar_proyek"])): ?>
-                        <img src="../assets/images/uploads/<?= $k['gambar_proyek'] ?>" alt="<?= htmlspecialchars($k['judul']) ?>" class="w-full h-full object-cover">
-                    <?php endif; ?>
-                </div>
-
-                    <!-- Content -->
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold"><?= htmlspecialchars($k["judul"]) ?></h3>
-
-                    <!-- Badge kategori -->
-                    <?php 
-                        $color_map = [
-                            "mobile dev" => "bg-orange-500",
-                            "web dev" => "bg-blue-500", // Ubah "web" menjadi "web dev" jika itu nama kategori di DB
-                            "ui/ux" => "bg-purple-500", // Ubah "uiux" menjadi "ui/ux" jika itu nama kategori di DB
-                            "iot" => "bg-green-600",
-                        ];
-                        
-                        // default kategori = abu-abu
-                        $color = $color_map[$kategori_slug] ?? 'bg-gray-500'; 
-                    ?>
-
-                        <span class="text-xs text-white px-3 py-1 rounded mt-2 inline-block <?= $color ?>">
-                            <?= strtoupper($kategori_display) ?>
+                        <!-- Warna Kategori -->
+                        <h3 class="font-semibold mt-3"><?= htmlspecialchars($k["judul"]) ?></h3>
+                        <span class="inline-block bg-orange-500 text-white text-xs px-3 py-1 rounded mt-2">
+                            <?= htmlspecialchars($k["nama_kategori"] ?? 'N/A') ?>
                         </span>
+
                     </div>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p class="text-gray-500 text-center col-span-full">Belum ada karya yang tersedia.</p>
-        <?php endif;?>
+                <?php endforeach; ?>
+            <?php else: ?>
+                 <p class="text-gray-500 col-span-full text-center">Belum ada karya yang tersedia.</p>
+            <?php endif; ?>
+        </div>
 
     </div>
 </div>
@@ -114,11 +93,11 @@ try {
 <script>
     const searchInput = document.getElementById("searchInput");
     const categoryFilter = document.getElementById("categoryFilter");
-    const items = document.querySelectorAll(".gallery-item");
 
     function filterGallery() {
         const searchText = searchInput.value.toLowerCase();
         const category = categoryFilter.value;
+        const items = document.querySelectorAll(".gallery-item");
 
         items.forEach(item => {
             const title = item.getAttribute("data-title").toLowerCase();
