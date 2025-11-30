@@ -1,18 +1,21 @@
 <?php
 require_once __DIR__ . '/../lib/Connection.php';
 
-class NewsModel {
+class NewsModel
+{
     private ?PDO $conn;
     private string $table = "berita_artikel";
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->conn = Connection::getConnection();
     }
 
     /**
      * Ambil berita dengan filter + pagination.
      */
-    public function getNews(?string $keyword = null, ?int $kategoriId = null, int $offset = 0, int $limit = 10): array {
+    public function getNews(?string $keyword = null, ?int $kategoriId = null, int $offset = 0, int $limit = 10): array
+    {
         if ($this->conn === null) {
             return [];
         }
@@ -48,7 +51,8 @@ class NewsModel {
     /**
      * Hitung total berita untuk pagination.
      */
-    public function countNews(?string $keyword = null, ?int $kategoriId = null): int {
+    public function countNews(?string $keyword = null, ?int $kategoriId = null): int
+    {
         if ($this->conn === null) {
             return 0;
         }
@@ -68,13 +72,14 @@ class NewsModel {
         }
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return (int)($row['total'] ?? 0);
+        return (int) ($row['total'] ?? 0);
     }
 
     /**
      * Ambil 1 berita terbaru (bisa disaring kategori / keyword).
      */
-    public function getLatest(?string $keyword = null, ?int $kategoriId = null): ?array {
+    public function getLatest(?string $keyword = null, ?int $kategoriId = null): ?array
+    {
         $data = $this->getNews($keyword, $kategoriId, 0, 1);
         return $data[0] ?? null;
     }
@@ -82,12 +87,26 @@ class NewsModel {
     /**
      * Ambil daftar kategori untuk dropdown.
      */
-    public function getCategories(): array {
+    public function getCategories(): array
+    {
         if ($this->conn === null) {
             return [];
         }
         $stmt = $this->conn->prepare("SELECT id, nama_kategori FROM kategori ORDER BY nama_kategori ASC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+        public function getNewsById($id) {
+        $query = "SELECT b.*, k.nama_kategori 
+                  FROM berita_artikel b
+                  LEFT JOIN kategori k ON b.kategori_id = k.id
+                  WHERE b.id = :id";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

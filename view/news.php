@@ -112,7 +112,7 @@ include '../layouts/header.php';
                     <p class="text-gray-500 text-sm leading-relaxed">
                         <?php echo h(mb_substr(strip_tags($featuredNews['isi_berita'] ?? ''), 0, 150) . '...'); ?>
                     </p>
-                    <a href="#"
+                    <a href="news_detail.php?id=<?php echo $news['id']; ?>"
                         class="inline-flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold py-3 px-6 rounded-lg transition-all shadow-md shadow-orange-200 transform hover:-translate-y-0.5">
                         Lihat Selengkapnya
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -156,7 +156,7 @@ include '../layouts/header.php';
                                 <p class="text-gray-500 text-sm line-clamp-3 mb-4 flex-grow">
                                     <?php echo h(mb_substr(strip_tags($news['isi_berita'] ?? ''), 0, 100) . '...'); ?>
                                 </p>
-                                <a href="#"
+                                <a href="news_detail.php?id=<?php echo $news['id']; ?>"
                                     class="inline-flex items-center justify-center gap-2 w-full bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold py-3 px-4 rounded-lg transition-all mt-auto shadow-sm hover:shadow-md">
                                     Lihat Selengkapnya
                                     <span class="text-base leading-none">&rarr;</span>
