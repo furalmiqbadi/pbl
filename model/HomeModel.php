@@ -79,11 +79,14 @@ class HomeModel {
                 $rows = $stmt->fetchAll();
                 $data = [];
                 foreach ($rows as $row) {
+                    $rawExcerpt = trim(strip_tags($row['isi_proyek'] ?? ''));
+                    $excerpt = mb_substr($rawExcerpt, 0, 140);
                     $data[] = [
                         'id' => $row['id'] ?? null,
                         'title' => trim($row['judul'] ?? ''),
                         'category' => trim($row['nama_kategori'] ?? ''),
                         'image' => trim($row['gambar_proyek'] ?? ''),
+                        'excerpt' => $excerpt,
                     ];
                 }
                 return $data;

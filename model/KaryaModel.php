@@ -33,7 +33,10 @@ class KaryaModel {
     }
 
     public function getById($id) {
-        $sql = "SELECT * FROM daftar_proyek WHERE id = :id";
+        $sql = "SELECT p.*, k.nama_kategori 
+                FROM daftar_proyek p 
+                LEFT JOIN kategori k ON p.kategori_id = k.id 
+                WHERE p.id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);

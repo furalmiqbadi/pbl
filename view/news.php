@@ -21,31 +21,30 @@ include __DIR__ . '/../layouts/header.php';
         </div>
     </section>
 
-    <section class="bg-white border border-gray-200 rounded-xl shadow-sm p-4">
-        <form action="index.php" method="GET" class="flex flex-col md:flex-row gap-4 items-center">
+    <section class="bg-white rounded-xl p-4">
+        <form action="index.php" method="GET" class="flex flex-col md:flex-row gap-3 items-center justify-center">
             
             <input type="hidden" name="page" value="news">
 
-            <div class="relative flex-1 w-full">
+            <div class="relative w-full md:w-96">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
                 </span>
-                <input type="text" name="search" value="<?php echo h($search ?? ''); ?>" placeholder="Cari judul berita..."
-                    class="w-full pl-11 pr-4 py-3 text-sm rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400">
+                <input type="text" name="search" value="<?php echo h($search ?? ''); ?>" placeholder="Cari judul proyek..."
+                    class="w-full pl-11 pr-4 py-3 text-sm rounded-lg bg-white border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-300">
             </div>
 
             <div class="relative w-full md:w-64">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 text-xs font-semibold">Kategori:</span>
                 <select name="category" onchange="this.form.submit()"
-                    class="w-full pl-20 pr-10 py-3 text-sm font-semibold bg-white text-gray-700 border border-gray-200 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400">
-                    <option value="semua">Semua</option>
+                    class="w-full pl-3 pr-8 py-3 text-sm font-semibold bg-white text-gray-800 border border-gray-200 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-300">
+                    <option value="semua">Kategori: Semua</option>
                     <?php if (!empty($categories)): ?>
                         <?php foreach ($categories as $cat): ?>
                             <option value="<?php echo (int) $cat['id']; ?>" <?php echo (isset($categoryId) && $categoryId === (int) $cat['id']) ? 'selected' : ''; ?>>
-                                <?php echo h($cat['nama_kategori']); ?>
+                                <?php echo 'Kategori: ' . h($cat['nama_kategori']); ?>
                             </option>
                         <?php endforeach; ?>
                     <?php endif; ?>
