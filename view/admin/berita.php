@@ -1,130 +1,115 @@
 <?php
-require_once '../../model/NewsModel.php'; 
-$newsModel = new NewsModel();
+if (!function_exists('h')) {
+    function h(?string $str) {
+        return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8');
+    }
+}
 
-$newsList = $newsModel->getNews(); 
+
+$listBerita = $newsList ?? []; 
+$searchQuery = $_GET['search'] ?? ''; 
 ?>
 
-<div class="space-y-6">
+<div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
     
-    <!-- 1. HEADER HALAMAN -->
-    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
         <div>
-            <h2 class="font-heading font-bold text-2xl text-brand-dark">Kelola Artikel & Berita</h2>
+            <h2 class="text-2xl font-bold text-gray-800">Kelola Artikel & Berita</h2>
         </div>
         
-        <!-- Tombol Tambah -->
-        <a href="dashboard.php?page=tulis_berita" class="inline-flex items-center bg-brand-orange hover:bg-orange-600 text-white text-sm font-semibold px-5 py-2.5 rounded-lg shadow-sm transition-all">
-            <i class="ph ph-plus mr-2 text-lg"></i>
+        <a href="dashboard.php?page=tambah_berita" class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 transition shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             Tulis Berita
         </a>
     </div>
 
-    <!-- 2. FILTER & PENCARIAN -->
-    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 justify-between">
-        <!-- Search -->
-        <div class="relative w-full md:w-80">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <i class="ph ph-magnifying-glass text-lg"></i>
+    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6 flex flex-col md:flex-row gap-4 justify-between items-center">
+        <form action="" method="GET" class="relative w-full md:w-96">
+            <input type="hidden" name="page" value="berita"> 
+            
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </span>
-            <input type="text" class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange" placeholder="Cari judul berita...">
-        </div>
+            
+            <input type="text" name="search" 
+                   value="<?php echo h($searchQuery); ?>" 
+                   placeholder="Cari judul berita..." 
+                   class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-500 transition">
+        </form>
 
-        <!-- Filter Kategori -->
-        <div class="w-full md:w-48">
-            <select class="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-brand-orange cursor-pointer text-gray-600 font-medium">
+        <div class="flex items-center gap-2">
+             <select class="px-4 py-2.5 rounded-lg border border-gray-300 text-gray-600 text-sm focus:outline-none focus:border-orange-500 bg-white">
                 <option value="">Semua Kategori</option>
-                <option value="Kegiatan">Kegiatan</option>
-                <option value="Prestasi">Prestasi</option>
-                <option value="Workshop">Workshop</option>
-            </select>
+                <option value="prestasi">Prestasi</option>
+                <option value="kegiatan">Kegiatan</option>
+             </select>
         </div>
     </div>
 
-    <!-- 3. TABEL DATA BERITA -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-500 font-semibold tracking-wider">
-                        <th class="px-6 py-4">Thumbnail</th>
-                        <th class="px-6 py-4">Judul & Cuplikan</th>
-                        <th class="px-6 py-4 text-center">Kategori</th>
-                        <th class="px-6 py-4 text-center">Tanggal</th>
-                        <th class="px-6 py-4 text-right">Aksi</th>
+    <div class="overflow-x-auto rounded-lg border border-gray-200">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-gray-50 text-gray-600 text-xs uppercase font-bold tracking-wider">
+                <tr>
+                    <th class="px-6 py-4 border-b border-gray-200">Thumbnail</th>
+                    <th class="px-6 py-4 border-b border-gray-200">Judul & Cuplikan</th>
+                    <th class="px-6 py-4 border-b border-gray-200 text-center">Kategori</th>
+                    <th class="px-6 py-4 border-b border-gray-200 text-center">Tanggal</th>
+                    <th class="px-6 py-4 border-b border-gray-200 text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 bg-white">
+                <?php if (empty($listBerita)): ?>
+                    <tr>
+                        <td colspan="5" class="px-6 py-8 text-center text-gray-400">
+                            Belum ada berita yang ditemukan.
+                        </td>
                     </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100">
-                    
-                    <?php if (!empty($newsList)): ?>
-                        <?php foreach($newsList as $news): ?>
-                        <tr class="hover:bg-orange-50/30 transition-colors group">
-                            <!-- Thumbnail -->
-                            <td class="px-6 py-4 w-32">
-                                <div class="h-16 w-24 rounded-lg overflow-hidden bg-gray-200 border border-gray-200">
-                                    <img src="<?php echo !empty($news['gambar_berita']) ? $news['gambar_berita'] : 'https://placehold.co/100x100?text=No+Img'; ?>" 
-                                         class="w-full h-full object-cover">
-                                </div>
-                            </td>
+                <?php else: ?>
+                    <?php foreach ($listBerita as $berita): ?>
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4 w-32">
+                            <div class="h-20 w-28 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 flex items-center justify-center">
+                                <?php if (!empty($berita['gambar_berita'])): ?>
+                                    <img src="../<?php echo h($berita['gambar_berita']); ?>" alt="Img" class="w-full h-full object-cover">
+                                <?php else: ?>
+                                    <span class="text-xs text-gray-400 font-medium">No Img</span>
+                                <?php endif; ?>
+                            </div>
+                        </td>
 
-                            <!-- Judul -->
-                            <td class="px-6 py-4 max-w-md">
-                                <h3 class="text-sm font-bold text-brand-dark line-clamp-1 group-hover:text-brand-orange transition-colors">
-                                    <?php echo htmlspecialchars($news['judul']); ?>
-                                </h3>
-                                <p class="text-xs text-gray-500 mt-1 line-clamp-2">
-                                    <?php echo htmlspecialchars(substr(strip_tags($news['isi_berita']), 0, 100)) . '...'; ?>
-                                </p>
-                            </td>
+                        <td class="px-6 py-4 max-w-md">
+                            <h3 class="font-bold text-gray-800 text-base mb-1">
+                                <?php echo h($berita['judul']); ?>
+                            </h3>
+                            <p class="text-gray-500 text-sm line-clamp-2 leading-relaxed">
+                                <?php echo h(mb_substr(strip_tags($berita['isi_berita'] ?? ''), 0, 100)) . '...'; ?>
+                            </p>
+                        </td>
 
-                            <!-- Kategori -->
-                            <td class="px-6 py-4 text-center">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                    <?php echo htmlspecialchars($news['nama_kategori'] ?? 'Umum'); ?>
-                                </span>
-                            </td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                <?php echo h($berita['nama_kategori'] ?? 'Umum'); ?>
+                            </span>
+                        </td>
 
-                            <!-- Tanggal -->
-                            <td class="px-6 py-4 text-center text-xs text-gray-500 font-medium">
-                                <?php echo date('d M Y', strtotime($news['created_at'])); ?>
-                            </td>
+                        <td class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500">
+                            <?php echo !empty($berita['created_at']) ? date('d M Y', strtotime($berita['created_at'])) : '-'; ?>
+                        </td>
 
-                            <!-- Aksi -->
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-2">
-                                    <button class="p-2 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors" title="Edit">
-                                        <i class="ph ph-pencil-simple text-lg"></i>
-                                    </button>
-                                    <button class="p-2 rounded-lg text-red-600 bg-red-50 hover:bg-red-100 transition-colors" title="Hapus" onclick="return confirm('Yakin hapus berita ini?')">
-                                        <i class="ph ph-trash text-lg"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="5" class="px-6 py-12 text-center text-gray-500">
-                                <div class="flex flex-col items-center justify-center">
-                                    <i class="ph ph-newspaper text-4xl mb-3 text-gray-300"></i>
-                                    <p>Belum ada berita yang ditambahkan.</p>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Pagination (Statis dulu) -->
-        <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
-            <span class="text-xs text-gray-500">Menampilkan <?php echo count($newsList); ?> data</span>
-            <div class="flex gap-2">
-                <button class="px-3 py-1 text-xs font-medium text-gray-500 bg-white border border-gray-200 rounded hover:bg-gray-50 disabled:opacity-50">Prev</button>
-                <button class="px-3 py-1 text-xs font-medium text-gray-500 bg-white border border-gray-200 rounded hover:bg-gray-50">Next</button>
-            </div>
-        </div>
+                        <td class="px-6 py-4 text-center w-32">
+                            <div class="flex items-center justify-center gap-2">
+                                <a href="dashboard.php?page=edit_berita&id=<?php echo $berita['id']; ?>" class="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition" title="Edit">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                </a>
+                                <a href="dashboard.php?page=hapus_berita&id=<?php echo $berita['id']; ?>" onclick="return confirm('Yakin ingin menghapus berita ini?')" class="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition" title="Hapus">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
-
 </div>
