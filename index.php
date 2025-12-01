@@ -94,6 +94,7 @@ if ($page === 'detailGallery') {
         return (int)$item['id'] !== $id;
     });
     $sidebarGallery = array_slice($sidebarGallery, 0, 3);
+
     include __DIR__ . '/view/detailGallery.php';
     exit;
 }
