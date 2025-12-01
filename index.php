@@ -63,12 +63,38 @@ if ($page === 'catalog') {
 }
 
 if ($page === 'gallery') {
+    require_once __DIR__ . '/model/GaleriModel.php';
+    $galeriModel = new GaleriModel();
+    $data = $galeriModel->getAll();
     include __DIR__ . '/view/gallery.php';
     exit;
 }
 
 if ($page === 'detailKarya') {
-    include __DIR__ . '/view/detailKarya.php';
+    require_once __DIR__ . '/model/KaryaModel.php';
+    $karyaModel = new KaryaModel();
+    $karyaId = isset($_GET['id']) ? (int) $_GET['id'] : null;
+    $karyaItem = $karyaId ? $karyaModel->getById($karyaId) : null;
+    $allKarya = $karyaModel->getAll();
+    include __DIR__ . '/view/karya_detail.php';
+    exit;
+}
+
+if ($page === 'detailGallery') {
+    require_once __DIR__ . '/model/GaleriModel.php';
+    $galeriModel = new GaleriModel();
+    $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+    $detail = $galeriModel->getById($id);
+    if (!$detail) {
+        header("Location: index.php?page=gallery");
+        exit;
+    }
+    $allGallery = $galeriModel->getAll();
+    $sidebarGallery = array_filter($allGallery, function($item) use ($id) {
+        return (int)$item['id'] !== $id;
+    });
+    $sidebarGallery = array_slice($sidebarGallery, 0, 3);
+    include __DIR__ . '/view/detailGallery.php';
     exit;
 }
 //sampai sini 
@@ -230,18 +256,22 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             const karyaGrid = document.getElementById('karya-grid');
 
             function renderKarya(list) {
-                karyaGrid.innerHTML = list.slice(0, 3).map(k => `
-            <div class="bg-white rounded-2xl shadow-[0_12px_35px_-18px_rgba(15,23,42,0.35)] overflow-hidden border border-slate-200/70">
-                <div class="w-full h-44 bg-gray-200 overflow-hidden">
-                    ${k.image ? `<img src="${k.image}" alt="${k.title || ''}" class="w-full h-full object-cover">` : ''}
-                </div>
-                <div class="p-4 space-y-2">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#feedd8] text-orange-700 text-xs font-semibold border border-orange-200">${k.category || ''}</span>
-                    <h3 class="text-lg font-semibold text-gray-800">${k.title || ''}</h3>
-                    <p class="text-sm text-gray-500">Detail singkat akan tampil di sini.</p>
-                </div>
-            </div>
-        `).join('');
+                karyaGrid.innerHTML = list.slice(0, 3).map(k => {
+                    const detailUrl = k.id ? `index.php?page=detailKarya&id=${encodeURIComponent(k.id)}` : 'index.php?page=detailKarya';
+                    const excerpt = k.excerpt && k.excerpt !== '' ? k.excerpt : 'Detail singkat akan tampil di sini.';
+                    return `
+                <a href="${detailUrl}" class="block bg-white rounded-2xl shadow-[0_12px_35px_-18px_rgba(15,23,42,0.35)] overflow-hidden border border-slate-200/70 hover:shadow-lg hover:-translate-y-1 transition">
+                    <div class="w-full h-44 bg-gray-200 overflow-hidden">
+                        ${k.image ? `<img src="${k.image}" alt="${k.title || ''}" class="w-full h-full object-cover">` : ''}
+                    </div>
+                    <div class="p-4 space-y-2">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#feedd8] text-orange-700 text-xs font-semibold border border-orange-200">${k.category || ''}</span>
+                        <h3 class="text-lg font-semibold text-gray-800">${k.title || ''}</h3>
+                        <p class="text-sm text-gray-500 line-clamp-2">${excerpt}</p>
+                    </div>
+                </a>
+            `;
+                }).join('');
             }
 
             renderKarya(karyaData);
