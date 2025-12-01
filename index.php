@@ -63,6 +63,9 @@ if ($page === 'catalog') {
 }
 
 if ($page === 'gallery') {
+    require_once __DIR__ . '/model/GaleriModel.php';
+    $galeriModel = new GaleriModel();
+    $data = $galeriModel->getAll();
     include __DIR__ . '/view/gallery.php';
     exit;
 }
