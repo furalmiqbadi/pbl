@@ -21,6 +21,8 @@ $sql_detail = "
         dp.judul, 
         dp.isi_proyek, 
         dp.gambar_proyek,
+        dp.tahun,
+        dp.nama_tim,
         k.nama_kategori
     FROM public.daftar_proyek dp
     LEFT JOIN public.kategori k ON dp.kategori_id = k.id
@@ -43,8 +45,8 @@ try {
         "kategori" => $karya_db["nama_kategori"] ?? 'Tidak Ada Kategori',
         "deskripsi" => $karya_db["isi_proyek"], 
         "thumbnail" => $karya_db["gambar_proyek"],
-        "tahun" => 'Tahun T/A', 
-        "nama_tim" => 'Tim Kreatif',
+        "tahun" => $karya_db["tahun"] ?? 'Tahun T/A', 
+        "nama_tim" => $karya_db["nama_tim"] ?? 'Tim Kreatif',
         "anggota" => [] 
     ];
 
@@ -102,11 +104,14 @@ try {
 
 <body class="bg-gray-50">
 
-<div class="max-w-6xl mx-auto px-4 py-8">
+<div class="max-w-6xl mx-auto px-4 mt-24 mb-6">
 
     <a href="catalog.php"
-       class="inline-block bg-orange-500 text-white px-5 py-2 rounded-lg font-medium mb-6 hover:bg-orange-600">
-        ← Kembali ke Karya
+       class="inline-flex items-center gap-2 bg-orange-500 text-white px-6 py-2 
+          rounded-xl font-semibold shadow-md hover:bg-orange-600 
+          transition mb-8">
+        <span class="text-lg">←</span> 
+        <span>Kembali ke Karya</span>
     </a>
 
     <div class="w-full rounded-xl overflow-hidden border border-gray-300 shadow-sm">
@@ -172,7 +177,7 @@ try {
                 <?php foreach ($karya_lain as $k): ?>
                     <div 
                         class="bg-white border rounded-xl shadow-sm overflow-hidden p-4 cursor-pointer hover:shadow-md transition"
-                        onclick="window.location.href='detailKarya.php?id=<?= $k['id'] ?>'"
+                        onclick="window.location.href='pbl/view/detailKarya.php?id=<?= $k['id'] ?>'"
                     >
                         <?php 
                             $img_path_lain = !empty($k['gambar_proyek']) ? '../assets/images/uploads/' . htmlspecialchars($k['gambar_proyek']) : 'https://via.placeholder.com/400x160?text=No+Image';

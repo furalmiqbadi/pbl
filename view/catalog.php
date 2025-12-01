@@ -1,6 +1,6 @@
 <?php
+require_once __DIR__ . '/../lib/Connection.php';
 include __DIR__ . '/../layouts/header.php';
-include '../lib/Connection.php';
 
 $pdo = Connection::getConnection();
 
@@ -64,7 +64,7 @@ try {
                         class="gallery-item bg-white border rounded-xl shadow-sm overflow-hidden p-4 cursor-pointer hover:shadow-md transition"
                         data-title="<?= strtolower(htmlspecialchars($k['judul'])) ?>"
                         data-category="<?= strtolower(htmlspecialchars($k['nama_kategori'])) ?>"
-                        onclick="window.location.href='detailKarya.php?id=<?= $k['id'] ?>'"
+                        onclick="window.location.href='/pbl/view/detailKarya.php?id=<?= $k['id'] ?>'"
                     >
                         <?php 
                             $img_path_lain = !empty($k['gambar_proyek']) ? '../assets/images/uploads/' . htmlspecialchars($k['gambar_proyek']) : 'https://via.placeholder.com/400x160?text=No+Image';
