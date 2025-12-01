@@ -1,5 +1,5 @@
 <?php
-include '../layouts/header.php';
+include __DIR__ . '/../layouts/header.php';
 include '../lib/Connection.php';
 
 $pdo = Connection::getConnection();
@@ -118,4 +118,4 @@ try {
     categoryFilter.addEventListener("change", filterGallery);
 </script>
 
-<?php include '../layouts/footer.php'; ?>
+<?php include __DIR__ . '/../layouts/footer.php'; ?>

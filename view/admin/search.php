@@ -50,29 +50,36 @@
     <?php endif; ?>
 
     <?php if (!empty($results['dosen'])): ?>
-        <div class="mb-8">
-            <h2 class="text-lg font-bold text-gray-700 mb-3 flex items-center gap-2">
-                <span class="w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center text-sm"><i class="fas fa-chalkboard-teacher"></i></span>
-                Ditemukan di Dosen
-            </h2>
-            <div class="grid grid-cols-1 gap-3">
-                <?php foreach ($results['dosen'] as $row): ?>
-                    <div class="bg-white p-4 rounded-xl border border-gray-100 hover:border-red-200 hover:shadow-md transition flex justify-between items-center group">
-                        <div class="flex items-center gap-4">
-                            <img src="../../assets/images/<?= $row['gambar_tim'] ?>" class="w-10 h-10 rounded-full object-cover border border-gray-200">
-                            <div>
-                                <h3 class="font-bold text-gray-800 group-hover:text-red-600 transition"><?= htmlspecialchars($row['nama']) ?></h3>
-                                <p class="text-xs text-gray-500"><?= htmlspecialchars($row['jabatan']) ?></p>
+            <div class="mb-8">
+                <h2 class="text-lg font-bold text-gray-700 mb-3 flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center text-sm"><i class="fas fa-chalkboard-teacher"></i></span>
+                    Ditemukan di Dosen
+                </h2>
+                <div class="grid grid-cols-1 gap-3">
+                    <?php foreach ($results['dosen'] as $row): ?>
+                        <div class="bg-white p-4 rounded-xl border border-gray-100 hover:border-red-200 hover:shadow-md transition flex justify-between items-center group">
+                            <div class="flex items-center gap-4">
+                                <?php 
+                                    $imgDosen = !empty($row['gambar_tim']) && $row['gambar_tim'] !== 'default.png' 
+                                        ? "../../assets/images/uploads/" . $row['gambar_tim'] 
+                                        : "https://ui-avatars.com/api/?name=" . urlencode($row['nama']);
+                                ?>
+                                <img src="<?= $imgDosen ?>" class="w-10 h-10 rounded-full object-cover border border-gray-200">
+                                
+                                <div>
+                                    <h3 class="font-bold text-gray-800 group-hover:text-red-600 transition"><?= htmlspecialchars($row['nama']) ?></h3>
+                                    <p class="text-xs text-gray-500"><?= htmlspecialchars($row['jabatan']) ?></p>
+                                </div>
                             </div>
+                            
+                            <a href="dashboard.php?page=dosen&highlight_id=<?= $row['id'] ?>" class="px-4 py-2 text-sm font-bold text-red-600 bg-red-50 rounded-lg hover:bg-red-600 hover:text-white transition">
+                                Lihat Data
+                            </a>
                         </div>
-                        <a href="dashboard.php?page=profil&highlight_dosen=<?= $row['id'] ?>" class="px-4 py-2 text-sm font-bold text-red-600 bg-red-50 rounded-lg hover:bg-red-600 hover:text-white transition">
-                            Lihat Data
-                        </a>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </div>
             </div>
-        </div>
-    <?php endif; ?>
+        <?php endif; ?>
 
     <?php if (!empty($results['proyek'])): ?>
         <div class="mb-8">

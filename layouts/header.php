@@ -1,18 +1,22 @@
 <?php
 $basePath = '/pbl';
-$currentPage = basename($_SERVER['SCRIPT_NAME']);
+
+$currentPage = $_GET['page'] ?? 'home';
+
 $navItems = [
-    ['label' => 'Beranda', 'href' => $basePath . '/index.php'],
-    ['label' => 'Tentang Kami', 'href' => $basePath . '/view/about.php'],
-    ['label' => 'Karya', 'href' => $basePath . '/view/catalog.php'],
-    ['label' => 'Berita', 'href' => $basePath . '/view/news.php'],
-    ['label' => 'Galeri', 'href' => $basePath . '/view/gallery.php'],
+    ['label' => 'Beranda',      'page' => 'home',    'href' => $basePath . '/index.php?page=home'],
+    ['label' => 'Tentang Kami', 'page' => 'about',   'href' => $basePath . '/index.php?page=about'],
+    ['label' => 'Karya',        'page' => 'catalog', 'href' => $basePath . '/index.php?page=catalog'],
+    ['label' => 'Berita',       'page' => 'news',    'href' => $basePath . '/index.php?page=news'], 
+    ['label' => 'Galeri',       'page' => 'gallery', 'href' => $basePath . '/index.php?page=gallery'],
 ];
 ?>
+
 <header id="header" class="fixed w-full top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200 shadow-[0_6px_20px_-14px_rgba(15,23,42,0.35)] transition-transform duration-300 will-change-transform h-16">
     <div class="max-w-6xl mx-auto px-4 h-full">
         <div class="flex items-center justify-between h-full">
-            <a href="<?php echo $basePath; ?>/index.php" class="flex items-center space-x-2 group">
+            
+            <a href="<?php echo $basePath; ?>/index.php?page=home" class="flex items-center space-x-2 group">
                 <div class="flex items-center space-x-2 px-2 py-1.5">
                     <img src="<?php echo $basePath; ?>/assets/images/jtiLogo.png" alt="Logo JTI" class="h-7 w-7 object-contain" onerror="this.src='<?php echo $basePath; ?>/assets/images/image.png'">
                     <span class="w-px h-10 bg-gray-200"></span>
@@ -26,7 +30,12 @@ $navItems = [
 
             <nav class="hidden md:flex items-center space-x-2">
                 <?php foreach ($navItems as $item): 
-                    $isActive = $currentPage === basename($item['href']);
+                    $isActive = ($currentPage === $item['page']);
+                    
+                    if ($currentPage === 'news_detail' && $item['page'] === 'news') {
+                        $isActive = true;
+                    }
+
                     $activeClass = $isActive
                         ? 'text-orange-600 bg-orange-50 border border-orange-100 shadow-sm'
                         : 'text-slate-700 hover:text-orange-600 hover:bg-orange-50 border border-transparent';
@@ -46,7 +55,9 @@ $navItems = [
 
         <nav id="mobile-menu" class="hidden md:hidden pb-4 space-y-1 border-t border-slate-200 pt-3 bg-white/90 backdrop-blur absolute left-0 right-0 px-4 shadow-lg">
             <?php foreach ($navItems as $item): 
-                $isActive = $currentPage === basename($item['href']);
+                $isActive = ($currentPage === $item['page']);
+                if ($currentPage === 'news_detail' && $item['page'] === 'news') { $isActive = true; }
+
                 $activeClass = $isActive
                     ? 'text-orange-600 font-semibold bg-orange-50 border border-orange-100'
                     : 'text-gray-700';

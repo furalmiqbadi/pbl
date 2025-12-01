@@ -1,41 +1,186 @@
 <?php
 require_once __DIR__ . '/../model/NewsModel.php';
+require_once __DIR__ . '/../lib/helpers.php'; 
 
-class NewsController {
+class NewsController
+{
     private $model;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->model = new NewsModel();
     }
 
-    public function index() {
+    // BAGIAN FRONTEND
+
+    public function index()
+    {
         // 1. Ambil input
-        $search   = $_GET['search']   ?? null;
-        $category = $_GET['category'] ?? null;
+        $search = trim($_GET['search'] ?? '');
+        $categoryInput = $_GET['category'] ?? null;
 
-        // 2. Ambil data database
-        $allNews     = $this->model->getNews($search, $category);
-        $categories  = $this->model->getCategories();
-
-        // 3. Inisialisasi default anti-error
-        $featuredNews = null;
-        $newsList     = [];
-
-        // 4. Logika featured / list
-        if (!empty($allNews)) {
-
-            // Jika TIDAK sedang mencari dan kategori = semua → tampilkan Featured News
-            if (!$search && ($category === null || $category === 'semua')) {
-                $featuredNews = $allNews[0];        // Ambil berita paling baru
-                $newsList     = array_slice($allNews, 1);
-            } else {
-                // Jika sedang search atau filter kategori → semua jadi list
-                $newsList = $allNews;
-            }
+        // 2. Normalisasi Kategori
+        $categoryId = null;
+        if ($categoryInput && $categoryInput !== 'semua' && is_numeric($categoryInput)) {
+            $categoryId = (int) $categoryInput;
         }
 
-        // 5. Kirim ke view
+        // 3. Logika Pagination
+        $perPageFirst = 10;
+        $perPageOther = 12;
+        $page = isset($_GET['p']) && ctype_digit((string) $_GET['p']) ? max(1, (int) $_GET['p']) : 1;
+
+        $totalNews = $this->model->countNews($search, $categoryId);
+        $remaining = max(0, $totalNews - $perPageFirst);
+        $totalPages = 1 + ($remaining > 0 ? (int) ceil($remaining / $perPageOther) : 0);
+        
+        if ($page > $totalPages && $totalPages > 0) $page = $totalPages;
+
+        // 4. Logika Featured
+        $featuredNews = null;
+        if ($page === 1 && $search === '' && $categoryId === null) {
+            $featuredNews = $this->model->getLatest();
+        }
+
+        // 5. Hitung Offset
+        if ($page === 1) {
+            $offset = $featuredNews ? 1 : 0;
+            $limit = $featuredNews ? ($perPageFirst - 1) : $perPageFirst;
+        } else {
+            $offset = $perPageFirst + ($page - 2) * $perPageOther;
+            $limit = $perPageOther;
+        }
+
+        // 6. Ambil Data
+        $newsList = $this->model->getNews($search, $categoryId, $offset, $limit);
+        $categories = $this->model->getCategories();
+
+        // 7. Panggil View Publik
         include __DIR__ . '/../view/news.php';
+    }
+
+    public function detail()
+    {
+        if (!isset($_GET['id'])) {
+            header("Location: index.php?page=news"); exit;
+        }
+
+        $id = (int) $_GET['id'];
+        $newsItem = $this->model->getNewsById($id);
+
+        if (!$newsItem) {
+            echo "Berita tidak ditemukan!"; exit;
+        }
+
+        // Ambil Rekomendasi (3 berita terbaru selain yang sedang dibuka)
+        $recentNews = $this->model->getNews(null, null, 0, 4);
+        $relatedNews = array_filter($recentNews, function($item) use ($id) {
+            return (int)$item['id'] !== $id;
+        });
+        $relatedNews = array_slice($relatedNews, 0, 3);
+
+        include __DIR__ . '/../view/news_detail.php';
+    }
+
+    // BAGIAN ADMIN (Untuk Dashboard)
+
+    // Tampilkan Daftar Berita di Admin
+    public function adminIndex()
+    {
+        $search = $_GET['search'] ?? null;
+        if ($search) {
+            $newsList = $this->model->getNews($search, null, 0, 100);
+        } else {
+            $newsList = $this->model->getAllNews();
+        }
+        include __DIR__ . '/../view/admin/berita.php';
+    }
+
+    // Tampilkan Form Tambah
+    public function create()
+    {
+        $categories = $this->model->getCategories();
+        include __DIR__ . '/../view/admin/tambah_berita.php';
+    }
+
+    // Proses Simpan Data Baru
+    public function store()
+    {
+        $data = [
+            'judul' => $_POST['judul'],
+            'isi_berita' => $_POST['isi_berita'],
+            'kategori_id' => $_POST['kategori_id'],
+            'gambar_berita' => ''
+        ];
+
+        // Upload Gambar
+        if (!empty($_FILES['gambar_berita']['name'])) {
+            $data['gambar_berita'] = $this->uploadImage($_FILES['gambar_berita']);
+        }
+
+        if ($this->model->insert($data)) {
+            echo "<script>alert('Berita berhasil ditambahkan!'); window.location.href='dashboard.php?page=berita';</script>";
+        } else {
+            echo "<script>alert('Gagal menambah berita!'); window.history.back();</script>";
+        }
+    }
+
+    // Tampilkan Form Edit
+    public function edit()
+    {
+        $id = $_GET['id'];
+        $berita = $this->model->getNewsById($id);
+        $categories = $this->model->getCategories();
+        include __DIR__ . '/../view/admin/edit_berita.php';
+    }
+
+    // Proses Update Data
+    public function update()
+    {
+        $data = [
+            'id' => $_POST['id'],
+            'judul' => $_POST['judul'],
+            'isi_berita' => $_POST['isi_berita'],
+            'kategori_id' => $_POST['kategori_id'],
+            'gambar_berita' => ''
+        ];
+
+        // Cek jika ada gambar baru
+        if (!empty($_FILES['gambar_berita']['name'])) {
+            $data['gambar_berita'] = $this->uploadImage($_FILES['gambar_berita']);
+        }
+
+        if ($this->model->update($data)) {
+            echo "<script>alert('Berita berhasil diupdate!'); window.location.href='dashboard.php?page=berita';</script>";
+        } else {
+            echo "<script>alert('Gagal update berita!'); window.history.back();</script>";
+        }
+    }
+
+    // Proses Hapus Data
+    public function delete()
+    {
+        $id = $_GET['id'];
+        if ($this->model->delete($id)) {
+            echo "<script>alert('Berita berhasil dihapus!'); window.location.href='dashboard.php?page=berita';</script>";
+        } else {
+            echo "<script>alert('Gagal menghapus!'); window.location.href='dashboard.php?page=berita';</script>";
+        }
+    }
+
+    // Helper Upload Gambar
+    private function uploadImage($file)
+    {
+        $targetDir = __DIR__ . "/../assets/images/uploads/";
+        if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+
+        $ext = pathinfo($file["name"], PATHINFO_EXTENSION);
+        $fileName = time() . '_' . uniqid() . '.' . $ext;
+        
+        if (move_uploaded_file($file["tmp_name"], $targetDir . $fileName)) {
+            return "assets/images/uploads/" . $fileName;
+        }
+        return "";
     }
 }
 ?>
