@@ -53,7 +53,9 @@ if ($page === 'news_detail') {
 }
 
 if ($page === 'about') {
-    include __DIR__ . '/view/about.php';
+    require_once __DIR__ . '/controller/AboutController.php';
+    $controller = new AboutController();
+    $controller->index();
     exit;
 }
 
