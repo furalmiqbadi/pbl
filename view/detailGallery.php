@@ -1,131 +1,102 @@
-<?php
-// --- DATA DUMMY (sementara tanpa database) ---
-$karya = [
-    "judul" => "Sistem Informasi Akademik Pintar",
-    "kategori" => "Mobile Application",
-    "tahun" => 2025,
-    "nama_tim" => "Nama Tim",
-    "anggota" => [
-        "Mahasiswa 1",
-        "Mahasiswa 2",
-        "Mahasiswa 3",
-        "Mahasiswa 4"
-    ],
-    "thumbnail" => "https://sl.bing.net/fh7GkLR12Qu",
-    "deskripsi" => "
-        Sistem informasi akademik pintar adalah sebuah inovasi terbaru dari mahasiswa Politeknik Negeri Malang 
-        dengan mengkombinasikan teknologi modern...
-    ",
-    "latar_belakang" => "
-        Pernahkah Anda merasa frustrasi karena melewatkan kelas akibat perubahan jadwal mendadak?
-        Atau bingung menghitung jatah absen yang tersisa? 
-        Kesenjangan antara kebutuhan mahasiswa modern dan sistem birokrasi lama membuat kami mencari solusi.
-    "
-];
-
-// Dummy karya lainnya
-$karya_lain = [
-    ["judul" => "Aplikasi Smart Kampus", "kategori" => "Mobile Dev"],
-    ["judul" => "Aplikasi Smart Kampus", "kategori" => "Mobile Dev"],
-    ["judul" => "Aplikasi Smart Kampus", "kategori" => "Mobile Dev"],
-];
+<?php 
+if (!function_exists('h')) { function h($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); } }
+include __DIR__ . '/../layouts/header.php'; 
+$mainImage = assetUrl($detail['gambar_galeri']);
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $karya["judul"]; ?></title>
+    <title>Detail Galeri - Lab MMT</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .content-body p { margin-bottom: 1.5rem; line-height: 1.8; color: #4b5563; }
+        .sidebar-card { transition: all 0.3s ease; }
+        .sidebar-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+    </style>
 </head>
+<body class="bg-white text-gray-800 font-sans">
 
-<body class="bg-gray-50">
-
-<!-- HEADER -->
-<?php include '../layouts/header.php'; ?>
-
-<!-- MAIN CONTENT -->
-<div class="max-w-6xl mx-auto px-4 py-8">
-
-    <!-- Tombol Kembali -->
-    <a href="catalog.php"
-       class="inline-block bg-orange-500 text-white px-5 py-2 rounded-lg font-medium mb-6 hover:bg-orange-600">
-        ← Kembali ke Karya
-    </a>
-
-    <!-- Gambar Utama -->
-    <div class="w-full rounded-xl overflow-hidden border border-gray-300 shadow-sm">
-        <img src="<?= $karya['thumbnail']; ?>" 
-             class="w-full h-[420px] object-cover" />
-    </div>
-
-    <!-- Konten Utama -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
-
-        <!-- Info Kiri -->
-        <div class="bg-white p-6 rounded-xl border shadow-sm text-sm space-y-3">
-            <div>
-                <p class="text-gray-500">Kategori</p>
-                <p class="font-semibold"><?= $karya["kategori"] ?></p>
-            </div>
-
-            <div>
-                <p class="text-gray-500">Tahun</p>
-                <p class="font-semibold"><?= $karya["tahun"] ?></p>
-            </div>
-
-            <div>
-                <p class="text-gray-500">Nama Tim</p>
-                <p class="font-semibold">"<?= $karya["nama_tim"] ?>"</p>
-            </div>
-
-            <div>
-                <p class="text-gray-500">Anggota Tim</p>
-                <ul class="list-disc ml-5">
-                    <?php foreach ($karya["anggota"] as $mhs): ?>
-                        <li><?= $mhs ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
+        
+        <div class="mb-8">
+            <a href="index.php?page=gallery" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-orange-600 transition">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Kembali ke Galeri
+            </a>
         </div>
 
-        <!-- Konten Kanan -->
-        <div class="md:col-span-2 space-y-6">
-            <h1 class="text-3xl font-bold"><?= $karya["judul"] ?></h1>
-
-            <p class="text-gray-700 leading-relaxed"><?= $karya["deskripsi"] ?></p>
-
-            <div>
-                <h2 class="text-xl font-bold mb-2">Latar Belakang</h2>
-                <p class="text-gray-700 leading-relaxed">
-                    <?= nl2br(trim($karya["latar_belakang"])) ?>
-                </p>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Karya Lainnya -->
-    <div class="mt-20">
-        <h2 class="text-2xl font-bold text-center mb-6">Lihat Karya Lainnya</h2>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <?php foreach ($karya_lain as $k): ?>
-                <div class="bg-white border rounded-xl shadow-sm overflow-hidden p-4">
-                    <div class="w-full h-40 bg-gray-200 rounded"></div>
-                    <h3 class="font-semibold mt-3"><?= $k["judul"] ?></h3>
-                    <span class="inline-block bg-orange-500 text-white text-xs px-3 py-1 rounded mt-2">
-                        <?= $k["kategori"] ?>
-                    </span>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            
+            <div class="lg:col-span-2">
+                
+                <div class="text-center mb-4">
+                    <span class="text-orange-500 font-bold tracking-wider text-xs uppercase">Dokumentasi Lab MMT</span>
                 </div>
-            <?php endforeach; ?>
+
+                <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 text-center mb-4 leading-tight">
+                    Kegiatan & Dokumentasi Laboratorium
+                </h1>
+
+                <div class="text-center text-gray-400 text-sm mb-10">
+                    Oleh Admin &bull; Galeri ID #<?= h($detail['id']) ?>
+                </div>
+
+                <div class="w-full rounded-3xl overflow-hidden shadow-lg mb-10">
+                    <img src="<?= $mainImage ?>" 
+                         alt="Detail Galeri" 
+                         class="w-full h-auto object-cover max-h-[500px]">
+                </div>
+
+                <div class="content-body text-lg text-justify border-b border-gray-100 pb-10">
+                    <?php 
+                        echo nl2br(h($detail['deskripsi'])); 
+                    ?>
+                </div>
+            </div>
+
+            <div class="lg:col-span-1">
+                <div class="sticky top-24">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6 border-l-4 border-orange-500 pl-3">
+                        Lihat Juga
+                    </h3>
+
+                    <div class="space-y-6">
+                        <?php if (!empty($sidebarGallery)): ?>
+                            <?php foreach ($sidebarGallery as $sideItem): ?>
+                                <div class="bg-white border border-gray-200 rounded-2xl p-4 sidebar-card flex flex-col gap-3">
+                                    <div class="h-40 bg-gray-200 rounded-xl overflow-hidden relative">
+                                        <img src="<?= assetUrl($sideItem['gambar_galeri']) ?>" 
+                                             class="w-full h-full object-cover" 
+                                             alt="Thumbnail">
+                                    </div>
+                                    
+                                    <div>
+                                        <div class="text-xs text-gray-400 mb-1">Dokumentasi</div>
+                                        <p class="font-bold text-gray-800 line-clamp-2 text-sm mb-3">
+                                            <?= h(mb_substr($sideItem['deskripsi'], 0, 60)) ?>...
+                                        </p>
+                                        
+                                        <a href="index.php?page=detailGallery&id=<?= $sideItem['id'] ?>" 
+                                           class="inline-block w-full text-center bg-orange-500 text-white text-xs font-bold py-2 rounded-lg hover:bg-orange-600 transition">
+                                            Lihat Foto
+                                        </a>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p class="text-gray-500 text-sm italic">Belum ada galeri lain.</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+
         </div>
-    </div>
+    </main>
 
-</div>
-
-<!-- FOOTER -->
-<?php include '../layouts/footer.php'; ?>
-
+<?php include __DIR__ . '/../layouts/footer.php'; ?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </body>
 </html>
