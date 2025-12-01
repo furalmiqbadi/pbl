@@ -79,6 +79,24 @@ if ($page === 'detailKarya') {
     include __DIR__ . '/view/karya_detail.php';
     exit;
 }
+
+if ($page === 'detailGallery') {
+    require_once __DIR__ . '/model/GaleriModel.php';
+    $galeriModel = new GaleriModel();
+    $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+    $detail = $galeriModel->getById($id);
+    if (!$detail) {
+        header("Location: index.php?page=gallery");
+        exit;
+    }
+    $allGallery = $galeriModel->getAll();
+    $sidebarGallery = array_filter($allGallery, function($item) use ($id) {
+        return (int)$item['id'] !== $id;
+    });
+    $sidebarGallery = array_slice($sidebarGallery, 0, 3);
+    include __DIR__ . '/view/detailGallery.php';
+    exit;
+}
 //sampai sini 
 
 $controller = new HomeController();
