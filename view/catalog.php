@@ -1,18 +1,33 @@
 <?php
+require_once __DIR__ . '/../lib/Connection.php';
 include __DIR__ . '/../layouts/header.php';
 
-// Dummy karya
-$karya = [
-    ["judul" => "Aplikasi Smart Kampus", "kategori" => "mobile dev"],
-    ["judul" => "Aplikasi Smart Kampus", "kategori" => "mobile dev"],
-    ["judul" => "Aplikasi Smart Kampus", "kategori" => "mobile dev"],
-    ["judul" => "Aplikasi Smart Kampus", "kategori" => "uiux"],
-    ["judul" => "Aplikasi Smart Kampus", "kategori" => "web"],
-    ["judul" => "Aplikasi Smart Kampus", "kategori" => "iot"],
-];
+$pdo = Connection::getConnection();
+
+// Query mengambil semua data proyek beserta nama kategorinya
+$sql = "SELECT dp.id, dp.judul, dp.gambar_proyek, k.nama_kategori
+        FROM public.daftar_proyek dp
+        LEFT JOIN public.kategori k ON dp.kategori_id = k.id
+        ORDER BY dp.id DESC";
+$karya = [];
+try {
+    $stmt = $pdo->query($sql);
+    $karya = $stmt->fetchAll();
+} catch (PDOException $e) {
+    echo "<p style='color: red;'>Error mengambil data proyek: " . $e->getMessage() . "</p>";
+}
+
+// Query mengambil semua kategori untuk filter
+$sql_kategori = "SELECT nama_kategori FROM public.kategori ORDER BY nama_kategori ASC";
+$kategori_list = [];
+try {
+    $stmt_kategori = $pdo->query($sql_kategori);
+    $kategori_list = $stmt_kategori->fetchAll(PDO::FETCH_COLUMN);
+} catch (PDOException $e) {
+    echo "<p style='color: red;'>Error mengambil data kategori: " . $e->getMessage() . "</p>";
+}
 ?>
 
-<!-- Tailwind CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 
 <div class="px-4 py-10 max-w-7xl mx-auto">
@@ -32,46 +47,44 @@ $karya = [
         <input id="searchInput" type="text" placeholder="Cari judul proyek..."
             class="px-4 py-2 border rounded-lg text-sm w-60">
 
-        <select id="categoryFilter" class="px-4 py-2 border rounded-lg text-sm">
+        <select id="categoryFilter" 
+            class="px-4 py-2 border rounded-lg text-sm">
             <option value="semua">Kategori: Semua</option>
-            <option value="mobile dev">Mobile Dev</option>
-            <option value="web">Web Dev</option>
-            <option value="uiux">UI/UX</option>
-            <option value="iot">IoT</option>
-        </select>
+            <?php foreach ($kategori_list as $nama_kategori): ?>
+            <option value="<?= strtolower($nama_kategori) ?>"><?= ucwords($nama_kategori) ?></option>
+            <?php endforeach; ?>
+            </select>
     </div>
 
-    <!-- Galeri Grid -->
-    <div id="galleryContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+    <!-- Tampilan Karya -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <?php if (count($karya) > 0): ?>
+                <?php foreach ($karya as $k): ?>
+                    <div 
+                        class="gallery-item bg-white border rounded-xl shadow-sm overflow-hidden p-4 cursor-pointer hover:shadow-md transition"
+                        data-title="<?= strtolower(htmlspecialchars($k['judul'])) ?>"
+                        data-category="<?= strtolower(htmlspecialchars($k['nama_kategori'])) ?>"
+                        onclick="window.location.href='/pbl/view/detailKarya.php?id=<?= $k['id'] ?>'"
+                    >
+                        <?php 
+                            $img_path_lain = !empty($k['gambar_proyek']) ? '../assets/images/uploads/' . htmlspecialchars($k['gambar_proyek']) : 'https://via.placeholder.com/400x160?text=No+Image';
+                        ?>
+                        <div class="w-full h-40 bg-gray-200 rounded overflow-hidden">
+                            <img src="<?= $img_path_lain ?>" alt="<?= htmlspecialchars($k['judul']) ?>" class="w-full h-full object-cover">
+                        </div>
 
-        <!-- Card -->
-        <?php foreach ($karya as $k): ?>
-            <div class="gallery-item bg-white border rounded-xl shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition"
-                data-category="<?= $k["kategori"] ?>" data-title="<?= strtolower($k["judul"]) ?>"
-                onclick="window.location.href='detailKarya.php'">
-                <!-- Thumbnail -->
-                <div class="w-full h-44 bg-gray-200"></div>
+                        <!-- Warna Kategori -->
+                        <h3 class="font-semibold mt-3"><?= htmlspecialchars($k["judul"]) ?></h3>
+                        <span class="inline-block bg-orange-500 text-white text-xs px-3 py-1 rounded mt-2">
+                            <?= htmlspecialchars($k["nama_kategori"] ?? 'N/A') ?>
+                        </span>
 
-                <!-- Content -->
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold"><?= $k["judul"] ?></h3>
-
-                    <!-- Badge kategori -->
-                    <?php
-                    $color = [
-                        "mobile dev" => "bg-orange-500",
-                        "web" => "bg-blue-500",
-                        "uiux" => "bg-purple-500",
-                        "iot" => "bg-green-600"
-                    ][$k["kategori"]];
-                    ?>
-
-                    <span class="text-xs text-white px-3 py-1 rounded mt-2 inline-block <?= $color ?>">
-                        <?= strtoupper($k["kategori"]) ?>
-                    </span>
-                </div>
-            </div>
-        <?php endforeach; ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                 <p class="text-gray-500 col-span-full text-center">Belum ada karya yang tersedia.</p>
+            <?php endif; ?>
+        </div>
 
     </div>
 </div>
@@ -80,11 +93,11 @@ $karya = [
 <script>
     const searchInput = document.getElementById("searchInput");
     const categoryFilter = document.getElementById("categoryFilter");
-    const items = document.querySelectorAll(".gallery-item");
 
     function filterGallery() {
         const searchText = searchInput.value.toLowerCase();
         const category = categoryFilter.value;
+        const items = document.querySelectorAll(".gallery-item");
 
         items.forEach(item => {
             const title = item.getAttribute("data-title").toLowerCase();
