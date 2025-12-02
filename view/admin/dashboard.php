@@ -114,15 +114,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
                 break;
             case 'hapus_karya':
                 $karyaController->delete();
-                break;
-
-            // --- OLD PROYEK (Biarkan saja jika tidak ingin dihapus) ---
-            case 'karya':
-                include 'karya.php';
-                break;
-            case 'tambah_proyek':
-                include 'tambah_proyek.php';
-                break;
+                break;            
 
             // --- BERITA ---
             case 'berita':
