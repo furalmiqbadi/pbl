@@ -146,7 +146,7 @@ if ($db) {
     <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
         <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
             <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2"><span class="w-2 h-6 bg-blue-500 rounded-full"></span> Karya Terbaru</h2>
-            <a href="dashboard.php?page=proyek" class="text-xs font-bold text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition">Lihat Semua</a>
+            <a href="dashboard.php?page=karya" class="text-xs font-bold text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition">Lihat Semua</a>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm text-gray-600">
