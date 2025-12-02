@@ -80,7 +80,7 @@ if ($db) {
 </div>
 
 <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10">
-    <a href="dashboard.php?page=tambah_proyek" class="p-4 bg-white border border-gray-200 rounded-xl hover:bg-blue-50 hover:border-blue-200 transition flex flex-col items-center gap-2 group shadow-sm hover:shadow-md">
+    <a href="dashboard.php?page=tambah_karya" class="p-4 bg-white border border-gray-200 rounded-xl hover:bg-blue-50 hover:border-blue-200 transition flex flex-col items-center gap-2 group shadow-sm hover:shadow-md">
         <i class="fas fa-plus-circle text-blue-400 group-hover:text-blue-600 text-2xl mb-1 transition"></i> 
         <span class="text-xs font-bold text-gray-600 group-hover:text-blue-700">Tambah Karya</span>
     </a>
