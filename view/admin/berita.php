@@ -70,7 +70,7 @@ $searchQuery = $_GET['search'] ?? '';
                         <td class="px-6 py-4 w-32">
                             <div class="h-20 w-28 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 flex items-center justify-center">
                                 <?php if (!empty($berita['gambar_berita'])): ?>
-                                    <img src="../<?php echo h($berita['gambar_berita']); ?>" alt="Img" class="w-full h-full object-cover">
+                                    <img src="<?php echo assetUrl($berita['gambar_berita']); ?>" alt="Img" class="w-full h-full object-cover">
                                 <?php else: ?>
                                     <span class="text-xs text-gray-400 font-medium">No Img</span>
                                 <?php endif; ?>
