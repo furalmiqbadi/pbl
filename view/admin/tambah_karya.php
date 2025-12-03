@@ -1,120 +1,206 @@
-<div class="mb-6">
-    <h1 class="text-3xl font-bold text-gray-900">Tambahkan Karya Baru</h1>
+<div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-3">
+            <span class="w-3 h-8 bg-gradient-to-b from-orange-400 to-red-500 rounded-full"></span>
+            Tambah Karya Baru
+        </h1>
+        <p class="text-gray-500 text-sm mt-1 ml-6">Unggah proyek inovatif mahasiswa atau penelitian dosen.</p>
+    </div>
+    <a href="dashboard.php?page=karya" 
+       class="text-gray-600 hover:text-orange-600 font-bold flex items-center gap-2 transition bg-white px-5 py-2.5 rounded-xl border border-gray-200 hover:border-orange-200 shadow-sm hover:shadow-md group">
+        <div class="w-6 h-6 rounded-full bg-gray-100 group-hover:bg-orange-100 flex items-center justify-center transition">
+            <i class="fas fa-arrow-left text-xs group-hover:-translate-x-0.5 transition-transform"></i>
+        </div>
+        Kembali
+    </a>
 </div>
 
-<form action="dashboard.php?page=store_karya" method="POST" enctype="multipart/form-data" class="space-y-8">
+<div class="bg-white rounded-[2rem] shadow-xl shadow-gray-100/50 border border-gray-100 p-8 relative overflow-hidden">
+    
+    <div class="absolute top-0 right-0 w-64 h-64 bg-orange-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-50 pointer-events-none"></div>
 
-    <div class="w-full">
-        <label for="upload-thumbnail" class="flex flex-col items-center justify-center w-full h-80 border-2 border-gray-300 border-dashed rounded-3xl cursor-pointer bg-gray-100 hover:bg-gray-200 transition relative overflow-hidden group">
-            <div class="flex flex-col items-center justify-center pt-5 pb-6 text-gray-500 group-hover:text-gray-600 z-10">
-                <p class="mb-2 text-lg font-semibold">Upload Thumbnail Karya</p>
-                <i class="fas fa-camera text-5xl text-gray-400 mt-2"></i>
-            </div>
-            <input id="upload-thumbnail" name="gambar_proyek" type="file" class="hidden" accept="image/*" onchange="previewImage(this)" />
-            <img id="image-preview" class="absolute inset-0 w-full h-full object-cover hidden" />
-        </label>
-    </div>
+    <form action="dashboard.php?page=store_karya" method="POST" enctype="multipart/form-data" class="relative z-10 space-y-8">
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        <div class="lg:col-span-4 space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
             
-            <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100">
-                <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Kategori</label>
-                <select name="kategori_id" required class="w-full bg-transparent border-b border-gray-300 py-2 focus:outline-none focus:border-orange-500 font-semibold text-gray-800 cursor-pointer">
-                    <option value="" disabled selected>Pilih Kategori</option>
-                    <?php foreach ($kategoriList as $kat): ?>
-                        <option value="<?= $kat['id'] ?>"><?= htmlspecialchars($kat['nama_kategori']) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100">
-                <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Tahun</label>
-                <input type="number" name="tahun" placeholder="Contoh: 2024" required 
-                       class="w-full bg-transparent border-b border-gray-300 py-2 focus:outline-none focus:border-orange-500 font-semibold text-gray-800">
-            </div>
-
-            <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100">
-                <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Nama Tim</label>
-                <input type="text" name="nama_tim" placeholder="Masukkan Nama Tim" required 
-                       class="w-full bg-transparent border-b border-gray-300 py-2 focus:outline-none focus:border-orange-500 font-semibold text-gray-800">
-            </div>
-
-            <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100">
-                <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Anggota Tim (Mahasiswa)</label>
+            <div class="lg:col-span-4 space-y-8">
                 
-                <div class="relative mb-3">
-                    <input type="text" id="search-mhs" placeholder="Cari Nama atau NIM..." 
-                           class="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-orange-500 transition shadow-sm bg-white" autocomplete="off">
-                    <i class="fas fa-search absolute left-3 top-2.5 text-gray-400 text-xs"></i>
+                <div class="space-y-3">
+                    <label class="block text-sm font-extrabold text-gray-700 tracking-wide">
+                        Thumbnail Karya <span class="text-red-500">*</span>
+                    </label>
+                    <label for="upload-thumbnail" class="group flex flex-col items-center justify-center w-full aspect-[4/3] border-2 border-dashed border-gray-300 rounded-3xl cursor-pointer bg-gray-50/50 hover:bg-orange-50/30 hover:border-orange-400 transition-all duration-300 relative overflow-hidden">
+                        
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6 text-gray-400 group-hover:text-orange-500 transition-colors z-10">
+                            <div class="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-cloud-upload-alt text-3xl text-orange-400"></i>
+                            </div>
+                            <p class="text-sm font-bold text-gray-600 group-hover:text-orange-600">Klik untuk upload</p>
+                            <p class="text-xs text-gray-400 mt-1">PNG, JPG (Max. 2MB)</p>
+                        </div>
+                        
+                        <input id="upload-thumbnail" name="gambar_proyek" type="file" class="hidden" accept="image/*" onchange="previewImage(this)" required />
+                        <img id="image-preview" class="absolute inset-0 w-full h-full object-cover hidden z-20 transition-opacity duration-300" />
+                        
+                        <div id="image-overlay" class="absolute inset-0 bg-black/40 hidden z-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <p class="text-white font-bold text-sm bg-white/20 backdrop-blur px-4 py-2 rounded-full">Ganti Gambar</p>
+                        </div>
+                    </label>
                 </div>
 
-                <div id="mhs-list" class="h-48 overflow-y-auto pr-2 space-y-2 scrollbar-thin scrollbar-thumb-gray-300">
-                    <?php if (!empty($mahasiswaList)): ?>
-                        <?php foreach ($mahasiswaList as $mhs): ?>
-                            <label class="mhs-item flex items-center space-x-3 p-2 hover:bg-white rounded-lg cursor-pointer transition border border-transparent hover:border-gray-200 group">
-                                <input type="checkbox" name="anggota_tim[]" value="<?= $mhs['id'] ?>" class="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500 cursor-pointer">
-                                <div class="text-sm cursor-pointer w-full">
-                                    <p class="font-semibold text-gray-800 mhs-name group-hover:text-orange-600 transition"><?= htmlspecialchars($mhs['nama']) ?></p>
-                                    <p class="text-xs text-gray-400 mhs-nim"><?= htmlspecialchars($mhs['nim']) ?></p>
-                                </div>
-                            </label>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p class="text-xs text-gray-400 text-center py-4">Data mahasiswa kosong.</p>
-                    <?php endif; ?>
+                <div class="bg-gray-50 p-6 rounded-3xl border border-gray-100 space-y-5">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Kategori</label>
+                        <div class="relative">
+                            <select name="kategori_id" required class="w-full pl-4 pr-10 py-3.5 rounded-xl bg-white border border-gray-200 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none transition font-semibold text-gray-700 appearance-none cursor-pointer hover:border-orange-300">
+                                <option value="" disabled selected>Pilih Kategori...</option>
+                                <?php foreach ($kategoriList as $kat): ?>
+                                    <option value="<?= $kat['id'] ?>"><?= htmlspecialchars($kat['nama_kategori']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-orange-500">
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Tahun Pembuatan</label>
+                        <div class="relative">
+                            <input type="number" name="tahun" placeholder="2024" required 
+                                   class="w-full pl-10 pr-4 py-3.5 rounded-xl bg-white border border-gray-200 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none transition font-mono font-medium hover:border-orange-300">
+                            <div class="absolute inset-y-0 left-0 flex items-center px-4 pointer-events-none text-gray-400">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+            </div>
+
+            <div class="lg:col-span-8 space-y-8">
                 
-                <p id="no-result" class="text-xs text-red-400 text-center mt-2 hidden">Mahasiswa tidak ditemukan.</p>
-                <p class="text-[10px] text-gray-400 mt-2 italic">* Centang nama mahasiswa yang terlibat.</p>
-            </div>
+                <div>
+                    <label class="block text-sm font-extrabold text-gray-700 mb-2">Judul Karya <span class="text-red-500">*</span></label>
+                    <input type="text" name="judul" placeholder="Masukkan judul karya yang menarik..." required 
+                           class="w-full px-6 py-4 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none transition text-lg font-bold text-gray-800 placeholder-gray-400 shadow-sm">
+                </div>
 
+                <div>
+                    <label class="block text-sm font-extrabold text-gray-700 mb-2">Deskripsi Lengkap <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <textarea name="deskripsi" rows="6" placeholder="Jelaskan latar belakang, fitur, dan teknologi yang digunakan..." required 
+                                  class="w-full p-6 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none transition resize-none text-gray-600 leading-relaxed shadow-sm"></textarea>
+                        <i class="fas fa-pen-nib absolute top-6 right-6 text-gray-300"></i>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-extrabold text-gray-700 mb-2">Nama Tim</label>
+                        <div class="relative">
+                            <input type="text" name="nama_tim" placeholder="Contoh: Tim Hore" required 
+                                   class="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white border border-gray-200 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none transition font-semibold hover:border-orange-300">
+                            <div class="absolute inset-y-0 left-0 flex items-center px-4 pointer-events-none text-blue-500">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-gray-200 p-6 rounded-3xl shadow-sm relative overflow-hidden group-focus-within:ring-4 group-focus-within:ring-orange-500/10 transition-all">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-3xl"></div>
+                    
+                    <label class="block text-sm font-extrabold text-gray-800 mb-4 flex justify-between items-center pl-2">
+                        <span>Pilih Anggota Tim</span>
+                        <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-wider">Mahasiswa</span>
+                    </label>
+                    
+                    <div class="relative mb-4">
+                        <input type="text" id="search-mhs" placeholder="Cari nama atau NIM..." 
+                               class="w-full pl-10 pr-4 py-3 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition bg-gray-50 focus:bg-white" autocomplete="off">
+                        <i class="fas fa-search absolute left-3.5 top-3.5 text-gray-400 text-sm"></i>
+                    </div>
+
+                    <div id="mhs-list" class="h-56 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
+                        <?php if (!empty($mahasiswaList)): ?>
+                            <?php foreach ($mahasiswaList as $mhs): ?>
+                                <label class="mhs-item flex items-center space-x-3 p-3 rounded-xl border border-gray-100 cursor-pointer hover:bg-blue-50 hover:border-blue-200 transition group select-none">
+                                    <div class="relative flex items-center">
+                                        <input type="checkbox" name="anggota_tim[]" value="<?= $mhs['id'] ?>" 
+                                               class="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-md checked:bg-blue-500 checked:border-blue-500 transition cursor-pointer">
+                                        <i class="fas fa-check text-white text-[10px] absolute inset-0 m-auto opacity-0 peer-checked:opacity-100 pointer-events-none"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-bold text-gray-700 group-hover:text-blue-700 truncate transition"><?= htmlspecialchars($mhs['nama']) ?></p>
+                                        <p class="text-xs text-gray-400 mhs-nim font-mono group-hover:text-blue-400"><?= htmlspecialchars($mhs['nim']) ?></p>
+                                    </div>
+                                </label>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="text-center py-10 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                                <i class="fas fa-user-slash text-gray-300 text-3xl mb-2"></i>
+                                <p class="text-gray-400 text-sm">Data mahasiswa belum tersedia.</p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <p id="no-result" class="hidden mt-2 p-3 bg-red-50 text-red-500 text-xs text-center rounded-lg border border-red-100 font-medium">
+                        <i class="fas fa-exclamation-circle mr-1"></i> Mahasiswa tidak ditemukan.
+                    </p>
+                </div>
+
+            </div>
         </div>
 
-        <div class="lg:col-span-8 space-y-6">
-            
-            <div>
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Masukkan Judul</h2>
-                <input type="text" name="judul" placeholder="Judul Karya..." required 
-                       class="w-full px-6 py-4 bg-gray-100 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition text-lg font-medium shadow-sm">
-            </div>
-
-            <div>
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Deskripsi Singkat</h2>
-                <textarea name="deskripsi" rows="12" placeholder="Jelaskan tentang karya ini secara detail..." required 
-                          class="w-full px-6 py-4 bg-gray-100 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition resize-none shadow-sm"></textarea>
-            </div>
-
+        <div class="pt-8 border-t border-gray-100 flex items-center justify-end gap-4">
+            <a href="dashboard.php?page=karya" class="px-6 py-3.5 rounded-xl text-gray-500 font-bold hover:bg-gray-100 hover:text-gray-700 transition">
+                Batal
+            </a>
+            <button type="submit" class="px-8 py-3.5 bg-gradient-to-r from-orange-600 to-red-500 hover:from-orange-700 hover:to-red-600 text-white font-bold rounded-xl shadow-lg shadow-orange-500/30 transform hover:-translate-y-1 transition duration-300 flex items-center gap-3">
+                <i class="fas fa-paper-plane text-sm"></i>
+                <span>Publikasikan Karya</span>
+            </button>
         </div>
-    </div>
 
-    <div class="flex gap-4 pt-6 border-t border-gray-100">
-        <button type="submit" class="px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl shadow-lg hover:shadow-orange-500/30 transition transform hover:-translate-y-0.5">
-            Simpan Karya
-        </button>
-        <a href="dashboard.php?page=karya" class="px-8 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-xl transition">
-            Batal
-        </a>
-    </div>
+    </form>
+</div>
 
-</form>
+<style>
+    /* Styling Scrollbar Modern */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #e5e7eb;
+        border-radius: 20px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: #d1d5db;
+    }
+</style>
 
 <script>
-    // 1. Preview Gambar
+    // 1. Preview Gambar & Overlay Control
     function previewImage(input) {
+        const preview = document.getElementById('image-preview');
+        const overlay = document.getElementById('image-overlay');
+        
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function (e) {
-                var img = document.getElementById('image-preview');
-                img.src = e.target.result;
-                img.classList.remove('hidden');
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+                overlay.classList.remove('hidden'); // Tampilkan overlay 'Ganti Gambar'
             }
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    // 2. Fitur Live Search Mahasiswa (Tanpa Reload)
+    // 2. Live Search Mahasiswa
     document.getElementById('search-mhs').addEventListener('keyup', function() {
         let filter = this.value.toLowerCase();
         let items = document.querySelectorAll('.mhs-item');
@@ -124,16 +210,14 @@
             let name = item.querySelector('.mhs-name').innerText.toLowerCase();
             let nim = item.querySelector('.mhs-nim').innerText.toLowerCase();
             
-            // Cek apakah Nama ATAU NIM cocok dengan ketikan
             if (name.includes(filter) || nim.includes(filter)) {
-                item.style.display = "flex"; // Tampilkan
+                item.style.display = "flex";
                 visibleCount++;
             } else {
-                item.style.display = "none"; // Sembunyikan
+                item.style.display = "none";
             }
         });
 
-        // Tampilkan pesan jika tidak ada hasil
         let noResultMsg = document.getElementById('no-result');
         if (visibleCount === 0) {
             noResultMsg.classList.remove('hidden');
