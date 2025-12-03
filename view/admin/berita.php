@@ -88,9 +88,7 @@ $searchQuery = $_GET['search'] ?? '';
                         <td class="px-8 py-5">
                             <div class="h-20 w-28 bg-gray-100 rounded-xl overflow-hidden border border-gray-200 flex items-center justify-center shadow-sm group-hover:shadow-md transition-all relative">
                                 <?php if (!empty($berita['gambar_berita'])): ?>
-                                    <img src="../<?php echo h($berita['gambar_berita']); ?>" 
-                                         alt="Thumbnail" 
-                                         class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                                    <img src="<?php echo assetUrl($berita['gambar_berita']); ?>" alt="Img" class="w-full h-full object-cover">
                                 <?php else: ?>
                                     <div class="flex flex-col items-center text-gray-300">
                                         <i class="fas fa-image text-xl mb-1"></i>
