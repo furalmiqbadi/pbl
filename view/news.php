@@ -1,11 +1,5 @@
 <?php
-// Helper function
-if (!function_exists('h')) {
-    function h(?string $value): string {
-        return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
-    }
-}
-
+include __DIR__ . '/../lib/helpers.php';
 include __DIR__ . '/../layouts/header.php';
 ?>
 

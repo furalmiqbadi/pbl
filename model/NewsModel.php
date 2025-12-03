@@ -88,7 +88,7 @@ class NewsModel extends Model
         if ($this->db === null) {
             return [];
         }
-        $stmt = $this->db->prepare("SELECT id, nama_kategori FROM kategori ORDER BY nama_kategori ASC");
+        $stmt = $this->db->prepare("SELECT id, nama_kategori FROM kategori WHERE jenis = 'berita' ORDER BY nama_kategori ASC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -173,4 +173,6 @@ class NewsModel extends Model
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
+
+    
 }
