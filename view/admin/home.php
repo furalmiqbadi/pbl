@@ -1,13 +1,11 @@
 <?php
-// 1. LOAD MODEL PENGUNJUNG
+require_once __DIR__ . '/../../lib/helpers.php';
 require_once __DIR__ . '/../../model/VisitorModel.php';
 $visitorModel = new VisitorModel();
 
-// 2. AMBIL DATA ANALITIK (Realtime dari Database)
-$webStats = $visitorModel->getStatistik();        // Angka: Hari ini, Bulan ini, Total
-$grafikData = $visitorModel->getGrafikMingguan(); // Data Grafik 7 Hari
+$webStats = $visitorModel->getStatistik();        
+$grafikData = $visitorModel->getGrafikMingguan(); 
 
-// Siapkan Data untuk Chart.js (Format JSON)
 $chartLabels = [];
 $chartValues = [];
 foreach ($grafikData as $d) {
@@ -15,7 +13,6 @@ foreach ($grafikData as $d) {
     $chartValues[] = $d['jumlah'];
 }
 
-// 3. AMBIL DATA LAINNYA (Koneksi Manual untuk Counter Data)
 $db = Connection::getConnection();
 $stats = ['proyek' => 0, 'berita' => 0, 'galeri' => 0, 'mahasiswa' => 0, 'dosen' => 0];
 $recentProyek = [];
@@ -187,17 +184,22 @@ if ($db) {
         <div class="space-y-4 flex-1 overflow-y-auto max-h-[320px] pr-1 scrollbar-hide">
             <?php if(!empty($recentBerita)): ?>
                 <?php foreach($recentBerita as $rb): ?>
-                <a href="dashboard.php?page=berita" class="flex gap-4 group cursor-pointer hover:bg-gray-50 p-2 rounded-xl transition border border-transparent hover:border-gray-100">
+                <a href="dashboard.php?page=edit_berita&id=<?= $rb['id'] ?>" class="flex gap-4 group cursor-pointer hover:bg-gray-50 p-2 rounded-xl transition border border-transparent hover:border-gray-100">
+                    
                     <div class="w-16 h-16 rounded-xl bg-gray-100 overflow-hidden flex-shrink-0 shadow-sm relative">
-                        <?php 
-                            $img = "../../assets/images/uploads/" . $rb['gambar_berita'];
-                            if(!file_exists(__DIR__ . '/../../assets/images/uploads/' . $rb['gambar_berita']) || empty($rb['gambar_berita'])) { $img = "https://via.placeholder.com/150?text=IMG"; }
-                        ?>
-                        <img src="<?= $img ?>" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <img src="<?= assetUrl($rb['gambar_berita'] ?? '') ?>" 
+                             alt="Thumbnail"
+                             class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                     </div>
+                    
                     <div class="flex-1">
-                        <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wide mb-0.5 block"><i class="far fa-clock mr-1"></i> <?= date('d M, Y', strtotime($rb['created_at'])) ?></span>
-                        <h4 class="text-sm font-bold text-gray-800 leading-snug group-hover:text-orange-600 transition line-clamp-2"><?= htmlspecialchars($rb['judul']) ?></h4>
+                        <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wide mb-0.5 block">
+                            <i class="far fa-clock mr-1"></i> 
+                            <?= date('d M, Y', strtotime($rb['created_at'])) ?>
+                        </span>
+                        <h4 class="text-sm font-bold text-gray-800 leading-snug group-hover:text-orange-600 transition line-clamp-2">
+                            <?= htmlspecialchars($rb['judul']) ?>
+                        </h4>
                     </div>
                 </a>
                 <?php endforeach; ?>
