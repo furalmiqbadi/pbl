@@ -5,104 +5,138 @@ if (!function_exists('h')) {
     }
 }
 
-
 $listBerita = $newsList ?? []; 
 $searchQuery = $_GET['search'] ?? ''; 
 ?>
 
-<div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-    
-    <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-        <div>
-            <h2 class="text-2xl font-bold text-gray-800">Kelola Artikel & Berita</h2>
-        </div>
-        
-        <a href="dashboard.php?page=tambah_berita" class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 transition shadow-sm hover:shadow-md">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            Tulis Berita
-        </a>
+<div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-3">
+            <span class="w-3 h-8 bg-gradient-to-b from-orange-400 to-red-500 rounded-full"></span>
+            Kelola Artikel & Berita
+        </h1>
+        <p class="text-gray-500 text-sm mt-2 ml-6">Publikasikan informasi terbaru seputar kegiatan lab dan prestasi.</p>
     </div>
+    
+    <a href="dashboard.php?page=tambah_berita" 
+       class="group bg-gradient-to-r from-orange-600 to-red-500 text-white px-7 py-3.5 rounded-2xl hover:shadow-lg hover:shadow-orange-500/30 hover:-translate-y-1 transition-all duration-300 font-bold flex items-center gap-3">
+        <div class="bg-white/20 p-1.5 rounded-lg group-hover:rotate-12 transition duration-300">
+            <i class="fas fa-pen-nib text-xs"></i>
+        </div>
+        <span>Tulis Berita Baru</span>
+    </a>
+</div>
 
-    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6 flex flex-col md:flex-row gap-4 justify-between items-center">
-        <form action="" method="GET" class="relative w-full md:w-96">
+<div class="bg-white rounded-[2rem] shadow-xl shadow-gray-100/50 border border-gray-100 overflow-hidden relative">
+    
+    <div class="absolute top-0 left-0 w-64 h-64 bg-orange-50 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 opacity-60 pointer-events-none"></div>
+
+    <div class="p-6 border-b border-gray-100 bg-gray-50/30 relative z-10 flex flex-col md:flex-row gap-4 justify-between items-center">
+        <form action="" method="GET" class="relative w-full md:w-96 group">
             <input type="hidden" name="page" value="berita"> 
-            
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            </span>
             
             <input type="text" name="search" 
                    value="<?php echo h($searchQuery); ?>" 
                    placeholder="Cari judul berita..." 
-                   class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-500 transition">
+                   class="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-400 transition shadow-sm font-medium text-gray-700">
+            
+            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400 group-focus-within:text-orange-500 transition-colors">
+                <i class="fas fa-search"></i>
+            </div>
         </form>
 
-        <div class="flex items-center gap-2">
-             <select class="px-4 py-2.5 rounded-lg border border-gray-300 text-gray-600 text-sm focus:outline-none focus:border-orange-500 bg-white">
+        <div class="relative">
+             <select class="pl-4 pr-10 py-3 rounded-xl border border-gray-200 bg-white text-gray-600 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-400 transition shadow-sm cursor-pointer appearance-none hover:border-orange-300">
                 <option value="">Semua Kategori</option>
                 <option value="prestasi">Prestasi</option>
                 <option value="kegiatan">Kegiatan</option>
              </select>
+             <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-400">
+                <i class="fas fa-filter text-xs"></i>
+            </div>
         </div>
     </div>
 
-    <div class="overflow-x-auto rounded-lg border border-gray-200">
+    <div class="overflow-x-auto relative z-10">
         <table class="w-full text-left border-collapse">
-            <thead class="bg-gray-50 text-gray-600 text-xs uppercase font-bold tracking-wider">
+            <thead class="bg-gray-50/80 text-gray-500 uppercase text-xs font-extrabold tracking-wider border-b border-gray-100">
                 <tr>
-                    <th class="px-6 py-4 border-b border-gray-200">Thumbnail</th>
-                    <th class="px-6 py-4 border-b border-gray-200">Judul & Cuplikan</th>
-                    <th class="px-6 py-4 border-b border-gray-200 text-center">Kategori</th>
-                    <th class="px-6 py-4 border-b border-gray-200 text-center">Tanggal</th>
-                    <th class="px-6 py-4 border-b border-gray-200 text-center">Aksi</th>
+                    <th class="px-8 py-5 w-40">Thumbnail</th>
+                    <th class="px-6 py-5">Judul & Cuplikan</th>
+                    <th class="px-6 py-5 text-center">Kategori</th>
+                    <th class="px-6 py-5 text-center">Tanggal</th>
+                    <th class="px-6 py-5 text-center w-32">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100 bg-white">
+            <tbody class="divide-y divide-gray-50 text-sm text-gray-700">
                 <?php if (empty($listBerita)): ?>
                     <tr>
-                        <td colspan="5" class="px-6 py-8 text-center text-gray-400">
-                            Belum ada berita yang ditemukan.
+                        <td colspan="5" class="px-6 py-16 text-center">
+                            <div class="flex flex-col items-center justify-center">
+                                <div class="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mb-4 animate-pulse">
+                                    <i class="far fa-newspaper text-3xl text-orange-300"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-800">Belum ada berita</h3>
+                                <p class="text-gray-500 text-sm mt-1">Mulai tulis artikel pertama Anda sekarang.</p>
+                            </div>
                         </td>
                     </tr>
                 <?php else: ?>
                     <?php foreach ($listBerita as $berita): ?>
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="px-6 py-4 w-32">
-                            <div class="h-20 w-28 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 flex items-center justify-center">
+                    <tr class="hover:bg-orange-50/30 transition duration-300 group">
+                        
+                        <td class="px-8 py-5">
+                            <div class="h-20 w-28 bg-gray-100 rounded-xl overflow-hidden border border-gray-200 flex items-center justify-center shadow-sm group-hover:shadow-md transition-all relative">
                                 <?php if (!empty($berita['gambar_berita'])): ?>
                                     <img src="<?php echo assetUrl($berita['gambar_berita']); ?>" alt="Img" class="w-full h-full object-cover">
                                 <?php else: ?>
-                                    <span class="text-xs text-gray-400 font-medium">No Img</span>
+                                    <div class="flex flex-col items-center text-gray-300">
+                                        <i class="fas fa-image text-xl mb-1"></i>
+                                        <span class="text-[10px] font-bold">No Image</span>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                         </td>
 
-                        <td class="px-6 py-4 max-w-md">
-                            <h3 class="font-bold text-gray-800 text-base mb-1">
+                        <td class="px-6 py-5 max-w-lg">
+                            <h3 class="font-bold text-gray-800 text-base mb-1.5 leading-snug group-hover:text-orange-600 transition-colors">
                                 <?php echo h($berita['judul']); ?>
                             </h3>
-                            <p class="text-gray-500 text-sm line-clamp-2 leading-relaxed">
-                                <?php echo h(mb_substr(strip_tags($berita['isi_berita'] ?? ''), 0, 100)) . '...'; ?>
+                            <p class="text-gray-500 text-xs leading-relaxed line-clamp-2">
+                                <?php echo h(mb_substr(strip_tags($berita['isi_berita'] ?? ''), 0, 120)) . '...'; ?>
                             </p>
                         </td>
 
-                        <td class="px-6 py-4 text-center">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        <td class="px-6 py-5 text-center">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-600 border border-blue-100 shadow-sm">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
                                 <?php echo h($berita['nama_kategori'] ?? 'Umum'); ?>
                             </span>
                         </td>
 
-                        <td class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500">
-                            <?php echo !empty($berita['created_at']) ? date('d M Y', strtotime($berita['created_at'])) : '-'; ?>
+                        <td class="px-6 py-5 text-center whitespace-nowrap">
+                            <div class="flex flex-col items-center">
+                                <span class="text-xs font-bold text-gray-700">
+                                    <?php echo !empty($berita['created_at']) ? date('d M Y', strtotime($berita['created_at'])) : '-'; ?>
+                                </span>
+                                <span class="text-[10px] text-gray-400 font-medium">
+                                    <?php echo !empty($berita['created_at']) ? date('H:i', strtotime($berita['created_at'])) . ' WIB' : ''; ?>
+                                </span>
+                            </div>
                         </td>
 
-                        <td class="px-6 py-4 text-center w-32">
-                            <div class="flex items-center justify-center gap-2">
-                                <a href="dashboard.php?page=edit_berita&id=<?php echo $berita['id']; ?>" class="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition" title="Edit">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        <td class="px-6 py-5 text-center">
+                            <div class="flex justify-center gap-2 opacity-90 group-hover:opacity-100 transition">
+                                <a href="dashboard.php?page=edit_berita&id=<?php echo $berita['id']; ?>" 
+                                   class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-gray-200 text-blue-500 hover:bg-blue-50 hover:border-blue-200 transition shadow-sm" 
+                                   title="Edit Artikel">
+                                    <i class="fas fa-pen text-xs"></i>
                                 </a>
-                                <a href="dashboard.php?page=hapus_berita&id=<?php echo $berita['id']; ?>" onclick="return confirm('Yakin ingin menghapus berita ini?')" class="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition" title="Hapus">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                <a href="dashboard.php?page=hapus_berita&id=<?php echo $berita['id']; ?>" 
+                                   onclick="return confirm('Apakah Anda yakin ingin menghapus berita ini?')" 
+                                   class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-gray-200 text-red-500 hover:bg-red-50 hover:border-red-200 transition shadow-sm" 
+                                   title="Hapus Artikel">
+                                    <i class="fas fa-trash text-xs"></i>
                                 </a>
                             </div>
                         </td>
