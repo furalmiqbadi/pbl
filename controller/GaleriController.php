@@ -9,23 +9,13 @@ class GaleriController {
     }
 
     public function index() {
-        $limit = 9;
-        $page = isset($_GET['p']) && is_numeric($_GET['p']) ? (int)$_GET['p'] : 1;
-        $offset = ($page - 1) * $limit;
+        $galeri = $this->model->getAll(); 
 
-        $totalData = $this->model->countAll();
-        $totalPages = ceil($totalData / $limit);
-        
-        if ($page < 1) $page = 1;
-        if ($page > $totalPages && $totalPages > 0) $page = $totalPages;
-
-        $galeri = $this->model->getPaginated($limit, $offset);
-        
         $data = $galeri; 
         
         include __DIR__ . '/../view/admin/galeri.php';
     }
-    
+
     public function create() { include __DIR__ . '/../view/admin/tambah_galeri.php'; }
     
     public function store() {
