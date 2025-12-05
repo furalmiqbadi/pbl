@@ -67,8 +67,7 @@ try {
                         onclick="window.location.href='/pbl/view/detailKarya.php?id=<?= $k['id'] ?>'"
                     >
                         <?php 
-                            $img_path_lain = !empty($k['gambar_proyek']) ? '../assets/images/uploads/' . htmlspecialchars($k['gambar_proyek']) : 'https://via.placeholder.com/400x160?text=No+Image';
-                        ?>
+                            $img_path_lain = !empty($k['gambar_proyek']) ? htmlspecialchars($k['gambar_proyek']) : 'https://via.placeholder.com/400x160?text=No+Image';                        ?>
                         <div class="w-full h-40 bg-gray-200 rounded overflow-hidden">
                             <img src="<?= $img_path_lain ?>" alt="<?= htmlspecialchars($k['judul']) ?>" class="w-full h-full object-cover">
                         </div>

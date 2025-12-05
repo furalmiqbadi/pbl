@@ -81,12 +81,27 @@
             <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-800 to-orange-600 bg-clip-text text-transparent">Fokus Utama Kami</h2>
             <p class="text-gray-600 text-lg">Game, UI/UX, dan AR/VR yang saling melengkapi.</p>
         </div>
-        <!-- Grid untuk cards Fokus Utama dengan gap yang cukup agar tidak nabrak saat hover -->
-        <!-- mt-16 memberikan jarak dari header agar card tidak nabrak text saat hover naik -->
-        <div class="grid md:grid-cols-3 gap-8 items-stretch mt-16">
-            <?php foreach ($fokusItems as $index => $fokus): ?>
-                <!-- Card Fokus Utama dengan glassmorphism effect -->
-                <!-- hover:-translate-y-2 membuat card naik 8px saat hover -->
+        <div class="grid md:grid-cols-3 gap-6 items-stretch">
+            <?php
+            $fokusItems = [
+                [
+                    'title' => 'Game Development',
+                    //'text' => 'Menciptakan pengalaman interaktif dan mendalam melalui pengembangan game lintas platform.',
+                    'image' => 'https://asset.kompas.com/crops/axklqfTkw8vxDlOxmkxk7fO_K5k=/0x0:780x520/750x500/data/photo/2021/02/25/6037b83b20b08.jpg'
+                ],
+                [
+                    'title' => 'UI/UX Design',
+                    //'text' => 'Merancang antarmuka yang intuitif dan menarik.',
+                    'image' => 'https://zegen.id/compro/wp-content/uploads/2023/02/Frame-44-5.jpg'
+                ],
+                [
+                    'title' => 'AR/VR',
+                    //'text' => 'Mengembangkan pengalaman imersif dengan teknologi AR dan VR.',
+                    'image' => 'https://tse2.mm.bing.net/th/id/OIP.uJaJsfyJtgJLQRJ6A21fxgHaE8?pid=Api&P=0&h=180'
+                ],
+            ]
+            ?>
+            <?php foreach ($fokusItems as $fokus): ?>
                 <div
                     class="group relative bg-white/80 backdrop-blur-sm rounded-3xl p-8 pt-16 flex flex-col items-center text-center h-full border border-gray-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_60px_rgb(251,146,60,0.25)] transition-all duration-500 hover:-translate-y-2" style="animation-delay: <?php echo $index * 100; ?>ms">
                     <!-- Background gradient yang muncul saat hover -->
