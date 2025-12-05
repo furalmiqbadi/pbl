@@ -7,10 +7,23 @@ class GaleriModel {
     public function __construct() {
         $this->db = Connection::getConnection();
     }
-
     public function getAll() {
         $sql = "SELECT * FROM galeri ORDER BY id DESC";
         return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getPaginated($limit, $offset) {
+        $sql = "SELECT * FROM galeri ORDER BY id DESC LIMIT :limit OFFSET :offset";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function countAll() {
+        $sql = "SELECT COUNT(*) as total FROM galeri";
+        $stmt = $this->db->query($sql);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row['total'];
     }
 
     public function getById($id) {
