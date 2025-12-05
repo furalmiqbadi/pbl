@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../model/NewsModel.php';
-require_once __DIR__ . '/../lib/helpers.php'; 
+require_once __DIR__ . '/../lib/helpers.php';
 
 class NewsController
 {
@@ -15,7 +15,7 @@ class NewsController
 
     public function index()
     {
-        // 1. Ambil input
+        // 1. Ambil Input
         $search = trim($_GET['search'] ?? '');
         $categoryInput = $_GET['category'] ?? null;
 
@@ -33,16 +33,18 @@ class NewsController
         $totalNews = $this->model->countNews($search, $categoryId);
         $remaining = max(0, $totalNews - $perPageFirst);
         $totalPages = 1 + ($remaining > 0 ? (int) ceil($remaining / $perPageOther) : 0);
-        
-        if ($page > $totalPages && $totalPages > 0) $page = $totalPages;
 
-        // 4. Logika Featured
+        if ($page > $totalPages && $totalPages > 0)
+            $page = $totalPages;
+
+        // 4. Logika Featured News (Headline Utama)
         $featuredNews = null;
+        // Featured hanya muncul jika di halaman 1, tidak search, dan tidak filter kategori
         if ($page === 1 && $search === '' && $categoryId === null) {
             $featuredNews = $this->model->getLatest();
         }
 
-        // 5. Hitung Offset
+        // 5. Hitung Offset Database
         if ($page === 1) {
             $offset = $featuredNews ? 1 : 0;
             $limit = $featuredNews ? ($perPageFirst - 1) : $perPageFirst;
@@ -51,31 +53,50 @@ class NewsController
             $limit = $perPageOther;
         }
 
-        // 6. Ambil Data
+        // 6. Ambil Data Utama
         $newsList = $this->model->getNews($search, $categoryId, $offset, $limit);
         $categories = $this->model->getCategories();
 
-        // 7. Panggil View Publik
+        // 7. Logika Slide
+        $sliderNews = [];
+
+        // Masukkan Featured News sebagai slide pertama
+        if (!empty($featuredNews)) {
+            $sliderNews[] = $featuredNews;
+        }
+
+        // Tambahkan 2 berita terbaru dari list agar slide-nya banyak
+        if (!empty($newsList)) {
+            $sliderNews = array_merge($sliderNews, array_slice($newsList, 0, 2));
+        }
+
+        // Hapus duplikat (jaga-jaga kalau datanya sama)
+        $sliderNews = array_unique($sliderNews, SORT_REGULAR);
+
+        // 8. Panggil View
+        // Sekarang View tinggal pakai variabel $sliderNews tanpa mikir
         include __DIR__ . '/../view/news.php';
     }
 
     public function detail()
     {
         if (!isset($_GET['id'])) {
-            header("Location: index.php?page=news"); exit;
+            header("Location: index.php?page=news");
+            exit;
         }
 
         $id = (int) $_GET['id'];
         $newsItem = $this->model->getNewsById($id);
 
         if (!$newsItem) {
-            echo "Berita tidak ditemukan!"; exit;
+            echo "Berita tidak ditemukan!";
+            exit;
         }
 
         // Ambil Rekomendasi (3 berita terbaru selain yang sedang dibuka)
         $recentNews = $this->model->getNews(null, null, 0, 4);
-        $relatedNews = array_filter($recentNews, function($item) use ($id) {
-            return (int)$item['id'] !== $id;
+        $relatedNews = array_filter($recentNews, function ($item) use ($id) {
+            return (int) $item['id'] !== $id;
         });
         $relatedNews = array_slice($relatedNews, 0, 3);
 
@@ -84,15 +105,14 @@ class NewsController
 
     // BAGIAN ADMIN (Untuk Dashboard)
 
-    // Tampilkan Daftar Berita di Admin
     public function adminIndex()
     {
         $search = $_GET['search'] ?? null;
-        if ($search) {
-            $newsList = $this->model->getNews($search, null, 0, 100);
-        } else {
-            $newsList = $this->model->getAllNews();
-        }
+        $category = $_GET['category'] ?? null;
+
+        $newsList = $this->model->getAdminNews($search, $category);
+        $categories = $this->model->getCategories();
+
         include __DIR__ . '/../view/admin/berita.php';
     }
 
@@ -172,11 +192,12 @@ class NewsController
     private function uploadImage($file)
     {
         $targetDir = __DIR__ . "/../assets/images/uploads/";
-        if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+        if (!is_dir($targetDir))
+            mkdir($targetDir, 0777, true);
 
         $ext = pathinfo($file["name"], PATHINFO_EXTENSION);
         $fileName = time() . '_' . uniqid() . '.' . $ext;
-        
+
         if (move_uploaded_file($file["tmp_name"], $targetDir . $fileName)) {
             return "assets/images/uploads/" . $fileName;
         }

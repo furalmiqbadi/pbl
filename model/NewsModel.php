@@ -174,5 +174,36 @@ class NewsModel extends Model
         return $stmt->execute();
     }
 
-    
+    // [UPDATE] Ambil Semua Berita untuk Admin (Dengan Filter Search & Kategori)
+    public function getAdminNews($search = null, $categoryId = null)
+    {
+        if ($this->db === null)
+            return [];
+
+        $sql = "SELECT b.*, k.nama_kategori 
+                FROM berita_artikel b
+                LEFT JOIN kategori k ON b.kategori_id = k.id
+                WHERE 1=1"; // Trik agar mudah menambah AND
+
+        $params = [];
+
+        // 1. Filter Pencarian (Judul atau Isi)
+        if (!empty($search)) {
+            // Gunakan ILIKE untuk PostgreSQL (Case Insensitive), pakai LIKE kalau MySQL
+            $sql .= " AND (b.judul ILIKE :search OR b.isi_berita ILIKE :search)";
+            $params[':search'] = "%$search%";
+        }
+
+        // 2. Filter Kategori
+        if (!empty($categoryId) && $categoryId !== 'semua') {
+            $sql .= " AND b.kategori_id = :cat";
+            $params[':cat'] = $categoryId;
+        }
+
+        $sql .= " ORDER BY b.created_at DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
