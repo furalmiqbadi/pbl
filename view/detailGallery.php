@@ -1,11 +1,19 @@
 <?php 
 if (!function_exists('h')) { function h($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); } }
-include __DIR__ . '/../layouts/header.php'; 
 
 $gambarUtama = assetUrl($detail['gambar_galeri']);
-
 $deskripsiFull = $detail['deskripsi'];
 $judulBuatan = implode(' ', array_slice(explode(' ', $deskripsiFull), 0, 10)) . '...';
+
+// Detect referrer untuk dynamic back button
+$from = $_GET['from'] ?? 'gallery';
+$backUrl = 'index.php?page=gallery';
+$backText = 'Kembali ke Galeri';
+
+if ($from === 'home') {
+    $backUrl = 'index.php';
+    $backText = 'Kembali ke Home';
+}
 ?>
 
 <!DOCTYPE html>
@@ -18,25 +26,55 @@ $judulBuatan = implode(' ', array_slice(explode(' ', $deskripsiFull), 0, 10)) . 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Poppins', sans-serif; }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
     </style>
 </head>
 <body class="bg-white text-gray-800">
 
-    <main class="max-w-6xl mx-auto px-4 py-12 pt-24">
+    <main class="max-w-6xl mx-auto px-4 py-12">
         
-        <div class="text-center mb-4">
+        <!-- Back Button - Bigger -->
+        <div class="mb-8 fade-in-up">
+            <a href="<?= $backUrl ?>" 
+               class="inline-flex items-center gap-3 px-6 py-3 bg-orange-500 text-white font-semibold rounded-xl hover:bg-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 group">
+                <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                <?= $backText ?>
+            </a>
+        </div>
+
+        <div class="text-center mb-4 fade-in-up">
             <span class="text-orange-500 font-bold uppercase tracking-widest text-xs">Dokumentasi & Galeri</span>
         </div>
 
-        <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4 leading-tight max-w-4xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4 leading-tight max-w-4xl mx-auto fade-in-up delay-100">
             <?= h($judulBuatan) ?>
         </h1>
 
-        <div class="text-center text-gray-400 text-xs mb-10 font-medium">
+        <div class="text-center text-gray-400 text-xs mb-10 font-medium fade-in-up delay-200">
             Oleh <span class="text-gray-600">Admin Lab MMT</span> &bull; Dokumentasi Kegiatan
         </div>
 
-        <div class="w-full mb-12">
+        <div class="w-full mb-12 fade-in-up delay-300">
             <div class="rounded-3xl overflow-hidden shadow-xl aspect-video relative group">
                 <img src="<?= $gambarUtama ?>" 
                      alt="Detail Galeri" 
@@ -61,7 +99,7 @@ $judulBuatan = implode(' ', array_slice(explode(' ', $deskripsiFull), 0, 10)) . 
             <div class="lg:col-span-4 space-y-8">
                 
                 <div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-6">Lihat Juga</h3>
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">Detail Lainnya</h3>
                     
                     <div class="space-y-6">
                         <?php if (!empty($sidebarGallery)): ?>
@@ -80,7 +118,7 @@ $judulBuatan = implode(' ', array_slice(explode(' ', $deskripsiFull), 0, 10)) . 
                                         </h4>
                                         <div class="text-xs text-gray-400 mb-4">Galeri Lainnya</div>
                                         
-                                        <a href="index.php?page=detailGallery&id=<?= $sideItem['id'] ?>" 
+                                        <a href="index.php?page=detailGallery&id=<?= $sideItem['id'] ?>&from=<?= $from ?>" 
                                            class="block w-full text-center bg-orange-500 text-white text-xs font-bold py-2.5 rounded-lg hover:bg-orange-600 transition shadow-sm">
                                             Lihat Selengkapnya
                                         </a>

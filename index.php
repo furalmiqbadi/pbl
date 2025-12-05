@@ -288,16 +288,110 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             }
         }
 
+        /* slideInLeft: muncul dari kiri */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* slideInRight: muncul dari kanan */
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* scaleIn: zoom in dengan fade */
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* shimmer: efek loading shimmer */
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
         /* Class untuk elemen yang akan muncul saat scroll */
         .scroll-reveal {
             opacity: 0;
+        }
+
+        .scroll-reveal.animate-in {
             animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+
+        .scale-in {
+            opacity: 0;
+            animation: scaleIn 0.6s ease-out forwards;
         }
 
         /* Delay untuk animasi berurutan */
         .delay-100 { animation-delay: 0.1s; }
         .delay-200 { animation-delay: 0.2s; }
         .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+        .delay-600 { animation-delay: 0.6s; }
+
+        /* Parallax effect */
+        .parallax {
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Enhanced hover effects */
+        .hover-lift {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Smooth gradient animation */
+        .gradient-shift {
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
     </style>
 </head>
 
@@ -459,7 +553,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             // Fungsi untuk render karya ke grid (max 3 items)
             function renderKarya(list) {
                 karyaGrid.innerHTML = list.slice(0, 3).map(k => {
-                    const detailUrl = k.id ? `index.php?page=detailKarya&id=${encodeURIComponent(k.id)}` : 'index.php?page=detailKarya';
+                    const detailUrl = k.id ? `index.php?page=detailKarya&id=${encodeURIComponent(k.id)}&from=home` : 'index.php?page=detailKarya&from=home';
                     const excerpt = k.excerpt && k.excerpt !== '' ? k.excerpt : 'Detail singkat akan tampil di sini.';
                     return `
                 <a href="${detailUrl}" class="block bg-white rounded-2xl shadow-[0_12px_35px_-18px_rgba(15,23,42,0.35)] overflow-hidden border border-slate-200/70 hover:shadow-lg hover:-translate-y-1 transition">
@@ -489,6 +583,48 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
                     const filtered = filter === 'Semua' ? karyaData : karyaData.filter(k => k.category === filter);
                     renderKarya(filtered);
                 });
+            });
+
+            // ========== PARALLAX EFFECT FOR HERO LOGO ==========
+            // Menambahkan efek parallax pada logo hero yang mengikuti gerakan mouse
+            const heroLogo = document.getElementById('hero-logo');
+            if (heroLogo) {
+                document.addEventListener('mousemove', (e) => {
+                    // Hitung posisi mouse relatif terhadap center viewport
+                    const mouseX = e.clientX / window.innerWidth - 0.5;
+                    const mouseY = e.clientY / window.innerHeight - 0.5;
+                    
+                    // Terapkan transformasi dengan multiplier untuk efek subtle
+                    // Nilai kecil (20px) agar tidak terlalu berlebihan
+                    const moveX = mouseX * 20;
+                    const moveY = mouseY * 20;
+                    
+                    heroLogo.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                });
+            }
+
+            // ========== SCROLL REVEAL ANIMATION ==========
+            // Intersection Observer untuk trigger animasi saat elemen masuk viewport
+            const observerOptions = {
+                root: null, // viewport
+                rootMargin: '0px',
+                threshold: 0.1 // trigger saat 10% elemen terlihat
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Tambahkan class untuk trigger animasi
+                        entry.target.classList.add('animate-in');
+                        // Optional: unobserve setelah animasi (animasi hanya sekali)
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            // Observe semua elemen dengan class scroll-reveal
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                observer.observe(el);
             });
         });
     </script>

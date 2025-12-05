@@ -6,8 +6,6 @@ if (!function_exists('h')) {
     }
 }
 
-include __DIR__ . '/../layouts/header.php';
-
 $detail = $karyaItem ?? null;
 $imageSrc = $detail ? assetUrl($detail['gambar_proyek'] ?? '') : '';
 $fallbackImage = 'https://placehold.co/900x520?text=Karya';
@@ -21,19 +19,67 @@ if (!empty($allKarya) && is_array($allKarya)) {
     }
     $relatedKarya = array_slice($relatedKarya, 0, 3);
 }
+
+// Detect referrer untuk dynamic back button
+$from = $_GET['from'] ?? 'catalog';
+$backUrl = 'index.php?page=catalog';
+$backText = 'Kembali ke Karya';
+
+if ($from === 'home') {
+    $backUrl = 'index.php';
+    $backText = 'Kembali ke Home';
+}
 ?>
 
-<script src="https://cdn.tailwindcss.com"></script>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo h($detail['judul'] ?? 'Detail Karya'); ?> - Lab MMT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Poppins', sans-serif; 
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+    </style>
+</head>
+<body class="bg-white">
 
 <main class="bg-white">
     <article class="max-w-5xl mx-auto px-4 pt-24 pb-14 space-y-8">
-        <a href="index.php?page=catalog"
-           class="inline-flex items-center text-sm font-semibold text-gray-500 hover:text-orange-500 transition-colors group">
-            <svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Kembali ke Karya
-        </a>
+        <!-- Back Button - Bigger -->
+        <div class="fade-in-up">
+            <a href="<?= $backUrl ?>"
+               class="inline-flex items-center gap-3 px-6 py-3 bg-orange-500 text-white font-semibold rounded-xl hover:bg-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 group">
+                <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                <?= $backText ?>
+            </a>
+        </div>
 
-        <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+        <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden fade-in-up delay-100">
             <div class="w-full h-[320px] md:h-[460px] bg-gray-100 relative">
                 <img src="<?php echo $imageSrc !== '' ? h($imageSrc) : $fallbackImage; ?>"
                      alt="<?php echo h($detail['judul'] ?? 'Karya'); ?>"
@@ -75,8 +121,8 @@ if (!empty($allKarya) && is_array($allKarya)) {
         </div>
 
         <?php if (!empty($relatedKarya)): ?>
-            <section class="space-y-4">
-                <h2 class="text-2xl font-bold text-gray-900">Karya Lainnya</h2>
+            <section class="space-y-4 fade-in-up delay-200">
+                <h2 class="text-2xl font-bold text-gray-900">Detail Lainnya</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <?php foreach ($relatedKarya as $karya): ?>
                         <?php
@@ -84,6 +130,7 @@ if (!empty($allKarya) && is_array($allKarya)) {
                         if (!empty($karya['id'])) {
                             $link .= '&id=' . urlencode((string) $karya['id']);
                         }
+                        $link .= '&from=' . $from;
                         $thumb = assetUrl($karya['gambar_proyek'] ?? ($karya['image'] ?? ''));
                         $text = trim(strip_tags($karya['isi_proyek'] ?? ($karya['excerpt'] ?? '')));
                         ?>
@@ -111,3 +158,5 @@ if (!empty($allKarya) && is_array($allKarya)) {
 </main>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>
+</body>
+</html>
