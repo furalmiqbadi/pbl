@@ -18,7 +18,10 @@ try {
 }
 
 // Query mengambil semua kategori untuk filter
-$sql_kategori = "SELECT nama_kategori FROM public.kategori ORDER BY nama_kategori ASC";
+$sql_kategori = "SELECT DISTINCT k.nama_kategori 
+                 FROM public.kategori k
+                 JOIN public.daftar_proyek dp ON k.id = dp.kategori_id
+                 ORDER BY k.nama_kategori ASC";
 $kategori_list = [];
 try {
     $stmt_kategori = $pdo->query($sql_kategori);
@@ -49,7 +52,7 @@ try {
 
         <select id="categoryFilter" 
             class="px-4 py-2 border rounded-lg text-sm">
-            <option value="semua">Kategori: Semua</option>
+            <option value="semua">Semua Kategori</option>
             <?php foreach ($kategori_list as $nama_kategori): ?>
             <option value="<?= strtolower($nama_kategori) ?>"><?= ucwords($nama_kategori) ?></option>
             <?php endforeach; ?>

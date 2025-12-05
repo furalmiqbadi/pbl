@@ -106,7 +106,7 @@ try {
 
 <div class="max-w-6xl mx-auto px-4 mt-24 mb-6">
 
-    <a href="catalog.php"
+    <a href="../index.php?page=catalog"
        class="inline-flex items-center gap-2 bg-orange-500 text-white px-6 py-2 
           rounded-xl font-semibold shadow-md hover:bg-orange-600 
           transition mb-8">
@@ -177,7 +177,7 @@ try {
                 <?php foreach ($karya_lain as $k): ?>
                     <div 
                         class="bg-white border rounded-xl shadow-sm overflow-hidden p-4 cursor-pointer hover:shadow-md transition"
-                        onclick="window.location.href='pbl/view/detailKarya.php?id=<?= $k['id'] ?>'"
+                        onclick="window.location.href='detailKarya.php?id=<?= $k['id'] ?>'"
                     >
                         <?php 
                             $img_path_lain = !empty($k['gambar_proyek']) ? '../' . htmlspecialchars($k['gambar_proyek']) : 'https://via.placeholder.com/400x160?text=No+Image';
