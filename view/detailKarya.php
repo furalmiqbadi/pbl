@@ -116,7 +116,7 @@ try {
 
     <div class="w-full rounded-xl overflow-hidden border border-gray-300 shadow-sm">
         <?php 
-            $gambar_path = !empty($karya['thumbnail']) ? '../assets/images/uploads/' . htmlspecialchars($karya['thumbnail']) : 'https://via.placeholder.com/1200x420?text=Gambar+Tidak+Tersedia';
+            $gambar_path = !empty($karya['thumbnail']) ? '../' . htmlspecialchars($karya['thumbnail']) : 'https://via.placeholder.com/1200x420?text=Gambar+Tidak+Tersedia';
         ?>
         <img src="<?= $gambar_path; ?>" 
              alt="<?= htmlspecialchars($karya['judul']) ?>"
@@ -180,7 +180,7 @@ try {
                         onclick="window.location.href='pbl/view/detailKarya.php?id=<?= $k['id'] ?>'"
                     >
                         <?php 
-                            $img_path_lain = !empty($k['gambar_proyek']) ? '../assets/images/uploads/' . htmlspecialchars($k['gambar_proyek']) : 'https://via.placeholder.com/400x160?text=No+Image';
+                            $img_path_lain = !empty($k['gambar_proyek']) ? '../' . htmlspecialchars($k['gambar_proyek']) : 'https://via.placeholder.com/400x160?text=No+Image';
                         ?>
                         <div class="w-full h-40 bg-gray-200 rounded overflow-hidden">
                             <img src="<?= $img_path_lain ?>" alt="<?= htmlspecialchars($k['judul']) ?>" class="w-full h-full object-cover">
