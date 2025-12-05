@@ -19,6 +19,7 @@ class GaleriModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
     public function countAll() {
         $sql = "SELECT COUNT(*) as total FROM galeri";
         $stmt = $this->db->query($sql);

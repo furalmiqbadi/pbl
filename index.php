@@ -68,22 +68,23 @@ if ($page === 'gallery') {
     require_once __DIR__ . '/model/GaleriModel.php';
     $galeriModel = new GaleriModel();
     
-    // Logika Pagination
-    $limit = 9;
+    $limit = 9; 
     $p = isset($_GET['p']) && is_numeric($_GET['p']) ? (int)$_GET['p'] : 1;
+    if ($p < 1) $p = 1;
+    
     $offset = ($p - 1) * $limit;
     
-    $totalData = $galeriModel->countAll();
+    $totalData = $galeriModel->countAll(); 
     $totalPages = ceil($totalData / $limit);
     
-    if ($p < 1) $p = 1;
-    if ($p > $totalPages && $totalPages > 0) $p = $totalPages;
+    if ($p > $totalPages && $totalPages > 0) {
+        $p = $totalPages;
+        $offset = ($p - 1) * $limit;
+    }
 
     $data = $galeriModel->getPaginated($limit, $offset);
     
-    // Variabel ini akan dipakai di view/gallery.php
     $currentPage = $p; 
-    
     include __DIR__ . '/view/gallery.php';
     exit;
 }
