@@ -34,6 +34,25 @@
             <p class="text-gray-600">Game, UI/UX, dan AR/VR yang saling melengkapi.</p>
         </div>
         <div class="grid md:grid-cols-3 gap-6 items-stretch">
+            <?php
+            $fokusItems = [
+                [
+                    'title' => 'Game Development',
+                    //'text' => 'Menciptakan pengalaman interaktif dan mendalam melalui pengembangan game lintas platform.',
+                    'image' => 'https://asset.kompas.com/crops/axklqfTkw8vxDlOxmkxk7fO_K5k=/0x0:780x520/750x500/data/photo/2021/02/25/6037b83b20b08.jpg'
+                ],
+                [
+                    'title' => 'UI/UX Design',
+                    //'text' => 'Merancang antarmuka yang intuitif dan menarik.',
+                    'image' => 'https://zegen.id/compro/wp-content/uploads/2023/02/Frame-44-5.jpg'
+                ],
+                [
+                    'title' => 'AR/VR',
+                    //'text' => 'Mengembangkan pengalaman imersif dengan teknologi AR dan VR.',
+                    'image' => 'https://tse2.mm.bing.net/th/id/OIP.uJaJsfyJtgJLQRJ6A21fxgHaE8?pid=Api&P=0&h=180'
+                ],
+            ]
+            ?>
             <?php foreach ($fokusItems as $fokus): ?>
                 <div
                     class="relative bg-white rounded-2xl card-outline p-8 pt-14 flex flex-col items-center text-center h-full">
