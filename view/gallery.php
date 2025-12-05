@@ -1,4 +1,5 @@
 <?php 
+
 $pageNum = isset($currentPage) ? (int)$currentPage : 1;
 $totalPageNum = isset($totalPages) ? (int)$totalPages : 1;
 
@@ -52,10 +53,15 @@ $pages = max(1, $totalPageNum);
                     ?>
                     <div class="gallery-card group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 h-72 border border-gray-100 cursor-pointer">
                         <img src="<?= $gambar ?>" alt="Galeri" class="w-full h-full object-cover transition-transform duration-700">
+                        
                         <div class="overlay absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-6">
-                            <p class="text-white text-sm font-medium line-clamp-2 mb-4">
-                                <?= $deskripsi ?: 'Dokumentasi Lab Multimedia' ?>
-                            </p>
+                            
+                            <?php if (!empty($deskripsi)): ?>
+                                <p class="text-white text-sm font-medium line-clamp-2 mb-4">
+                                    <?= htmlspecialchars($deskripsi) ?>
+                                </p>
+                            <?php endif; ?>
+
                             <a href="index.php?page=detailGallery&id=<?= $item['id'] ?>" 
                                class="inline-flex items-center justify-center bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold py-3 px-4 rounded-xl transition shadow-lg translate-y-2 group-hover:translate-y-0 duration-300">
                                 Lihat Detail <i class="fas fa-arrow-right ml-2"></i>
@@ -98,7 +104,14 @@ $pages = max(1, $totalPageNum);
                         <span class="flex items-center px-5 py-2.5 bg-gray-100 border border-gray-200 text-gray-400 rounded-xl font-bold cursor-not-allowed">
                            Selanjutnya <i class="fas fa-arrow-right ml-2"></i>
                         </span>
-                    <?php endif; ?>>
+                    <?php endif; ?>
+                </div>
+
+                <p class="text-sm text-gray-400 font-medium bg-gray-100 px-4 py-1.5 rounded-full">
+                    Menampilkan Halaman <span class="text-orange-600 font-bold"><?= $currPage ?></span> dari <?= $pages ?>
+                </p>
+
+            </div>
 
         <?php else: ?>
             <div class="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-200 text-center">
