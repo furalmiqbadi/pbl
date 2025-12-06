@@ -114,7 +114,7 @@ if ($page === 'detailGallery') {
     });
     $sidebarGallery = array_slice($sidebarGallery, 0, 3);
 
-    include __DIR__ . '/view/detailGallery.php';
+    include __DIR__ . '/view/gallery_detail.php';
     exit;
 }
 //sampai sini 
@@ -288,16 +288,118 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             }
         }
 
-        /* Class untuk elemen yang akan muncul saat scroll */
+        /* slideInLeft: muncul dari kiri */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* slideInRight: muncul dari kanan */
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* scaleIn: zoom in dengan fade */
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* shimmer: efek loading shimmer */
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        /* ========== SCROLL REVEAL ANIMATION ========== */
+        /* Animasi sederhana: elemen muncul dari bawah saat di-scroll */
+        
+        /* Class untuk elemen yang akan di-animasi saat scroll */
         .scroll-reveal {
             opacity: 0;
-            animation: fadeInUp 0.8s ease-out forwards;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        /* Class yang ditambahkan saat elemen terlihat di layar */
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animasi untuk hero section - langsung muncul tanpa scroll */
+        .slide-in-left {
+            opacity: 0;
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+
+        .scale-in {
+            opacity: 0;
+            animation: scaleIn 0.6s ease-out forwards;
         }
 
         /* Delay untuk animasi berurutan */
         .delay-100 { animation-delay: 0.1s; }
         .delay-200 { animation-delay: 0.2s; }
         .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+        .delay-600 { animation-delay: 0.6s; }
+
+        /* Parallax effect */
+        .parallax {
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Enhanced hover effects */
+        .hover-lift {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Smooth gradient animation */
+        .gradient-shift {
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
     </style>
 </head>
 
@@ -480,15 +582,93 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
 
             filterButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
-                    filterButtons.forEach(b => b.classList.remove('bg-orange-500', 'text-white', 'border-orange-500', 'shadow-sm'));
-                    filterButtons.forEach(b => b.classList.add('bg-white', 'text-gray-700', 'border-gray-200'));
-                    btn.classList.add('bg-orange-500', 'text-white', 'border-orange-500', 'shadow-sm');
-                    btn.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
+                    filterButtons.forEach(b => b.classList.remove('bg-orange-500', 'text-white', 'border-orange-500', 'shadow-md'));
+                    filterButtons.forEach(b => b.classList.add('bg-white', 'text-orange-600'));
+                    btn.classList.add('bg-orange-500', 'text-white', 'border-orange-500', 'shadow-md');
+                    btn.classList.remove('bg-white', 'text-orange-600');
 
                     const filter = btn.dataset.filter;
                     const filtered = filter === 'Semua' ? karyaData : karyaData.filter(k => k.category === filter);
                     renderKarya(filtered);
                 });
+            });
+
+            // ========== FILTER BERITA BERDASARKAN KATEGORI ==========
+            const newsFilterButtons = document.querySelectorAll('.news-filter');
+            const newsGrid = document.getElementById('news-grid');
+            const newsData = <?php echo json_encode($artikelItems); ?>;
+
+            // Fungsi untuk render berita ke grid
+            function renderNews(list) {
+                newsGrid.innerHTML = list.map(n => {
+                    const detailUrl = n.id ? `index.php?page=news_detail&id=${encodeURIComponent(n.id)}` : 'index.php?page=news_detail';
+                    return `
+                <a href="${detailUrl}" class="group bg-white rounded-xl card-outline overflow-hidden block hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                    ${n.image ? `
+                        <div class="w-full h-40 overflow-hidden bg-gray-200">
+                            <img src="${n.image}" alt="${n.title || ''}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        </div>
+                    ` : '<div class="w-full h-40 bg-gray-200"></div>'}
+                    <div class="p-4 space-y-2">
+                        <p class="text-sm text-orange-500 font-semibold">${n.date || ''}</p>
+                        <h3 class="font-semibold text-lg text-gray-800 group-hover:text-orange-600 transition-colors">${n.title || ''}</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed line-clamp-2">${n.excerpt || ''}</p>
+                    </div>
+                </a>
+            `;
+                }).join('');
+            }
+
+            renderNews(newsData);
+
+            newsFilterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    newsFilterButtons.forEach(b => b.classList.remove('bg-orange-500', 'text-white', 'border-orange-500', 'shadow-md'));
+                    newsFilterButtons.forEach(b => b.classList.add('bg-white', 'text-orange-600'));
+                    btn.classList.add('bg-orange-500', 'text-white', 'border-orange-500', 'shadow-md');
+                    btn.classList.remove('bg-white', 'text-orange-600');
+
+                    const filter = btn.dataset.filterNews;
+                    const filtered = filter === 'Semua' ? newsData : newsData.filter(n => n.category === filter);
+                    renderNews(filtered);
+                });
+            });
+
+            // ========== PARALLAX EFFECT FOR HERO LOGO ==========
+            // Menambahkan efek parallax pada logo hero yang mengikuti gerakan mouse
+            const heroLogo = document.getElementById('hero-logo');
+            if (heroLogo) {
+                document.addEventListener('mousemove', (e) => {
+                    // Hitung posisi mouse relatif terhadap center viewport
+                    const mouseX = e.clientX / window.innerWidth - 0.5;
+                    const mouseY = e.clientY / window.innerHeight - 0.5;
+                    
+                    // Terapkan transformasi dengan multiplier untuk efek subtle
+                    // Nilai kecil (20px) agar tidak terlalu berlebihan
+                    const moveX = mouseX * 20;
+                    const moveY = mouseY * 20;
+                    
+                    heroLogo.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                });
+            }
+            
+            // ========== SCROLL REVEAL ANIMATION ==========
+            // Animasi sederhana: elemen muncul dari bawah saat di-scroll
+            
+            const scrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            // Observe semua elemen dengan class 'scroll-reveal'
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                scrollObserver.observe(el);
             });
         });
     </script>
