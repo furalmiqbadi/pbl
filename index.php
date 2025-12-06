@@ -114,7 +114,7 @@ if ($page === 'detailGallery') {
     });
     $sidebarGallery = array_slice($sidebarGallery, 0, 3);
 
-    include __DIR__ . '/view/detailGallery.php';
+    include __DIR__ . '/view/gallery_detail.php';
     exit;
 }
 //sampai sini 
@@ -334,15 +334,23 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             }
         }
 
-        /* Class untuk elemen yang akan muncul saat scroll */
+        /* ========== SCROLL REVEAL ANIMATION ========== */
+        /* Animasi sederhana: elemen muncul dari bawah saat di-scroll */
+        
+        /* Class untuk elemen yang akan di-animasi saat scroll */
         .scroll-reveal {
             opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
 
-        .scroll-reveal.animate-in {
-            animation: fadeInUp 0.8s ease-out forwards;
+        /* Class yang ditambahkan saat elemen terlihat di layar */
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
+        /* Animasi untuk hero section - langsung muncul tanpa scroll */
         .slide-in-left {
             opacity: 0;
             animation: slideInLeft 0.8s ease-out forwards;
@@ -553,7 +561,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             // Fungsi untuk render karya ke grid (max 3 items)
             function renderKarya(list) {
                 karyaGrid.innerHTML = list.slice(0, 3).map(k => {
-                    const detailUrl = k.id ? `index.php?page=detailKarya&id=${encodeURIComponent(k.id)}&from=home` : 'index.php?page=detailKarya&from=home';
+                    const detailUrl = k.id ? `index.php?page=detailKarya&id=${encodeURIComponent(k.id)}` : 'index.php?page=detailKarya';
                     const excerpt = k.excerpt && k.excerpt !== '' ? k.excerpt : 'Detail singkat akan tampil di sini.';
                     return `
                 <a href="${detailUrl}" class="block bg-white rounded-2xl shadow-[0_12px_35px_-18px_rgba(15,23,42,0.35)] overflow-hidden border border-slate-200/70 hover:shadow-lg hover:-translate-y-1 transition">
@@ -574,14 +582,55 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
 
             filterButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
-                    filterButtons.forEach(b => b.classList.remove('bg-orange-500', 'text-white', 'border-orange-500', 'shadow-sm'));
-                    filterButtons.forEach(b => b.classList.add('bg-white', 'text-gray-700', 'border-gray-200'));
-                    btn.classList.add('bg-orange-500', 'text-white', 'border-orange-500', 'shadow-sm');
-                    btn.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
+                    filterButtons.forEach(b => b.classList.remove('bg-orange-500', 'text-white', 'border-orange-500', 'shadow-md'));
+                    filterButtons.forEach(b => b.classList.add('bg-white', 'text-orange-600'));
+                    btn.classList.add('bg-orange-500', 'text-white', 'border-orange-500', 'shadow-md');
+                    btn.classList.remove('bg-white', 'text-orange-600');
 
                     const filter = btn.dataset.filter;
                     const filtered = filter === 'Semua' ? karyaData : karyaData.filter(k => k.category === filter);
                     renderKarya(filtered);
+                });
+            });
+
+            // ========== FILTER BERITA BERDASARKAN KATEGORI ==========
+            const newsFilterButtons = document.querySelectorAll('.news-filter');
+            const newsGrid = document.getElementById('news-grid');
+            const newsData = <?php echo json_encode($artikelItems); ?>;
+
+            // Fungsi untuk render berita ke grid
+            function renderNews(list) {
+                newsGrid.innerHTML = list.map(n => {
+                    const detailUrl = n.id ? `index.php?page=news_detail&id=${encodeURIComponent(n.id)}` : 'index.php?page=news_detail';
+                    return `
+                <a href="${detailUrl}" class="group bg-white rounded-xl card-outline overflow-hidden block hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                    ${n.image ? `
+                        <div class="w-full h-40 overflow-hidden bg-gray-200">
+                            <img src="${n.image}" alt="${n.title || ''}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        </div>
+                    ` : '<div class="w-full h-40 bg-gray-200"></div>'}
+                    <div class="p-4 space-y-2">
+                        <p class="text-sm text-orange-500 font-semibold">${n.date || ''}</p>
+                        <h3 class="font-semibold text-lg text-gray-800 group-hover:text-orange-600 transition-colors">${n.title || ''}</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed line-clamp-2">${n.excerpt || ''}</p>
+                    </div>
+                </a>
+            `;
+                }).join('');
+            }
+
+            renderNews(newsData);
+
+            newsFilterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    newsFilterButtons.forEach(b => b.classList.remove('bg-orange-500', 'text-white', 'border-orange-500', 'shadow-md'));
+                    newsFilterButtons.forEach(b => b.classList.add('bg-white', 'text-orange-600'));
+                    btn.classList.add('bg-orange-500', 'text-white', 'border-orange-500', 'shadow-md');
+                    btn.classList.remove('bg-white', 'text-orange-600');
+
+                    const filter = btn.dataset.filterNews;
+                    const filtered = filter === 'Semua' ? newsData : newsData.filter(n => n.category === filter);
+                    renderNews(filtered);
                 });
             });
 
@@ -602,29 +651,24 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
                     heroLogo.style.transform = `translate(${moveX}px, ${moveY}px)`;
                 });
             }
-
+            
             // ========== SCROLL REVEAL ANIMATION ==========
-            // Intersection Observer untuk trigger animasi saat elemen masuk viewport
-            const observerOptions = {
-                root: null, // viewport
-                rootMargin: '0px',
-                threshold: 0.1 // trigger saat 10% elemen terlihat
-            };
-
-            const observer = new IntersectionObserver((entries) => {
+            // Animasi sederhana: elemen muncul dari bawah saat di-scroll
+            
+            const scrollObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Tambahkan class untuk trigger animasi
-                        entry.target.classList.add('animate-in');
-                        // Optional: unobserve setelah animasi (animasi hanya sekali)
-                        observer.unobserve(entry.target);
+                        entry.target.classList.add('visible');
                     }
                 });
-            }, observerOptions);
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
 
-            // Observe semua elemen dengan class scroll-reveal
+            // Observe semua elemen dengan class 'scroll-reveal'
             document.querySelectorAll('.scroll-reveal').forEach(el => {
-                observer.observe(el);
+                scrollObserver.observe(el);
             });
         });
     </script>

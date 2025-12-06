@@ -6,6 +6,8 @@ if (!function_exists('h')) {
     }
 }
 
+include __DIR__ . '/../layouts/header.php';
+
 $detail = $karyaItem ?? null;
 $imageSrc = $detail ? assetUrl($detail['gambar_proyek'] ?? '') : '';
 $fallbackImage = 'https://placehold.co/900x520?text=Karya';
@@ -20,143 +22,172 @@ if (!empty($allKarya) && is_array($allKarya)) {
     $relatedKarya = array_slice($relatedKarya, 0, 3);
 }
 
-// Detect referrer untuk dynamic back button
-$from = $_GET['from'] ?? 'catalog';
-$backUrl = 'index.php?page=catalog';
-$backText = 'Kembali ke Karya';
+// Set currentPage ke 'detail' agar tidak ada menu yang aktif di navbar
+$_GET['page'] = 'detail';
 
-if ($from === 'home') {
-    $backUrl = 'index.php';
-    $backText = 'Kembali ke Home';
+// Dynamic back button - deteksi dari mana user datang
+$referer = $_SERVER['HTTP_REFERER'] ?? '';
+$backUrl = 'index.php';
+$backText = 'Kembali ke Beranda';
+
+if (strpos($referer, 'page=catalog') !== false) {
+    $backUrl = 'index.php?page=catalog';
+    $backText = 'Kembali ke Katalog';
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo h($detail['judul'] ?? 'Detail Karya'); ?> - Lab MMT</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { 
-            font-family: 'Poppins', sans-serif; 
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    body { 
+        font-family: 'Poppins', sans-serif; 
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
         }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
+    }
 
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
+    .fade-in-up {
+        animation: fadeInUp 0.5s ease-out forwards;
+    }
 
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
-    </style>
-</head>
-<body class="bg-white">
+    .delay-100 { animation-delay: 0.1s; opacity: 0; }
+    .delay-200 { animation-delay: 0.2s; opacity: 0; }
+    .delay-300 { animation-delay: 0.3s; opacity: 0; }
+</style>
 
-<main class="bg-white">
-    <article class="max-w-5xl mx-auto px-4 pt-24 pb-14 space-y-8">
-        <!-- Back Button - Bigger -->
-        <div class="fade-in-up">
-            <a href="<?= $backUrl ?>"
-               class="inline-flex items-center gap-3 px-6 py-3 bg-orange-500 text-white font-semibold rounded-xl hover:bg-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 group">
-                <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                <?= $backText ?>
+<main class="bg-white min-h-screen">
+    <div class="max-w-6xl mx-auto px-4 pt-24 pb-16">
+        
+        <!-- Back Button Orange - Dinamis -->
+        <div class="mb-8 fade-in-up">
+            <a href="<?php echo h($backUrl); ?>"
+               class="inline-flex items-center gap-2 px-5 py-2.5 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-all duration-300 shadow-md hover:shadow-lg group">
+                <svg class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                <?php echo h($backText); ?>
             </a>
         </div>
 
-        <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden fade-in-up delay-100">
-            <div class="w-full h-[320px] md:h-[460px] bg-gray-100 relative">
-                <img src="<?php echo $imageSrc !== '' ? h($imageSrc) : $fallbackImage; ?>"
-                     alt="<?php echo h($detail['judul'] ?? 'Karya'); ?>"
-                     class="w-full h-full object-cover">
-            </div>
-
-            <div class="p-6 md:p-8 space-y-6">
-                <div class="flex flex-wrap gap-3 text-sm text-gray-600">
-                    <?php if (!empty($detail['nama_kategori'])): ?>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-orange-100 text-orange-700 font-semibold">
-                            <?php echo h($detail['nama_kategori']); ?>
-                        </span>
-                    <?php endif; ?>
-                    <?php if (!empty($detail['tahun'])): ?>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 font-semibold">
-                            Tahun <?php echo h((string) $detail['tahun']); ?>
-                        </span>
-                    <?php endif; ?>
-                    <?php if (!empty($detail['nama_tim'])): ?>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 font-semibold">
-                            Tim: <?php echo h($detail['nama_tim']); ?>
-                        </span>
-                    <?php endif; ?>
-                </div>
-
-                <div class="space-y-3">
-                    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
-                        <?php echo h($detail['judul'] ?? 'Karya tidak ditemukan'); ?>
-                    </h1>
-                    <?php if (!empty($detail['isi_proyek'])): ?>
-                        <p class="text-gray-700 leading-relaxed">
-                            <?php echo nl2br(h($detail['isi_proyek'])); ?>
-                        </p>
-                    <?php else: ?>
-                        <p class="text-gray-500">Detail karya belum tersedia.</p>
-                    <?php endif; ?>
+        <!-- Hero Image - Full Width di Atas -->
+        <div class="mb-12 fade-in-up delay-100">
+            <div class="rounded-2xl overflow-hidden shadow-lg">
+                <div class="w-full h-64 md:h-96 bg-gray-100 relative overflow-hidden group">
+                    <img src="<?php echo $imageSrc !== '' ? h($imageSrc) : $fallbackImage; ?>"
+                         alt="<?php echo h($detail['judul'] ?? 'Karya'); ?>"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                 </div>
             </div>
         </div>
 
+        <!-- Content: 2 Kolom - Sidebar (Kiri) + Main Content (Kanan) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16 fade-in-up delay-200">
+            
+            <!-- Kolom Kiri: Sidebar Metadata -->
+            <div class="lg:col-span-4">
+                <div class="bg-white rounded-xl border border-gray-200 p-6 sticky top-24">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4 pb-3 border-b border-gray-200">Kategori</h3>
+                    
+                    <div class="space-y-4 text-sm">
+                        <?php if (!empty($detail['nama_kategori'])): ?>
+                            <div>
+                                <p class="text-gray-500 mb-1">Nama Aplikasi</p>
+                                <p class="font-semibold text-gray-900"><?php echo h($detail['nama_kategori']); ?></p>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <?php if (!empty($detail['tahun'])): ?>
+                            <div>
+                                <p class="text-gray-500 mb-1">Tahun</p>
+                                <p class="font-semibold text-gray-900"><?php echo h((string) $detail['tahun']); ?></p>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <?php if (!empty($detail['nama_tim'])): ?>
+                            <div>
+                                <p class="text-gray-500 mb-1">Nama Tim</p>
+                                <p class="font-semibold text-gray-900"><?php echo h($detail['nama_tim']); ?></p>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <div>
+                            <p class="text-gray-500 mb-2">Anggota Tim</p>
+                            <div class="space-y-1">
+                                <p class="font-semibold text-gray-900">Mahasiswa 1</p>
+                                <p class="font-semibold text-gray-900">Mahasiswa 2</p>
+                                <p class="font-semibold text-gray-900">Mahasiswa 3</p>
+                                <p class="font-semibold text-gray-900">Mahasiswa 4</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kolom Kanan: Title + Deskripsi -->
+            <div class="lg:col-span-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
+                    <?php echo h($detail['judul'] ?? 'Karya tidak ditemukan'); ?>
+                </h1>
+
+                <?php if (!empty($detail['isi_proyek'])): ?>
+                    <div class="space-y-6">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900 mb-3">Latar Belakang</h2>
+                            <div class="prose prose-lg max-w-none">
+                                <p class="text-gray-700 leading-relaxed text-justify">
+                                    <?php echo nl2br(h($detail['isi_proyek'])); ?>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <p class="text-gray-500 italic">Detail karya belum tersedia.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Related Works -->
         <?php if (!empty($relatedKarya)): ?>
-            <section class="space-y-4 fade-in-up delay-200">
-                <h2 class="text-2xl font-bold text-gray-900">Detail Lainnya</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <section class="fade-in-up delay-300">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Lihat Karya Lainnya</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <?php foreach ($relatedKarya as $karya): ?>
                         <?php
                         $link = 'index.php?page=detailKarya';
                         if (!empty($karya['id'])) {
                             $link .= '&id=' . urlencode((string) $karya['id']);
                         }
-                        $link .= '&from=' . $from;
                         $thumb = assetUrl($karya['gambar_proyek'] ?? ($karya['image'] ?? ''));
                         $text = trim(strip_tags($karya['isi_proyek'] ?? ($karya['excerpt'] ?? '')));
                         ?>
                         <a href="<?php echo h($link); ?>"
-                           class="group bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition">
-                            <div class="h-36 bg-gray-100 overflow-hidden">
+                           class="group bg-white rounded-xl border-2 border-gray-200 overflow-hidden hover:border-orange-400 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                            <div class="h-44 bg-gray-100 overflow-hidden relative">
                                 <img src="<?php echo $thumb !== '' ? h($thumb) : $fallbackImage; ?>"
                                      alt="<?php echo h($karya['judul'] ?? 'Karya'); ?>"
-                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             </div>
-                            <div class="p-4 space-y-2">
-                                <h3 class="font-semibold text-gray-900 group-hover:text-orange-600 transition-colors line-clamp-2">
-                                    <?php echo h($karya['judul'] ?? ''); ?>
+                            <div class="p-5 space-y-3">
+                                <h3 class="font-bold text-gray-900 group-hover:text-orange-600 transition-colors line-clamp-2">
+                                    <?php echo h($karya['judul'] ?? 'Aplikasi Smart Kampus'); ?>
                                 </h3>
-                                <p class="text-sm text-gray-600 line-clamp-2">
-                                    <?php echo h(mb_substr($text, 0, 120)); ?>
-                                </p>
+                                <button class="w-full bg-orange-500 text-white text-sm font-semibold py-2.5 px-4 rounded-lg hover:bg-orange-600 transition-colors duration-200">
+                                    Lihat Detail
+                                </button>
                             </div>
                         </a>
                     <?php endforeach; ?>
                 </div>
             </section>
         <?php endif; ?>
-    </article>
+    </div>
 </main>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>
-</body>
-</html>

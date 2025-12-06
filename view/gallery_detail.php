@@ -1,5 +1,9 @@
 <?php 
 if (!function_exists('h')) { function h($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); } }
+
+// Set currentPage ke 'detail' agar tidak ada menu yang aktif di navbar
+$_GET['page'] = 'detail';
+
 include __DIR__ . '/../layouts/header.php'; 
 
 $gambarUtama = assetUrl($detail['gambar_galeri']);
@@ -77,11 +81,11 @@ $judulBuatan = implode(' ', array_slice(explode(' ', $deskripsiFull), 0, 10)) . 
 
     <main class="max-w-6xl mx-auto px-4 py-12 pt-24">
         
-        <!-- Breadcrumb -->
+        <!-- Back Button Orange -->
         <div class="mb-6 fade-in-up">
             <a href="index.php?page=gallery" 
-               class="inline-flex items-center text-sm font-semibold text-gray-500 hover:text-orange-500 transition-colors group">
-                <svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               class="inline-flex items-center gap-2 px-5 py-2.5 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-all duration-300 shadow-md hover:shadow-lg group">
+                <svg class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
                 Kembali ke Galeri
