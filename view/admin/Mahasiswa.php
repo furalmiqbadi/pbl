@@ -17,14 +17,14 @@ $searchKeyword = $_GET['q'] ?? '';
         <form action="dashboard.php" method="GET" class="relative w-full sm:w-64 group">
             <input type="hidden" name="page" value="mahasiswa">
             <input type="text" name="q" value="<?= htmlspecialchars($searchKeyword) ?>" placeholder="Cari Nama / NIM..." 
-                   class="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-400 transition shadow-sm font-medium text-gray-700">
+                    class="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-400 transition shadow-sm font-medium text-gray-700">
             <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400 group-focus-within:text-emerald-500 transition-colors">
                 <i class="fas fa-search"></i>
             </div>
         </form>
 
         <a href="dashboard.php?page=tambah_mahasiswa" 
-           class="group bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-3 rounded-xl hover:shadow-lg hover:shadow-emerald-500/30 hover:-translate-y-1 transition-all duration-300 font-bold flex items-center justify-center gap-3 whitespace-nowrap">
+            class="group bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-3 rounded-xl hover:shadow-lg hover:shadow-emerald-500/30 hover:-translate-y-1 transition-all duration-300 font-bold flex items-center justify-center gap-3 whitespace-nowrap">
             <div class="bg-white/20 p-1 rounded-lg group-hover:rotate-90 transition duration-300">
                 <i class="fas fa-plus text-xs"></i>
             </div>
@@ -41,10 +41,8 @@ $searchKeyword = $_GET['q'] ?? '';
         <table class="w-full text-left border-collapse">
             <thead class="bg-gray-50/80 text-gray-500 uppercase text-xs font-extrabold tracking-wider border-b border-gray-100">
                 <tr>
-                    <th class="px-8 py-5 w-20 text-center">No</th>
-                    <th class="px-6 py-5">Identitas Mahasiswa</th>
-                    <th class="px-6 py-5">Program Studi</th>
-                    <th class="px-6 py-5 w-32 text-center">Aksi</th>
+                    <th class="px-8 py-5 w-16 text-center">No</th>
+                    <th class="px-6 py-5">Nama Mahasiswa</th> <th class="px-6 py-5 w-32">NIM</th> <th class="px-6 py-5 w-auto">Program Studi</th> <th class="px-6 py-5 w-32 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-50 text-sm text-gray-700">
@@ -63,24 +61,20 @@ $searchKeyword = $_GET['q'] ?? '';
                         </td>
                         
                         <td class="px-6 py-5">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">
-                                    <?= substr($row['nama'], 0, 1) ?>
-                                </div>
-                                <div>
-                                    <div class="font-bold text-gray-800 text-base group-hover:text-emerald-700 transition">
-                                        <?= htmlspecialchars($row['nama']) ?>
-                                    </div>
-                                    <span class="font-mono text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded border border-gray-200 mt-1 inline-block">
-                                        <?= htmlspecialchars($row['nim']) ?>
-                                    </span>
-                                    <?php if($isHighlighted): ?>
-                                        <span class="ml-2 text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">
-                                            <i class="fas fa-check mr-1"></i> Ditemukan
-                                        </span>
-                                    <?php endif; ?>
-                                </div>
+                            <div class="font-bold text-gray-800 text-base group-hover:text-emerald-700 transition">
+                                <?= htmlspecialchars($row['nama']) ?>
                             </div>
+                            <?php if($isHighlighted): ?>
+                                <span class="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold mt-1 inline-block">
+                                    <i class="fas fa-check mr-1"></i> Ditemukan
+                                </span>
+                            <?php endif; ?>
+                        </td>
+                        
+                        <td class="px-6 py-5">
+                            <span class="font-mono text-xs text-gray-600 bg-gray-100 px-3 py-1 rounded-lg border border-gray-200 inline-block font-semibold">
+                                <?= htmlspecialchars($row['nim']) ?>
+                            </span>
                         </td>
                         
                         <td class="px-6 py-5">
@@ -109,7 +103,7 @@ $searchKeyword = $_GET['q'] ?? '';
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="4" class="px-6 py-16 text-center">
+                        <td colspan="5" class="px-6 py-16 text-center">
                             <div class="flex flex-col items-center justify-center">
                                 <div class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mb-4 animate-bounce">
                                     <i class="fas fa-user-graduate text-3xl text-emerald-300"></i>
