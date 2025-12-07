@@ -32,16 +32,14 @@ include __DIR__ . '/../layouts/header.php';
             </div>
 
             <div class="relative w-full md:w-64">
-                <select name="category" onchange="this.form.submit()"
+                <select id="categoryFilter" name="category"
                     class="w-full pl-4 pr-10 py-3 text-sm font-semibold bg-white text-gray-700 border border-gray-200 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400 cursor-pointer">
-                    <option value="semua">Semua Kategori</option>
-                    <?php if (!empty($categories)): ?>
-                        <?php foreach ($categories as $cat): ?>
-                            <option value="<?php echo (int) $cat['id']; ?>" <?php echo (isset($categoryId) && $categoryId === (int) $cat['id']) ? 'selected' : ''; ?>>
-                                <?php echo h($cat['nama_kategori']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                    <option value="semua" <?php echo ($categoryId === null) ? 'selected' : ''; ?>>Semua Kategori</option>
+                    <?php foreach (($categories ?? []) as $cat): ?>
+                        <option value="<?php echo h($cat['id']); ?>" <?php echo ((string)($cat['id'] ?? '') === (string)($categoryId ?? '')) ? 'selected' : ''; ?>>
+                            <?php echo h($cat['nama_kategori'] ?? ''); ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
                 <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -217,5 +215,57 @@ document.addEventListener('DOMContentLoaded', () => {
         currentIndex = (currentIndex + 1) % totalSlides;
         updateSlider();
     }, 5000);
+
+    // ========== FILTER KATEGORI BERITA ==========
+    const categoryFilter = document.getElementById('categoryFilter');
+    const newsGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3');
+    
+    if (categoryFilter && newsGrid) {
+        // Simpan semua card berita
+        const allNewsCards = Array.from(newsGrid.children);
+        
+        // Assign kategori ke setiap berita berdasarkan keyword di judul
+        allNewsCards.forEach(card => {
+            const titleElement = card.querySelector('h3 a');
+            const title = titleElement ? titleElement.textContent.toLowerCase() : '';
+            let category = 'artikel'; // default
+            
+            // Cek keyword untuk menentukan kategori
+            if (title.includes('lomba') || title.includes('juara') || title.includes('prestasi') || title.includes('menang')) {
+                category = 'prestasi';
+            } else if (title.includes('workshop') || title.includes('pelatihan') || title.includes('kunjungan') || title.includes('kegiatan')) {
+                category = 'kegiatan';
+            } else if (title.includes('pengumuman') || title.includes('informasi')) {
+                category = 'pengumuman';
+            }
+            
+            card.dataset.category = category;
+        });
+        
+        // Handle filter change
+        categoryFilter.addEventListener('change', function() {
+            const selectedCategory = this.value;
+            
+            if (selectedCategory === 'semua') {
+                // Tampilkan semua berita
+                allNewsCards.forEach(card => {
+                    card.style.display = '';
+                });
+            } else {
+                // Filter berita berdasarkan kategori, maksimal 3 per kategori
+                let count = 0;
+                allNewsCards.forEach(card => {
+                    if (card.dataset.category === selectedCategory && count < 3) {
+                        card.style.display = '';
+                        count++;
+                    } else if (card.dataset.category === selectedCategory) {
+                        card.style.display = 'none'; // Lebih dari 3, sembunyikan
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+        });
+    }
 });
 </script>
