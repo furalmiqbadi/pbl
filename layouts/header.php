@@ -49,7 +49,7 @@ $navItems = [
                         $classes = 'text-gray-700 hover:text-orange-600 hover:bg-gray-50 border-transparent font-medium';
                     }
                 ?>
-                    <a href="<?php echo $item['href']; ?>" class="relative px-4 py-2 rounded-lg border transition-all duration-200 <?php echo $classes; ?>">
+                    <a href="<?php echo $item['href']; ?>" class="relative px-4 py-2 rounded-lg border <?php echo $classes; ?>">
                         <?php echo $item['label']; ?>
                         <?php if ($isActive): ?>
                             <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-10 h-0.5 bg-orange-600 rounded-full"></div>
@@ -81,7 +81,7 @@ $navItems = [
                     $classes = 'text-gray-700 bg-white border-gray-100 font-medium hover:bg-gray-50';
                 }
             ?>
-                <a href="<?php echo $item['href']; ?>" class="flex items-center justify-between py-2.5 px-4 rounded-lg border transition-colors <?php echo $classes; ?>">
+                <a href="<?php echo $item['href']; ?>" class="flex items-center justify-between py-2.5 px-4 rounded-lg border <?php echo $classes; ?>">
                     <span><?php echo $item['label']; ?></span>
                     <?php if ($isActive): ?>
                         <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

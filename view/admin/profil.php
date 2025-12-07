@@ -236,7 +236,7 @@ $partner = $partner ?? [];
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-3 group hover:border-pink-300 hover:shadow-md transition relative h-36">
                     
                     <div class="flex-1 flex items-center justify-center w-full px-2">
-                        <img src="../../assets/images/uploads/<?= $pt['gambar_brand'] ?? 'default.png' ?>" class="max-h-16 w-auto object-contain grayscale group-hover:grayscale-0 group-hover:scale-110 transition duration-300">
+                        <img src="../../assets/images/uploads/<?= $pt['gambar_brand'] ?? 'default.png' ?>" class="max-h-16 w-auto object-contain group-hover:scale-110 transition duration-300">
                     </div>
                     
                     <h4 class="font-bold text-gray-600 text-[10px] uppercase tracking-wider group-hover:text-pink-600 transition"><?= htmlspecialchars($pt['nama_brand'] ?? '') ?></h4>

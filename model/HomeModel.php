@@ -122,6 +122,7 @@ class HomeModel {
                     $data[] = [
                         'id' => $row['id'] ?? null,
                         'title' => trim($row['judul'] ?? ''),
+                        'category' => trim($row['nama_kategori'] ?? ''),
                         'date' => $displayDate ?: '',
                         'excerpt' => trim($row['isi_berita'] ?? ''),
                         'image' => trim($row['gambar_berita'] ?? ''),
