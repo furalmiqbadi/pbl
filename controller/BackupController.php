@@ -13,30 +13,19 @@ class BackupController {
         include __DIR__ . '/../view/admin/backup.php';
     }
 
-    // Fungsi Konseptual Cloud Upload (Placeholder)
-    public function uploadToGoogleDrive(string $filePath, string $fileName) : string {
-        if (!file_exists($filePath)) {
-            return "FAILED (Cloud): File sumber tidak ada.";
-        }
-        return "SUCCESS (Cloud): File siap diunggah ke Google Drive (Logic API diperlukan).";
-    }
-
-    // --- LOGIC: BACKUP (Lokal & Cloud) ---
-        public function runBackup() {
+    // --- LOGIC: BACKUP (HANYA Lokal) ---
+    public function runBackup() {
         $paths = $this->model->getBackupFilePaths();
         $results = [];
         
-        // --- Perbaikan di sini ---
-        // HINDARI escapeshellarg() pada password jika password sederhana
-        $dbPass = $paths['dbPass']; // TIDAK pakai escapeshellarg()
+        // --- DB Config ---
+        $dbPass = $paths['dbPass'];
+        $dbUser = escapeshellarg($paths['dbUser']);
+        $dbName = escapeshellarg($paths['dbName']);
+        $dbFile = escapeshellarg($paths['dbFile']);
+        // --- Akhir Config ---
         
-        $dbUser = escapeshellarg($paths['dbUser']); // Tetap pakai escapeshellarg()
-        $dbName = escapeshellarg($paths['dbName']); // Tetap pakai escapeshellarg()
-        $dbFile = escapeshellarg($paths['dbFile']); // Tetap pakai escapeshellarg()
-        // --- Akhir Perbaikan ---
-        
-        // 1. BACKUP DATABASE (pg_dump) - Disesuaikan untuk Windows (CMD)
-        // Perhatikan $dbPass TIDAK menggunakan quote
+        // 1. BACKUP DATABASE (pg_dump)
         $cmdDb = sprintf(
             'set PGPASSWORD=%s && pg_dump -h localhost -p 5432 -U %s -d %s > %s',
             $dbPass,
@@ -50,81 +39,109 @@ class BackupController {
 
         
         // 2. BACKUP MEDIA FILES (ZipArchive)
-        // Panggil metode baru dari model
         $mediaResult = $this->model->createZipArchive($paths['uploadDir'], $paths['mediaFile']);
         
-        // Tentukan status dan pesan eror media
         if (strpos($mediaResult, 'SUCCESS') !== false) {
             $results['media_status'] = 'SUCCESS';
             $results['media'] = '';
         } else {
-            // $mediaResult sudah berisi pesan FAILED yang detail dari Model
             $results['media_status'] = $mediaResult; 
             $results['media'] = $mediaResult;
         }
-
-        
-        // 3. CLOUD UPLOAD (Konsep/Placeholder)
-        $cloudResult = "DB: " . $this->uploadToGoogleDrive($paths['dbFile'], basename($paths['dbFile']));
-        
-        // Media Cloud hanya jika media lokal sukses
-        if ($results['media_status'] == 'SUCCESS') {
-            $cloudResult .= " | Media: " . $this->uploadToGoogleDrive($paths['mediaFile'], basename($paths['mediaFile']));
-        } else {
-            $cloudResult .= " | Media: FAILED (Cloud): File sumber tidak ada.";
-        }
-
-        $results['cloud_status'] = $cloudResult;
 
         $_SESSION['backup_result'] = $results;
         header("Location: dashboard.php?page=backup");
         exit;
     }
     
-    // --- LOGIC: RESTORE (Hanya dari Lokal) ---
+    // --- LOGIC: RESTORE (Database & Media) ---
     public function runRestore() {
-        $backupFiles = glob($this->model::BACKUP_DIR . '/*.sql');
+        $paths = $this->model->getBackupFilePaths();
+        $backupSqlFiles = glob($this->model::BACKUP_DIR . '/*.sql');
+        $restoreMessages = [];
         
-        if (empty($backupFiles)) {
-            $_SESSION['restore_status'] = "FAILED: Tidak ada file backup lokal (.sql) ditemukan.";
+        // --- 1. Cek & Temukan File SQL Terbaru ---
+        if (empty($backupSqlFiles)) {
+            $_SESSION['restore_status'] = "FAILED: Tidak ada file backup lokal (.sql) ditemukan. Pemulihan Gagal.";
             header("Location: dashboard.php?page=backup");
             exit;
         }
 
-        // Ambil file SQL yang terakhir (backup terbaru)
-        // ... (dalam fungsi runRestore)
-        // ...
-        $latestDbFile = end($backupFiles);
-        $paths = $this->model->getBackupFilePaths();
+        $latestDbFile = end($backupSqlFiles);
+        $timestamp = basename($latestDbFile, '.sql');
         
-        // --- Perbaikan di sini ---
-        $dbPass = $paths['dbPass']; // TIDAK pakai escapeshellarg()
-        // --- Akhir Perbaikan ---
-        
+        // --- DB Config ---
+        $dbPass = $paths['dbPass']; 
         $dbUser = escapeshellarg($paths['dbUser']);
         $dbName = escapeshellarg($paths['dbName']);
         $latestDbFileEscaped = escapeshellarg($latestDbFile);
         
-        // RESTORE DATABASE (psql) - Disesuaikan untuk Windows (CMD)
-        $cmdRestore = sprintf(
-            'set PGPASSWORD=%s && psql -h localhost -p 5432 -U %s -d %s < %s',
-            $dbPass,
-            $dbUser,
-            $dbName,
-            $latestDbFileEscaped
-        );
-        // ... (sisanya sama)
+        // --- 2. HAPUS DATABASE LAMA (DROPDB) & BUAT BARU (CREATEDB) & RESTORE DATA (psql) ---
         
-        $execRestore = shell_exec($cmdRestore . ' 2>&1');
+        // ** (Langkah 2 - 4 Tidak Diubah dari logika sukses terakhir Anda) **
         
-        if (strpos($execRestore, 'ERROR') === false) {
-            $_SESSION['restore_status'] = "SUCCESS: Database berhasil dipulihkan dari " . basename($latestDbFile);
-        } else {
-            $_SESSION['restore_status'] = "FAILED: Gagal memulihkan database. Periksa log atau izin DB. Pesan: " . $execRestore;
+        // 2. DROPDB
+        $cmdDropDb = sprintf('set PGPASSWORD=%s && dropdb -f -U %s %s', $dbPass, $dbUser, $dbName);
+        $execDropDb = shell_exec($cmdDropDb . ' 2>&1');
+        
+        // 3. CREATEDB
+        $cmdCreateDb = sprintf('set PGPASSWORD=%s && createdb -U %s %s', $dbPass, $dbUser, $dbName);
+        $execCreateDb = shell_exec($cmdCreateDb . ' 2>&1');
+
+        if (strpos($execCreateDb, 'ERROR') !== false) {
+             $restoreMessages[] = "DB: FAILED. Gagal membuat database baru. Pesan: " . $execCreateDb;
+             $_SESSION['restore_status'] = implode(' | ', $restoreMessages);
+             header("Location: dashboard.php?page=backup");
+             exit;
         }
         
+        // 4. RESTORE DATA (psql)
+        $cmdRestoreData = sprintf(
+            'set PGPASSWORD=%s && psql -h localhost -p 5432 -U %s -d %s < %s',
+            $dbPass, $dbUser, $dbName, $latestDbFileEscaped
+        );
+        $execRestoreData = shell_exec($cmdRestoreData . ' 2>&1');
+        
+        if (strpos($execRestoreData, 'ERROR') === false) {
+            $restoreMessages[] = "DB: SUCCESS. Database berhasil dipulihkan.\n";
+        } else {
+            $restoreMessages[] = "DB: FAILED. Gagal memuat data. Pesan: " . $execRestoreData;
+        }
+        
+        // --- 5. RESTORE MEDIA FILES (.zip) ---
+        
+        // CARI FILE ZIP PALING BARU SECARA INDEPENDEN
+        $backupZipFiles = glob($this->model::BACKUP_DIR . '/*.zip');
+        
+        if (empty($backupZipFiles)) {
+            $restoreMessages[] = "Media: SKIP. Tidak ada file ZIP media ditemukan.";
+        } else {
+            // Ambil file ZIP paling akhir (terbaru)
+            $latestMediaFile = end($backupZipFiles); 
+            
+            if (file_exists($latestMediaFile)) {
+                $zip = new \ZipArchive;
+                
+                if ($zip->open($latestMediaFile) === TRUE) {
+                    // Panggil fungsi cleanDirectory di Model sebelum ekstraksi
+                    $this->model->cleanDirectory($paths['uploadDir']); 
+                    
+                    // Ekstrak file
+                    $zip->extractTo($paths['uploadDir']);
+                    $zip->close();
+                    
+                    $restoreMessages[] = "Media: SUCCESS. File media berhasil diekstrak dari " . basename($latestMediaFile);
+                } else {
+                    $restoreMessages[] = "Media: FAILED. Tidak dapat membuka file ZIP media: " . basename($latestMediaFile);
+                }
+            } else {
+                $restoreMessages[] = "Media: SKIP. File ZIP media tidak dapat diakses.";
+            }
+        }
+
+
+        $_SESSION['restore_status'] = implode(' | ', $restoreMessages);
         header("Location: dashboard.php?page=backup");
         exit;
     }
 }
-?>
