@@ -14,6 +14,7 @@ class HomeController {
             'fokus' => $this->model->getFokus(),
             'karya' => $this->model->getKarya(),
             'artikel' => $this->model->getArtikel(),
+            'newsCategories' => $this->model->getNewsCategories(),
             'galleryTop' => $this->model->getGalleryRows()['top'],
             'galleryBottom' => $this->model->getGalleryRows()['bottom'],
         ];

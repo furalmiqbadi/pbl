@@ -1,8 +1,11 @@
 ﻿<?php
+// Base path untuk URL
 $basePath = '/pbl';
 
+// Deteksi halaman aktif
 $currentPage = $_GET['page'] ?? 'home';
 
+// Menu navigasi
 $navItems = [
     ['label' => 'Beranda',      'page' => 'home',    'href' => $basePath . '/index.php?page=home'],
     ['label' => 'Tentang Kami', 'page' => 'about',   'href' => $basePath . '/index.php?page=about'],
@@ -12,13 +15,15 @@ $navItems = [
 ];
 ?>
 
+<!-- Header dengan background blur dan border gradient -->
 <header id="header" class="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-300">
+    <!-- Garis dekoratif gradient -->
     <div class="absolute inset-x-6 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-orange-200/80 to-transparent pointer-events-none"></div>
     <div class="absolute inset-x-10 bottom-[2px] h-px bg-gradient-to-r from-orange-50 via-white to-orange-50 opacity-60 pointer-events-none"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div class="flex items-center justify-between h-16">
             
-            <!-- Logo Section -->
+            <!-- Logo (JTI + MMT) -->
             <a href="<?php echo $basePath; ?>/index.php?page=home" class="flex items-center gap-3 group">
                 <div class="flex items-center gap-2.5 px-2.5 py-1.5">
                     <img src="<?php echo $basePath; ?>/assets/images/jtiLogo.png" alt="Logo JTI" class="h-8 w-8 object-contain transform group-hover:scale-105 transition-transform duration-200" onerror="this.src='<?php echo $basePath; ?>/assets/images/image.png'">
@@ -34,7 +39,7 @@ $navItems = [
                 </div>
             </a>
 
-            <!-- Desktop Navigation -->
+            <!-- Menu navigasi desktop -->
             <nav class="hidden lg:flex items-center gap-1">
                 <?php foreach ($navItems as $item): 
                     $isActive = ($currentPage === $item['page']);
@@ -58,7 +63,7 @@ $navItems = [
                 <?php endforeach; ?>
             </nav>
 
-            <!-- Mobile Menu Button -->
+            <!-- Tombol menu mobile -->
             <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none">
                 <svg id="menu-icon" class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -69,7 +74,7 @@ $navItems = [
             </button>
         </div>
 
-        <!-- Mobile Navigation -->
+        <!-- Menu navigasi mobile -->
         <nav id="mobile-menu" class="hidden lg:hidden pb-4 pt-2 space-y-1.5 border-t border-gray-100">
             <?php foreach ($navItems as $item): 
                 $isActive = ($currentPage === $item['page']);
@@ -111,7 +116,7 @@ $navItems = [
                 header.style.transform = 'translateY(0)';
             }
             
-            // Add shadow on scroll
+            // Tambah shadow saat scroll
             if (currentY > 10) {
                 header.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
             } else {
@@ -121,7 +126,7 @@ $navItems = [
             lastY = currentY;
         }, { passive: true });
 
-        // Mobile menu toggle
+        // Toggle menu mobile
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
         const menuIcon = document.getElementById('menu-icon');
@@ -136,7 +141,7 @@ $navItems = [
                 closeIcon.classList.toggle('hidden');
             });
 
-            // Close menu when clicking on a link
+            // Tutup menu saat klik link
             menu.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', () => {
                     menu.classList.add('hidden');

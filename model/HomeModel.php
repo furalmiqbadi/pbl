@@ -104,7 +104,7 @@ class HomeModel {
         }
 
         try {
-            $sql = "SELECT ba.id, ba.judul, ba.isi_berita, ba.gambar_berita, ba.created_at, k.nama_kategori FROM berita_artikel ba LEFT JOIN kategori k ON ba.kategori_id = k.id ORDER BY ba.created_at DESC, ba.id DESC LIMIT 12";
+            $sql = "SELECT ba.id, ba.judul, ba.isi_berita, ba.gambar_berita, ba.created_at, k.nama_kategori FROM berita_artikel ba LEFT JOIN kategori k ON ba.kategori_id = k.id ORDER BY ba.created_at DESC, ba.id DESC LIMIT 3";
             $stmt = $this->db->query($sql);
             if ($stmt) {
                 $rows = $stmt->fetchAll();
@@ -119,19 +119,12 @@ class HomeModel {
                         }
                     }
 
-                    $rawExcerpt = trim(strip_tags($row['isi_berita'] ?? ''));
-                    $excerpt = mb_substr($rawExcerpt, 0, 160);
-                    $category = trim($row['nama_kategori'] ?? '');
-                    if ($category === '') {
-                        $category = 'Artikel';
-                    }
-
                     $data[] = [
                         'id' => $row['id'] ?? null,
                         'title' => trim($row['judul'] ?? ''),
-                        'category' => $category,
+                        'category' => trim($row['nama_kategori'] ?? '') ?: 'Artikel',
                         'date' => $displayDate ?: '',
-                        'excerpt' => $excerpt,
+                        'excerpt' => trim($row['isi_berita'] ?? ''),
                         'image' => trim($row['gambar_berita'] ?? ''),
                     ];
                 }
@@ -162,6 +155,32 @@ class HomeModel {
                     }
                 }
                 return $data;
+            }
+        } catch (Throwable $e) {
+            return [];
+        }
+
+        return [];
+    }
+
+    public function getNewsCategories(): array {
+        if ($this->db === null) {
+            return [];
+        }
+
+        try {
+            $sql = "SELECT nama_kategori FROM kategori WHERE jenis = 'berita' ORDER BY id ASC";
+            $stmt = $this->db->query($sql);
+            if ($stmt) {
+                $rows = $stmt->fetchAll();
+                $categories = [];
+                foreach ($rows as $row) {
+                    $cat = trim($row['nama_kategori'] ?? '');
+                    if ($cat !== '') {
+                        $categories[] = $cat;
+                    }
+                }
+                return $categories;
             }
         } catch (Throwable $e) {
             return [];

@@ -11,7 +11,7 @@ $detail = $newsItem ?? null;
 $imageSrc = $detail ? assetUrl($detail['gambar_berita'] ?? '') : '';
 $fallbackImage = 'https://placehold.co/900x520?text=Berita';
 
-// Set currentPage ke 'detail' agar tidak ada menu yang aktif di navbar
+// Set halaman detail (tidak ada menu aktif di navbar)
 $_GET['page'] = 'detail';
 
 // Dynamic back button - deteksi dari mana user datang
@@ -25,6 +25,7 @@ if (strpos($referer, 'page=news') !== false) {
 }
 ?>
 
+<!-- Tailwind CSS & Font -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -56,7 +57,7 @@ if (strpos($referer, 'page=news') !== false) {
 <main class="bg-white min-h-screen">
     <div class="max-w-6xl mx-auto px-4 pt-24 pb-16">
         
-        <!-- Back Button Orange - Dinamis -->
+        <!-- Tombol kembali (dinamis) -->
         <div class="mb-8 fade-in-up">
             <a href="<?php echo h($backUrl); ?>"
                class="inline-flex items-center gap-2 px-5 py-2.5 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-all duration-300 shadow-md hover:shadow-lg group">
@@ -65,26 +66,28 @@ if (strpos($referer, 'page=news') !== false) {
             </a>
         </div>
 
-        <!-- Category Badge -->
-        <div class="text-center mb-4 fade-in-up delay-100">
-            <span class="inline-block px-4 py-1.5 bg-orange-100 text-orange-600 text-xs font-bold uppercase rounded-full tracking-wide">
-                PRESTASI
-            </span>
-        </div>
+        <!-- Badge kategori berita -->
+        <?php if (!empty($detail['nama_kategori'])): ?>
+            <div class="text-center mb-4 fade-in-up delay-100">
+                <span class="inline-block px-4 py-1.5 bg-orange-100 text-orange-600 text-xs font-bold uppercase rounded-full tracking-wide">
+                    <?php echo h($detail['nama_kategori']); ?>
+                </span>
+            </div>
+        <?php endif; ?>
 
-        <!-- Title -->
+        <!-- Judul berita -->
         <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4 leading-tight max-w-4xl mx-auto fade-in-up delay-100">
             <?php echo h($detail['judul'] ?? 'Berita tidak ditemukan'); ?>
         </h1>
 
-        <!-- Meta Info -->
+        <!-- Info meta (penulis & tanggal) -->
         <div class="text-center text-gray-500 text-sm mb-10 fade-in-up delay-100">
             <?php if (!empty($detail['created_at'])): ?>
                 Oleh Admin • <?php echo date('d M Y', strtotime($detail['created_at'])); ?>
             <?php endif; ?>
         </div>
 
-        <!-- Hero Image - Full Width -->
+        <!-- Gambar hero (full width) -->
         <div class="mb-12 fade-in-up delay-200">
             <div class="rounded-2xl overflow-hidden shadow-lg">
                 <div class="w-full h-64 md:h-96 bg-gray-100 relative overflow-hidden group">
@@ -95,10 +98,10 @@ if (strpos($referer, 'page=news') !== false) {
             </div>
         </div>
 
-        <!-- Content: 2 Kolom - Main Content (Kiri) + Sidebar (Kanan) -->
+        <!-- Konten: 2 kolom (Isi berita kiri + Sidebar kanan) -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16 fade-in-up delay-300">
             
-            <!-- Kolom Kiri: Isi Berita (Main Content) -->
+            <!-- Konten kiri: Isi berita -->
             <div class="lg:col-span-8">
                 <?php if (!empty($detail['isi_berita'])): ?>
                     <div class="prose prose-lg max-w-none">
@@ -111,7 +114,7 @@ if (strpos($referer, 'page=news') !== false) {
                 <?php endif; ?>
             </div>
 
-            <!-- Kolom Kanan: Sidebar "Baca Juga" -->
+            <!-- Sidebar kanan: Baca juga -->
             <div class="lg:col-span-4">
                 <div class="sticky top-24 space-y-6">
                     <h3 class="text-xl font-bold text-gray-900 mb-4">Baca Juga</h3>

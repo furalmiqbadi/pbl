@@ -131,18 +131,16 @@ $hero['image'] = $heroImage;
 $fokusItems = $data['fokus'] ?? [];
 $karyaItems = mapImageList($data['karya'] ?? []);
 $artikelItems = mapImageList($data['artikel'] ?? []);
-$artikelItems = array_map(function ($item) {
-    $item['category'] = trim($item['category'] ?? '') !== '' ? $item['category'] : 'Artikel';
-    $item['excerpt'] = trim($item['excerpt'] ?? '');
-    return $item;
-}, $artikelItems);
+
+// Ambil semua kategori berita dari database
 $newsCategories = ['Semua'];
-foreach ($artikelItems as $article) {
-    $cat = $article['category'] ?? '';
-    if ($cat !== '' && !in_array($cat, $newsCategories, true)) {
+$dbCategories = $data['newsCategories'] ?? [];
+foreach ($dbCategories as $cat) {
+    if (!in_array($cat, $newsCategories, true)) {
         $newsCategories[] = $cat;
     }
 }
+
 $galleryTop = mapImageList($data['galleryTop'] ?? []);
 $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
 ?>
@@ -610,19 +608,11 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             // ========== FILTER BERITA BERDASARKAN KATEGORI ==========
             const newsFilterButtons = document.querySelectorAll('.news-filter');
             const newsGrid = document.getElementById('news-grid');
-            let newsData = <?php echo json_encode($artikelItems); ?>;
-            newsData = (newsData || []).map((item) => {
-                const category = item.category && item.category !== '' ? item.category : 'Artikel';
-                return {
-                    ...item,
-                    category
-                };
-            });
+            const newsData = <?php echo json_encode($artikelItems); ?>;
 
             // Fungsi untuk render berita ke grid
-            function renderNews(list, limitToThree = false) {
-                const displayList = limitToThree ? list.slice(0, 3) : list;
-                newsGrid.innerHTML = displayList.map(n => {
+            function renderNews(list) {
+                newsGrid.innerHTML = list.map(n => {
                     const detailUrl = n.id ? `index.php?page=news_detail&id=${encodeURIComponent(n.id)}` : 'index.php?page=news_detail';
                     return `
                 <a href="${detailUrl}" class="group bg-white rounded-xl card-outline overflow-hidden block hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
@@ -641,8 +631,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
                 }).join('');
             }
 
-            // Tampilan awal: hanya 3 berita pertama
-            renderNews(newsData, true);
+            renderNews(newsData);
 
             newsFilterButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -652,18 +641,10 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
                     btn.classList.remove('bg-white', 'text-orange-600');
 
                     const filter = btn.dataset.filterNews;
-                    if (filter === 'Semua') {
-                        // Tampilkan hanya 3 berita pertama
-                        renderNews(newsData, true);
-                    } else {
-                        const filtered = newsData.filter(n => (n.category || '').toLowerCase() === filter.toLowerCase());
-                        renderNews(filtered, true);
-                    }
+                    const filtered = filter === 'Semua' ? newsData : newsData.filter(n => n.category === filter);
+                    renderNews(filtered);
                 });
             });
-
-
-
 
             // ========== PARALLAX EFFECT FOR HERO LOGO ==========
             // Menambahkan efek parallax pada logo hero yang mengikuti gerakan mouse

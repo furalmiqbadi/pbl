@@ -242,15 +242,8 @@
             </span>
             <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-800 to-orange-600 bg-clip-text text-transparent">Artikel & Berita</h2>
             <p class="text-gray-600 text-lg">Update terbaru dari Lab Multimedia</p>
-            <!-- Filter kategori berita (ambil dari database melalui controller) -->
             <div class="flex flex-wrap gap-3 justify-center">
-                <?php 
-                $newsCategories = $newsCategories ?? [];
-                if (empty($newsCategories)) {
-                    $newsCategories = ['Semua'];
-                }
-                foreach ($newsCategories as $index => $newsCat): 
-                ?>
+                <?php foreach ($newsCategories as $index => $newsCat): ?>
                     <button data-filter-news="<?php echo h($newsCat); ?>"
                         class="news-filter px-6 py-2.5 rounded-full text-sm font-semibold border-2 transition-all duration-300 hover:scale-105 <?php echo $index === 0 ? 'bg-orange-500 text-white border-orange-500 shadow-md' : 'bg-white text-orange-600 border-orange-500 hover:bg-orange-500 hover:text-white hover:shadow-md'; ?>">
                         <?php echo h($newsCat); ?>
@@ -258,9 +251,41 @@
                 <?php endforeach; ?>
             </div>
         </div>
-        <!-- Grid artikel & berita (diisi oleh JavaScript) -->
+        <!-- Grid artikel & berita -->
         <div class="grid md:grid-cols-3 gap-6" id="news-grid">
-            <!-- Berita akan di-render oleh JavaScript -->
+            <?php foreach ($artikelItems as $artikel): ?>
+                <?php
+                $artikelLink = 'index.php?page=news_detail';
+                if (!empty($artikel['id'])) {
+                    $artikelLink .= '&id=' . urlencode((string) $artikel['id']);
+                }
+                ?>
+                <!-- Card artikel (naik saat hover) -->
+                <a href="<?php echo h($artikelLink); ?>"
+                    class="group block bg-white rounded-2xl shadow-[0_12px_35px_-18px_rgba(15,23,42,0.35)] overflow-hidden border border-slate-200/70 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                    <?php if (!empty($artikel['image'])): ?>
+                        <!-- Gambar artikel -->
+                        <div class="w-full h-44 bg-gray-200 overflow-hidden">
+                            <!-- group-hover = zoom gambar saat hover -->
+                            <img src="<?php echo h($artikel['image']); ?>" alt="<?php echo h($artikel['title'] ?? ''); ?>"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        </div>
+                    <?php else: ?>
+                        <div class="w-full h-44 bg-gray-200"></div>
+                    <?php endif; ?>
+                    <div class="p-4 space-y-2">
+                        <!-- Badge kategori berita (mirip dengan karya) -->
+                        <?php if (!empty($artikel['category'])): ?>
+                            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#feedd8] text-orange-700 text-xs font-semibold border border-orange-200">
+                                <span class="h-2 w-2 rounded-full bg-orange-500"></span>
+                                <?php echo h($artikel['category']); ?>
+                            </span>
+                        <?php endif; ?>
+                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-orange-600 transition-colors"><?php echo h($artikel['title'] ?? ''); ?></h3>
+                        <p class="text-sm text-gray-500 line-clamp-2"><?php echo h($artikel['excerpt'] ?? 'Detail singkat akan tampil di sini.'); ?></p>
+                    </div>
+                </a>
+            <?php endforeach; ?>
         </div>
         <div class="text-center">
             <a href="index.php?page=news"
