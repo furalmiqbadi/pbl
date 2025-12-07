@@ -12,6 +12,7 @@ function h($value)
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 
+//bebasis url dan tidak
 function assetUrl(string $src): string
 {
     global $basePath;
@@ -24,6 +25,7 @@ function assetUrl(string $src): string
     return rtrim($basePath, '/') . '/' . ltrim($src, '/');
 }
 
+//varialbe menyimpan foto
 function mapImageList(array $items, string $key = 'image'): array
 {
     foreach ($items as &$item) {
@@ -129,6 +131,16 @@ $hero['image'] = $heroImage;
 $fokusItems = $data['fokus'] ?? [];
 $karyaItems = mapImageList($data['karya'] ?? []);
 $artikelItems = mapImageList($data['artikel'] ?? []);
+
+// Ambil semua kategori berita dari database
+$newsCategories = ['Semua'];
+$dbCategories = $data['newsCategories'] ?? [];
+foreach ($dbCategories as $cat) {
+    if (!in_array($cat, $newsCategories, true)) {
+        $newsCategories[] = $cat;
+    }
+}
+
 $galleryTop = mapImageList($data['galleryTop'] ?? []);
 $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
 ?>

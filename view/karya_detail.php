@@ -22,7 +22,7 @@ if (!empty($allKarya) && is_array($allKarya)) {
     $relatedKarya = array_slice($relatedKarya, 0, 3);
 }
 
-// Set currentPage ke 'detail' agar tidak ada menu yang aktif di navbar
+// Set halaman detail (tidak ada menu aktif di navbar)
 $_GET['page'] = 'detail';
 
 // Dynamic back button - deteksi dari mana user datang
@@ -36,6 +36,7 @@ if (strpos($referer, 'page=catalog') !== false) {
 }
 ?>
 
+<!-- Tailwind CSS & Font -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -67,7 +68,7 @@ if (strpos($referer, 'page=catalog') !== false) {
 <main class="bg-white min-h-screen">
     <div class="max-w-6xl mx-auto px-4 pt-24 pb-16">
         
-        <!-- Back Button Orange - Dinamis -->
+        <!-- Tombol kembali (dinamis sesuai dari mana user datang) -->
         <div class="mb-8 fade-in-up">
             <a href="<?php echo h($backUrl); ?>"
                class="inline-flex items-center gap-2 px-5 py-2.5 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-all duration-300 shadow-md hover:shadow-lg group">
@@ -76,7 +77,7 @@ if (strpos($referer, 'page=catalog') !== false) {
             </a>
         </div>
 
-        <!-- Hero Image - Full Width di Atas -->
+        <!-- Gambar hero (full width) -->
         <div class="mb-12 fade-in-up delay-100">
             <div class="rounded-2xl overflow-hidden shadow-lg">
                 <div class="w-full h-64 md:h-96 bg-gray-100 relative overflow-hidden group">
@@ -87,10 +88,10 @@ if (strpos($referer, 'page=catalog') !== false) {
             </div>
         </div>
 
-        <!-- Content: 2 Kolom - Sidebar (Kiri) + Main Content (Kanan) -->
+        <!-- Konten: 2 kolom (Sidebar kiri + Konten kanan) -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16 fade-in-up delay-200">
             
-            <!-- Kolom Kiri: Sidebar Metadata -->
+            <!-- Sidebar kiri: Metadata karya -->
             <div class="lg:col-span-4">
                 <div class="bg-white rounded-xl border border-gray-200 p-6 sticky top-24">
                     <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4 pb-3 border-b border-gray-200">Kategori</h3>
@@ -130,7 +131,7 @@ if (strpos($referer, 'page=catalog') !== false) {
                 </div>
             </div>
 
-            <!-- Kolom Kanan: Title + Deskripsi -->
+            <!-- Konten kanan: Judul & Deskripsi -->
             <div class="lg:col-span-8">
                 <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
                     <?php echo h($detail['judul'] ?? 'Karya tidak ditemukan'); ?>
@@ -153,7 +154,7 @@ if (strpos($referer, 'page=catalog') !== false) {
             </div>
         </div>
 
-        <!-- Related Works -->
+        <!-- Karya terkait lainnya -->
         <?php if (!empty($relatedKarya)): ?>
             <section class="fade-in-up delay-300">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Lihat Karya Lainnya</h2>

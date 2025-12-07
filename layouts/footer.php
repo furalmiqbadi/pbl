@@ -3,8 +3,9 @@ if (!isset($basePath)) {
     $basePath = '/pbl';
 }
 ?>
+<!-- Footer dengan gradient background -->
 <footer class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white mt-12 relative overflow-hidden">
-    <!-- Decorative Elements -->
+    <!-- Elemen dekoratif -->
     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-50"></div>
     <div class="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl"></div>
     <div class="absolute bottom-0 left-0 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl"></div>
@@ -12,7 +13,7 @@ if (!isset($basePath)) {
     <div class="container mx-auto px-6 lg:px-8 py-8 relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
             
-            <!-- Kontak Kami Section -->
+            <!-- Bagian Kontak Kami -->
             <div class="md:col-span-4 space-y-4">
                 <div class="space-y-1">
                     <h3 class="text-xl font-bold text-white tracking-tight">Kontak Kami</h3>
@@ -59,7 +60,7 @@ if (!isset($basePath)) {
                 </div>
             </div>
 
-            <!-- Menu Cepat Section -->
+            <!-- Bagian Menu Cepat -->
             <div class="md:col-span-4 space-y-4">
                 <div class="space-y-1">
                     <h3 class="text-xl font-bold text-white tracking-tight">Menu Cepat</h3>
@@ -90,7 +91,7 @@ if (!isset($basePath)) {
                 </nav>
             </div>
 
-            <!-- Logo & Portal Admin Section -->
+            <!-- Bagian Logo & Portal Admin -->
             <div class="md:col-span-4 flex flex-col items-center justify-center space-y-4">
                 <div class="relative group">
                     <div class="absolute -inset-4 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -118,7 +119,7 @@ if (!isset($basePath)) {
             </div>
         </div>
 
-        <!-- Footer Bottom -->
+        <!-- Footer bawah (copyright) -->
         <div class="border-t border-white/10 mt-8 pt-4">
             <div class="text-center">
                 <p class="text-xs text-gray-400">
