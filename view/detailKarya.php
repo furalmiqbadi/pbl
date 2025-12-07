@@ -2,7 +2,7 @@
 include '../lib/Connection.php';
 include '../layouts/header.php'; 
 
-// --- 1. Ambil ID Proyek dari URL ---
+// --- Ambil ID Proyek dari URL ---
 $proyek_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($proyek_id === 0) {
@@ -15,7 +15,6 @@ $pdo = Connection::getConnection();
 $karya = [];
 
 // --- Query Detail Proyek Utama ---
-// Mengambil data proyek, join dengan tabel kategori
 $sql_detail = "
     SELECT 
         dp.judul, 
@@ -54,8 +53,7 @@ try {
     die("Error mengambil detail proyek: " . $e->getMessage());
 }
 
-// --- 3. Query Anggota Tim (Mahasiswa) ---
-// Mengambil daftar nama mahasiswa untuk proyek ini
+// --- Query Anggota Tim (Mahasiswa) ---
 $sql_anggota = "
     SELECT 
         m.nama
