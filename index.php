@@ -97,6 +97,7 @@ if ($page === 'detailKarya') {
     $karyaId = isset($_GET['id']) ? (int) $_GET['id'] : null;
     $karyaItem = $karyaId ? $karyaModel->getById($karyaId) : null;
     $allKarya = $karyaModel->getAll();
+    $anggota = $karyaId ? $karyaModel->getAnggotaTim($karyaId) : [];
     include __DIR__ . '/view/karya_detail.php';
     exit;
 }
