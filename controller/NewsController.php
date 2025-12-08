@@ -59,22 +59,15 @@ class NewsController
 
         // 7. Logika Slide
         $sliderNews = [];
-
-        // Masukkan Featured News sebagai slide pertama
         if (!empty($featuredNews)) {
             $sliderNews[] = $featuredNews;
         }
-
-        // Tambahkan 2 berita terbaru dari list agar slide-nya banyak
         if (!empty($newsList)) {
             $sliderNews = array_merge($sliderNews, array_slice($newsList, 0, 2));
         }
-
-        // Hapus duplikat (jaga-jaga kalau datanya sama)
         $sliderNews = array_unique($sliderNews, SORT_REGULAR);
 
         // 8. Panggil View
-        // Sekarang View tinggal pakai variabel $sliderNews tanpa mikir
         include __DIR__ . '/../view/news.php';
     }
 
