@@ -1,15 +1,6 @@
 <?php
 include __DIR__ . '/../lib/helpers.php';
 include __DIR__ . '/../layouts/header.php';
-
-$sliderNews = [];
-if (!empty($featuredNews)) {
-    $sliderNews[] = $featuredNews;
-}
-if (!empty($newsList)) {
-    $sliderNews = array_merge($sliderNews, array_slice($newsList, 0, 2));
-}
-$sliderNews = array_unique($sliderNews, SORT_REGULAR);
 ?>
 
 <script src="https://cdn.tailwindcss.com"></script>

@@ -1,88 +1,102 @@
 <?php
-require_once __DIR__ . '/../lib/Connection.php'; 
+require_once __DIR__ . '/Model.php'; 
 
-class AboutModel {
-    private $conn;
+class AboutModel extends Model {
 
-    public function __construct() {
-        $this->conn = Connection::getConnection();
-    }
-    private function getAboutData() {
-        $data = [];
+    // --- BAGIAN BACA DATA (READ - PUBLIC & ADMIN) ---
+
+    public function getVisi() {
+        if ($this->db === null) return 'Visi belum diatur.';
         try {
-            $stmt_visi = $this->conn->query("SELECT isi_visi FROM visi LIMIT 1");
-            $row_visi = $stmt_visi->fetch(PDO::FETCH_ASSOC);
-            $data['visi'] = $row_visi['isi_visi'] ?? 'Visi belum diatur.';
+            $stmt = $this->db->query("SELECT isi_visi FROM visi LIMIT 1");
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $res['isi_visi'] ?? 'Visi belum diatur.';
+        } catch (PDOException $e) { return ''; }
+    }
 
-            $stmt_misi = $this->conn->query("SELECT isi_misi FROM misi LIMIT 1");
-            $row_misi = $stmt_misi->fetch(PDO::FETCH_ASSOC);
-            $data['misi'] = $row_misi['isi_misi'] ?? 'Misi belum diatur.';
+    public function getMisi() {
+        if ($this->db === null) return 'Misi belum diatur.';
+        try {
+            $stmt = $this->db->query("SELECT isi_misi FROM misi LIMIT 1");
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $res['isi_misi'] ?? 'Misi belum diatur.';
+        } catch (PDOException $e) { return ''; }
+    }
+
+    public function getNilai() {
+        if ($this->db === null) return [];
+        try {
+            $data = $this->db->query("SELECT * FROM nilai ORDER BY id ASC")->fetchAll(PDO::FETCH_ASSOC);
             
-            $stmt_nilai = $this->conn->query("SELECT * FROM nilai ORDER BY id ASC");
-            $data['nilai_inti'] = $stmt_nilai->fetchAll(PDO::FETCH_ASSOC);
-
-            $stmt_sejarah = $this->conn->query("SELECT * FROM sejarah ORDER BY tahun ASC");
-            $data['sejarah'] = $stmt_sejarah->fetchAll(PDO::FETCH_ASSOC);
-
-        } catch (PDOException $e) {
-            error_log("Error fetching About data: " . $e->getMessage());
-            $data = ['visi' => 'Error DB', 'misi' => 'Error DB', 'nilai_inti' => [], 'sejarah' => []];
-        }
-        return $data;
+            // [LOGIKA GAMBAR] Tambahkan 'uploads/' jika belum ada
+            foreach ($data as &$item) {
+                if (!empty($item['gambar_nilai']) && strpos($item['gambar_nilai'], '/') === false) {
+                    $item['gambar_nilai'] = 'uploads/' . $item['gambar_nilai'];
+                }
+            }
+            return $data;
+        } catch (PDOException $e) { return []; }
     }
 
-    private function getStrukturOrganisasi() {
+    public function getSejarah() {
+        if ($this->db === null) return [];
         try {
-            $stmt = $this->conn->query("SELECT gambar_organisasi FROM struktur_organisasi LIMIT 1");
+            return $this->db->query("SELECT * FROM sejarah ORDER BY tahun ASC")->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) { return []; }
+    }
+
+    public function getStrukturOrganisasi() {
+        if ($this->db === null) return null;
+        try {
+            $stmt = $this->db->query("SELECT gambar_organisasi FROM struktur_organisasi LIMIT 1");
             $res = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($res && !empty($res['gambar_organisasi'])) {
-                return 'assets/images/uploads/' . $res['gambar_organisasi'];
+                $img = $res['gambar_organisasi'];
+                return (strpos($img, '/') === false) ? 'uploads/' . $img : $img;
             }
             return null;
-        } catch (PDOException $e) {
-            return null;
-        }
+        } catch (PDOException $e) { return null; }
     }
 
-    private function getDosen() {
+    public function getDosen() {
+        if ($this->db === null) return [];
         try {
-            $stmt = $this->conn->query("SELECT * FROM dosen_multimedia ORDER BY id ASC");
-            $dosen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $dosen = $this->db->query("SELECT * FROM dosen_multimedia ORDER BY id ASC")->fetchAll(PDO::FETCH_ASSOC);
             
             foreach ($dosen as &$d) {
-                if (!empty($d['gambar_tim']) && $d['gambar_tim'] !== 'default.png') {
-                    $d['gambar_tim'] = 'assets/images/uploads/' . $d['gambar_tim'];
+                if (!empty($d['gambar_tim']) && strpos($d['gambar_tim'], '/') === false) {
+                    $d['gambar_tim'] = 'uploads/' . $d['gambar_tim'];
                 }
             }
             return $dosen;
-        } catch (PDOException $e) {
-            return [];
-        }
+        } catch (PDOException $e) { return []; }
     }
 
-    private function getPartner() {
+    public function getPartner() {
+        if ($this->db === null) return [];
         try {
-            $stmt = $this->conn->query("SELECT * FROM partner ORDER BY id ASC");
-            $partner = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $partner = $this->db->query("SELECT * FROM partner ORDER BY id ASC")->fetchAll(PDO::FETCH_ASSOC);
             
             foreach ($partner as &$p) {
-                if (!empty($p['gambar_brand'])) {
-                    $p['gambar_brand'] = 'assets/images/uploads/' . $p['gambar_brand'];
+                if (!empty($p['gambar_brand']) && strpos($p['gambar_brand'], '/') === false) {
+                    $p['gambar_brand'] = 'uploads/' . $p['gambar_brand'];
                 }
             }
             return $partner;
-        } catch (PDOException $e) {
-            return [];
-        }
+        } catch (PDOException $e) { return []; }
     }
 
     public function getAllData() {
-        $data = $this->getAboutData();
-        $data['organisasi'] = $this->getStrukturOrganisasi();
-        $data['dosen'] = $this->getDosen();
-        $data['partner'] = $this->getPartner();
-        return $data;
+        return [
+            'visi'       => $this->getVisi(),
+            'misi'       => $this->getMisi(),
+            'nilai_inti' => $this->getNilai(),
+            'sejarah'    => $this->getSejarah(),
+            'organisasi' => $this->getStrukturOrganisasi(),
+            'dosen'      => $this->getDosen(),
+            'partner'    => $this->getPartner()
+        ];
     }
 }
 ?>
