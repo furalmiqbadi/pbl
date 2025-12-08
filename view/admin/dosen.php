@@ -91,15 +91,28 @@ $searchKeyword = $_GET['q'] ?? '';
 
                         <td class="px-6 py-5 text-center">
                             <div class="flex justify-center gap-3">
+                                
                                 <?php if(!empty($row['link_instagram'])): ?>
-                                    <a href="<?= htmlspecialchars($row['link_instagram']) ?>" target="_blank" class="text-gray-300 hover:text-pink-500 transition hover:scale-110"><i class="fab fa-instagram text-lg"></i></a>
+                                    <a href="<?= htmlspecialchars($row['link_instagram']) ?>" target="_blank" 
+                                    class="text-pink-500 hover:text-pink-600 transition hover:scale-110">
+                                    <i class="fab fa-instagram text-lg"></i>
+                                    </a>
                                 <?php endif; ?>
+
                                 <?php if(!empty($row['link_linkedin'])): ?>
-                                    <a href="<?= htmlspecialchars($row['link_linkedin']) ?>" target="_blank" class="text-gray-300 hover:text-blue-600 transition hover:scale-110"><i class="fab fa-linkedin text-lg"></i></a>
+                                    <a href="<?= htmlspecialchars($row['link_linkedin']) ?>" target="_blank" 
+                                    class="text-blue-600 hover:text-blue-700 transition hover:scale-110">
+                                    <i class="fab fa-linkedin text-lg"></i>
+                                    </a>
                                 <?php endif; ?>
+
                                 <?php if(!empty($row['link_github'])): ?>
-                                    <a href="<?= htmlspecialchars($row['link_github']) ?>" target="_blank" class="text-gray-300 hover:text-gray-800 transition hover:scale-110"><i class="fab fa-github text-lg"></i></a>
+                                    <a href="<?= htmlspecialchars($row['link_github']) ?>" target="_blank" 
+                                    class="text-gray-900 hover:text-black transition hover:scale-110">
+                                    <i class="fab fa-github text-lg"></i>
+                                    </a>
                                 <?php endif; ?>
+
                             </div>
                         </td>
                         

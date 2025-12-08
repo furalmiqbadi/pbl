@@ -122,6 +122,7 @@ class HomeModel {
                     $data[] = [
                         'id' => $row['id'] ?? null,
                         'title' => trim($row['judul'] ?? ''),
+                        'category' => trim($row['nama_kategori'] ?? '') ?: 'Artikel',
                         'date' => $displayDate ?: '',
                         'excerpt' => trim($row['isi_berita'] ?? ''),
                         'image' => trim($row['gambar_berita'] ?? ''),
@@ -154,6 +155,32 @@ class HomeModel {
                     }
                 }
                 return $data;
+            }
+        } catch (Throwable $e) {
+            return [];
+        }
+
+        return [];
+    }
+
+    public function getNewsCategories(): array {
+        if ($this->db === null) {
+            return [];
+        }
+
+        try {
+            $sql = "SELECT nama_kategori FROM kategori WHERE jenis = 'berita' ORDER BY id ASC";
+            $stmt = $this->db->query($sql);
+            if ($stmt) {
+                $rows = $stmt->fetchAll();
+                $categories = [];
+                foreach ($rows as $row) {
+                    $cat = trim($row['nama_kategori'] ?? '');
+                    if ($cat !== '') {
+                        $categories[] = $cat;
+                    }
+                }
+                return $categories;
             }
         } catch (Throwable $e) {
             return [];

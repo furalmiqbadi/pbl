@@ -2,7 +2,7 @@
 include '../lib/Connection.php';
 include '../layouts/header.php'; 
 
-// --- 1. Ambil ID Proyek dari URL ---
+// --- Ambil ID Proyek dari URL ---
 $proyek_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($proyek_id === 0) {
@@ -15,7 +15,6 @@ $pdo = Connection::getConnection();
 $karya = [];
 
 // --- Query Detail Proyek Utama ---
-// Mengambil data proyek, join dengan tabel kategori
 $sql_detail = "
     SELECT 
         dp.judul, 
@@ -54,8 +53,7 @@ try {
     die("Error mengambil detail proyek: " . $e->getMessage());
 }
 
-// --- 3. Query Anggota Tim (Mahasiswa) ---
-// Mengambil daftar nama mahasiswa untuk proyek ini
+// --- Query Anggota Tim (Mahasiswa) ---
 $sql_anggota = "
     SELECT 
         m.nama
@@ -99,105 +97,150 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($karya["judul"]); ?></title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-up { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+    </style>
 </head>
 
 <body class="bg-gray-50">
 
-<div class="max-w-6xl mx-auto px-4 mt-24 mb-6">
+<main class="max-w-6xl mx-auto px-4 pt-24 pb-16">
 
-    <a href="catalog.php"
-       class="inline-flex items-center gap-2 bg-orange-500 text-white px-6 py-2 
-          rounded-xl font-semibold shadow-md hover:bg-orange-600 
-          transition mb-8">
-        <span class="text-lg">←</span> 
-        <span>Kembali ke Karya</span>
-    </a>
-
-    <div class="w-full rounded-xl overflow-hidden border border-gray-300 shadow-sm">
-        <?php 
-            $gambar_path = !empty($karya['thumbnail']) ? '../' . htmlspecialchars($karya['thumbnail']) : 'https://via.placeholder.com/1200x420?text=Gambar+Tidak+Tersedia';
-        ?>
-        <img src="<?= $gambar_path; ?>" 
-             alt="<?= htmlspecialchars($karya['judul']) ?>"
-             class="w-full h-[420px] object-cover" />
+    <!-- Tombol Kembali -->
+    <div class="mb-8 fade-in-up">
+        <a href="../index.php?page=catalog"
+           class="inline-flex items-center gap-2 px-5 py-2.5 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-all duration-300 shadow-md hover:shadow-lg group">
+            <svg class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform"
+                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Kembali ke Karya
+        </a>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
-
-        <div class="bg-white p-6 rounded-xl border shadow-sm text-sm space-y-3">
-            <div>
-                <p class="text-gray-500">Kategori</p>
-                <p class="font-semibold"><?= htmlspecialchars($karya["kategori"]) ?></p>
-            </div>
-
-            <div>
-                <p class="text-gray-500">Tahun</p>
-                <p class="font-semibold"><?= htmlspecialchars($karya["tahun"]) ?></p>
-            </div>
-
-            <div>
-                <p class="text-gray-500">Nama Tim</p>
-                <p class="font-semibold">"<?= htmlspecialchars($karya["nama_tim"]) ?>"</p>
-            </div>
-
-            <div>
-                <p class="text-gray-500">Anggota Tim</p>
-                <ul class="list-disc ml-5">
-                    <?php if (count($karya["anggota"]) > 0): ?>
-                        <?php foreach ($karya["anggota"] as $mhs): ?>
-                            <li><?= htmlspecialchars($mhs) ?></li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <li>Tidak ada anggota tercatat</li>
-                    <?php endif; ?>
-                </ul>
+    <!-- Hero Image -->
+    <div class="fade-in-up delay-100 mb-12">
+        <div class="rounded-2xl overflow-hidden shadow-lg">
+            <div class="w-full h-64 md:h-96 bg-gray-100 overflow-hidden group">
+                <img src="<?= !empty($karya['thumbnail']) ? '../'.htmlspecialchars($karya['thumbnail']) : 'https://placehold.co/900x520?text=Gambar' ?>"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
             </div>
         </div>
-
-        <div class="md:col-span-2 space-y-6">
-            <h1 class="text-3xl font-bold"><?= htmlspecialchars($karya["judul"]) ?></h1>
-
-            <div>
-                <h2 class="text-xl font-bold mb-2">Deskripsi</h2>
-                <p class="text-gray-700 leading-relaxed">
-                    <?= nl2br(htmlspecialchars($karya["deskripsi"])) ?>
-                </p>
-            </div>
-
-        </div>
-
     </div>
 
-    <div class="mt-20">
-        <h2 class="text-2xl font-bold text-center mb-6">Lihat Karya Lainnya</h2>
+    <!-- Konten 2 Kolom -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 fade-in-up delay-200">
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <?php if (count($karya_lain) > 0): ?>
-                <?php foreach ($karya_lain as $k): ?>
-                    <div 
-                        class="bg-white border rounded-xl shadow-sm overflow-hidden p-4 cursor-pointer hover:shadow-md transition"
-                        onclick="window.location.href='pbl/view/detailKarya.php?id=<?= $k['id'] ?>'"
-                    >
-                        <?php 
-                            $img_path_lain = !empty($k['gambar_proyek']) ? '../' . htmlspecialchars($k['gambar_proyek']) : 'https://via.placeholder.com/400x160?text=No+Image';
-                        ?>
-                        <div class="w-full h-40 bg-gray-200 rounded overflow-hidden">
-                            <img src="<?= $img_path_lain ?>" alt="<?= htmlspecialchars($k['judul']) ?>" class="w-full h-full object-cover">
-                        </div>
-                        <h3 class="font-semibold mt-3"><?= htmlspecialchars($k["judul"]) ?></h3>
-                        <span class="inline-block bg-orange-500 text-white text-xs px-3 py-1 rounded mt-2">
-                            <?= htmlspecialchars($k["nama_kategori"] ?? 'N/A') ?>
-                        </span>
+        <!-- Sidebar -->
+        <div class="lg:col-span-4">
+            <div class="bg-white rounded-xl border border-gray-200 p-6 sticky top-24 shadow-sm">
+                <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4 pb-3 border-b">
+                    Detail Proyek
+                </h3>
+
+                <div class="space-y-4 text-sm">
+
+                    <div>
+                        <p class="text-gray-500 mb-1">Kategori</p>
+                        <p class="font-semibold"><?= htmlspecialchars($karya['kategori']) ?></p>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                 <p class="text-gray-500 col-span-full text-center">Tidak ada karya lain yang tersedia.</p>
-            <?php endif; ?>
+
+                    <div>
+                        <p class="text-gray-500 mb-1">Tahun</p>
+                        <p class="font-semibold"><?= htmlspecialchars($karya['tahun']) ?></p>
+                    </div>
+
+                    <div>
+                        <p class="text-gray-500 mb-1">Nama Tim</p>
+                        <p class="font-semibold"><?= htmlspecialchars($karya['nama_tim']) ?></p>
+                    </div>
+
+                    <div>
+                        <p class="text-gray-500 mb-2">Anggota Tim</p>
+                        <ul class="space-y-1">
+                            <?php if (!empty($karya["anggota"])): ?>
+                                <?php foreach ($karya["anggota"] as $m): ?>
+                                    <li class="font-semibold"><?= htmlspecialchars($m) ?></li>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <li class="text-gray-400 italic">Tidak ada anggota</li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Deskripsi -->
+        <div class="lg:col-span-8">
+            <h1 class="text-3xl md:text-4xl font-bold mb-6">
+                <?= htmlspecialchars($karya['judul']); ?>
+            </h1>
+
+            <div class="space-y-6">
+                <div>
+                    <h2 class="text-xl font-bold mb-3">Deskripsi</h2>
+                    <p class="text-gray-700 leading-relaxed text-justify">
+                        <?= nl2br(htmlspecialchars($karya['deskripsi'])); ?>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
-</div>
+    <!-- Karya Lainnya -->
+    <?php if (!empty($karya_lain)): ?>
+        <section class="fade-in-up delay-300 mt-20">
+            <h2 class="text-2xl font-bold text-center mb-6">Lihat Karya Lainnya</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <?php foreach ($karya_lain as $k): ?>
+                    <a href="detailKarya.php?id=<?= $k['id']; ?>"
+                       class="group bg-white rounded-xl border-2 border-gray-200 overflow-hidden hover:border-orange-400 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+
+                        <div class="h-44 bg-gray-100 overflow-hidden">
+                            <img src="<?= !empty($k['gambar_proyek']) ? '../'.htmlspecialchars($k['gambar_proyek']) : 'https://placehold.co/600x300?text=Gambar'; ?>"
+                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        </div>
+
+                        <div class="p-5 space-y-3">
+                            <h3 class="font-bold text-gray-900 group-hover:text-orange-600 transition-colors line-clamp-2">
+                                <?= htmlspecialchars($k['judul']); ?>
+                            </h3>
+
+                            <span class="inline-block bg-orange-500 text-white px-3 py-1 text-xs rounded">
+                                <?= htmlspecialchars($k['nama_kategori'] ?? 'N/A'); ?>
+                            </span>
+
+                            <button class="w-full bg-orange-500 text-white text-sm font-semibold py-2.5 rounded-lg hover:bg-orange-600 transition">
+                                Lihat Detail
+                            </button>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
+
+            </div>
+        </section>
+    <?php endif; ?>
+
+</main>
 
 <?php include '../layouts/footer.php'; ?>
 
