@@ -11,6 +11,7 @@ class BackupModel {
     
     // UPLOAD_DIR: target folder 'assets/images' secara keseluruhan
     const UPLOAD_DIR = __DIR__ . '/../assets/images'; 
+    const ASSETS_DIR = __DIR__ . '/../assets'; // <--- TAMBAHAN KRUSIAL
     const BACKUP_DIR = __DIR__ . '/../temp/backups';
 
     public function getBackupFilePaths(): array {
@@ -29,6 +30,7 @@ class BackupModel {
             'dbFile' => $dbFile,
             'mediaFile' => $mediaFile,
             'uploadDir' => self::UPLOAD_DIR,
+            'assetsDir' => self::ASSETS_DIR, // <--- TAMBAHAN KRUSIAL
             'timestamp' => $timestamp
         ];
     }
@@ -71,21 +73,12 @@ class BackupModel {
             return "FAILED: Gagal membuka file ZIP di '{$outputFileNormalized}'. Pastikan file tidak terkunci oleh program lain."; 
         }
         
-        // --- LOGIKA ZIP STABIL FINAL ---
-        
-        // 1. Tentukan path yang HARUS DIHAPUS: Path sampai sebelum folder 'images' (yaitu sampai '/assets/')
+        // --- LOGIKA ZIP STABIL FINAL (TIDAK DIUBAH) ---
         $basePath = dirname($sourceDir); 
         $basePathToRemove = str_replace('\\', '/', $basePath) . '/'; 
-        
-        // 2. Hitung panjang path yang akan dihapus
         $sourceDirLength = strlen($basePathToRemove); 
-        
-        // 3. Terapkan KOMPENSASI KRUSIAL (-2) untuk memperbaiki pemotongan 2 karakter di Windows.
-        $sourceDirLength -= 2; // INI ADALAH KUNCI STABILITAS PATH DI LINGKUNGAN ANDA
-        
-        // 4. Tentukan NAMA FOLDER ROOT yang dipertahankan
-        $rootFolderName = basename($sourceDir); // Ini adalah 'images'
-        
+        $sourceDirLength -= 2; 
+        $rootFolderName = basename($sourceDir); 
         // --- AKHIR LOGIKA ZIP STABIL FINAL ---
 
         try {
@@ -94,7 +87,6 @@ class BackupModel {
                 \RecursiveIteratorIterator::SELF_FIRST
             );
             
-            // Tambahkan folder 'images' sebagai folder root eksplisit di ZIP
             $zip->addEmptyDir($rootFolderName);
 
             foreach ($iterator as $fileInfo) {
@@ -105,15 +97,12 @@ class BackupModel {
                 $filePath = $fileInfo->getRealPath();
                 $filePathNormalized = str_replace('\\', '/', $filePath);
                 
-                // Mendapatkan path relatif dengan memotong $sourceDirLength yang sudah dikompensasi.
                 $relativePath = substr($filePathNormalized, $sourceDirLength);
 
-                // Jika path relatif tidak dimulai dengan 'images/', tambahkan prefix.
                 if (strpos($relativePath, $rootFolderName . '/') !== 0) {
                      $relativePath = $rootFolderName . '/' . $relativePath;
                 }
                 
-                // Normalisasi akhir untuk mencegah double slash
                 $relativePath = str_replace('//', '/', $relativePath);
 
 
