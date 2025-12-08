@@ -76,9 +76,7 @@ class BackupController {
         $dbName = escapeshellarg($paths['dbName']);
         $latestDbFileEscaped = escapeshellarg($latestDbFile);
         
-        // --- 2. HAPUS DATABASE LAMA (DROPDB) & BUAT BARU (CREATEDB) & RESTORE DATA (psql) ---
-        
-        // ** (Langkah 2 - 4 Tidak Diubah dari logika sukses terakhir Anda) **
+        // --- 2-4. DROP, CREATE, RESTORE DB (TIDAK DIUBAH) ---
         
         // 2. DROPDB
         $cmdDropDb = sprintf('set PGPASSWORD=%s && dropdb -f -U %s %s', $dbPass, $dbUser, $dbName);
@@ -103,7 +101,7 @@ class BackupController {
         $execRestoreData = shell_exec($cmdRestoreData . ' 2>&1');
         
         if (strpos($execRestoreData, 'ERROR') === false) {
-            $restoreMessages[] = "DB: SUCCESS. Database berhasil dipulihkan.\n";
+            $restoreMessages[] = "DB: SUCCESS. Database berhasil dipulihkan.";
         } else {
             $restoreMessages[] = "DB: FAILED. Gagal memuat data. Pesan: " . $execRestoreData;
         }
@@ -116,7 +114,6 @@ class BackupController {
         if (empty($backupZipFiles)) {
             $restoreMessages[] = "Media: SKIP. Tidak ada file ZIP media ditemukan.";
         } else {
-            // Ambil file ZIP paling akhir (terbaru)
             $latestMediaFile = end($backupZipFiles); 
             
             if (file_exists($latestMediaFile)) {
@@ -124,10 +121,11 @@ class BackupController {
                 
                 if ($zip->open($latestMediaFile) === TRUE) {
                     // Panggil fungsi cleanDirectory di Model sebelum ekstraksi
+                    // Ini membersihkan assets/images/
                     $this->model->cleanDirectory($paths['uploadDir']); 
                     
-                    // Ekstrak file
-                    $zip->extractTo($paths['uploadDir']);
+                    // EKSTRAKSI KE FOLDER assets/ BUKAN assets/images/
+                    $zip->extractTo($paths['assetsDir']); // <--- KOREKSI INI
                     $zip->close();
                     
                     $restoreMessages[] = "Media: SUCCESS. File media berhasil diekstrak dari " . basename($latestMediaFile);
