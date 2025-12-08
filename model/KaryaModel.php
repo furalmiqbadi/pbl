@@ -135,5 +135,45 @@ class KaryaModel {
             return $stmt->execute([':id' => $id]);
         } catch (PDOException $e) { return false; }
     }
+
+    // Method tambahan untuk Katalog dan DetailKarya
+    public function getAllWithKategori() {
+        $sql = "SELECT dp.id, dp.judul, dp.gambar_proyek, k.nama_kategori
+                FROM daftar_proyek dp
+                LEFT JOIN kategori k ON dp.kategori_id = k.id
+                ORDER BY dp.id DESC";
+        return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getKategoriFilter() {
+        $sql = "SELECT DISTINCT k.nama_kategori 
+                FROM kategori k
+                JOIN daftar_proyek dp ON dp.kategori_id = k.id
+                ORDER BY k.nama_kategori ASC";
+        return $this->db->query($sql)->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    public function getAnggotaTim($id) {
+        $sql = "SELECT m.nama
+                FROM mahasiswa_proyek mp
+                JOIN mahasiswa m ON mp.mahasiswa_id = m.id
+                WHERE mp.proyek_id = :id
+                ORDER BY m.nama ASC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id'=>$id]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    public function getKaryaLain($id) {
+        $sql = "SELECT dp.id, dp.judul, dp.gambar_proyek, k.nama_kategori
+                FROM daftar_proyek dp
+                LEFT JOIN kategori k ON dp.kategori_id = k.id
+                WHERE dp.id != :id
+                ORDER BY dp.id DESC
+                LIMIT 3";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id'=>$id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>

@@ -60,7 +60,9 @@ if ($page === 'about') {
 }
 
 if ($page === 'catalog') { 
-    include __DIR__ . '/view/catalog.php';
+    require_once __DIR__ . '/controller/KatalogController.php';
+    $controller = new KatalogController();
+    $controller->index();
     exit;
 }
 
