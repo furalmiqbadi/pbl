@@ -11,6 +11,7 @@ include __DIR__ . '/../layouts/header.php';
 $detail = $karyaItem ?? null;
 $imageSrc = $detail ? assetUrl($detail['gambar_proyek'] ?? '') : '';
 $fallbackImage = 'https://placehold.co/900x520?text=Karya';
+$anggota = $anggota ?? [];
 
 $relatedKarya = [];
 if (!empty($allKarya) && is_array($allKarya)) {
@@ -121,10 +122,13 @@ if (strpos($referer, 'page=catalog') !== false) {
                         <div>
                             <p class="text-gray-500 mb-2">Anggota Tim</p>
                             <div class="space-y-1">
-                                <p class="font-semibold text-gray-900">Mahasiswa 1</p>
-                                <p class="font-semibold text-gray-900">Mahasiswa 2</p>
-                                <p class="font-semibold text-gray-900">Mahasiswa 3</p>
-                                <p class="font-semibold text-gray-900">Mahasiswa 4</p>
+                                <?php if (!empty($anggota) && is_array($anggota)): ?>
+                                    <?php foreach ($anggota as $namaAnggota): ?>
+                                        <p class="font-semibold text-gray-900"><?php echo h($namaAnggota); ?></p>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <p class="text-gray-400 italic">Tidak ada anggota tim yang terdaftar.</p>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
