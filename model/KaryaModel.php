@@ -17,7 +17,11 @@ class KaryaModel {
     }
 
     public function getKategoriList() {
-        return $this->db->query("SELECT * FROM kategori ORDER BY nama_kategori ASC")->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "SELECT * FROM kategori 
+                WHERE nama_kategori IN ('Game Development', 'AR/VR', 'UI/UX') 
+                ORDER BY nama_kategori ASC";
+                
+        return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getMahasiswaList() {
