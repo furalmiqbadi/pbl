@@ -203,10 +203,9 @@ $partner = $data_About['partner'] ?? [];
                                     <p class="text-gray-500 text-xs uppercase tracking-wider font-semibold mb-4"><?php echo h($pic['jabatan']); ?></p>
                                     
                                     <div class="flex justify-center gap-4 border-t border-gray-100 pt-4 mt-4">
-                                        <?php if (!empty($pic['link_linkedin'])): ?> <a href="<?php echo h($pic['link_linkedin']); ?>" target="_blank" class="text-gray-400 hover:text-blue-700 transition transform hover:scale-110"><i class="fab fa-linkedin text-lg"></i></a> <?php endif; ?>
-                                        <?php if (!empty($pic['link_instagram'])): ?> <a href="<?php echo h($pic['link_instagram']); ?>" target="_blank" class="text-gray-400 hover:text-pink-600 transition transform hover:scale-110"><i class="fab fa-instagram text-lg"></i></a> <?php endif; ?>
-                                        <?php if (!empty($pic['link_github'])): ?> <a href="<?php echo h($pic['link_github']); ?>" target="_blank" class="text-gray-400 hover:text-gray-900 transition transform hover:scale-110"><i class="fab fa-github text-lg"></i></a> <?php endif; ?>
-                                        <?php if (!empty($pic['link_youtube'])): ?> <a href="<?php echo h($pic['link_youtube']); ?>" target="_blank" class="text-gray-400 hover:text-red-600 transition transform hover:scale-110"><i class="fab fa-youtube text-lg"></i></a> <?php endif; ?>
+                                        <?php if (!empty($pic['link_linkedin'])): ?> <a href="<?php echo h($pic['link_linkedin']); ?>" target="_blank" class="text-blue-700 transition transform hover:scale-110"><i class="fab fa-linkedin text-lg"></i></a> <?php endif; ?>
+                                        <?php if (!empty($pic['link_instagram'])): ?> <a href="<?php echo h($pic['link_instagram']); ?>" target="_blank" class="text-pink-600 transition transform hover:scale-110"><i class="fab fa-instagram text-lg"></i></a> <?php endif; ?>
+                                        <?php if (!empty($pic['link_github'])): ?> <a href="<?php echo h($pic['link_github']); ?>" target="_blank" class="text-gray-900 transition transform hover:scale-110"><i class="fab fa-github text-lg"></i></a> <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
@@ -229,7 +228,7 @@ $partner = $data_About['partner'] ?? [];
                                 ?>
                                 <img src="<?php echo assetUrl($partnerPath); ?>" 
                                      alt="<?php echo h($p['nama_brand']); ?>" 
-                                     class="max-h-12 max-w-full object-contain grayscale hover:grayscale-0 transition duration-300"
+                                     class="max-h-12 max-w-full object-contain hover:grayscale-0 transition duration-300"
                                      onerror="this.style.display='none';">
                             </div>
                         <?php endforeach; ?>
