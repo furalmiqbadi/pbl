@@ -1,31 +1,43 @@
 ﻿<?php
+// ========== INISIALISASI APLIKASI ==========
+// Memulai session untuk menyimpan data user
 session_start();
+
+// Merekam kunjungan pengunjung ke database
 require_once __DIR__ . '/model/VisitorModel.php';
 $visitorModel = new VisitorModel();
 $visitorModel->rekamKunjungan();
+
+// Load controller utama
 require_once __DIR__ . '/controller/HomeController.php';
 
+// Base path untuk URL
 $basePath = '/pbl';
 
+// ========== FUNGSI HELPER ==========
+// Fungsi untuk escape HTML (mencegah XSS attack)
 function h($value)
 {
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 
-// Fungsi untuk membuat URL asset
+// Fungsi untuk membuat URL asset (gambar, CSS, JS)
 function assetUrl(string $src): string
 {
     global $basePath;
+    // Return kosong jika source kosong
     if ($src === '') {
         return '';
     }
+    // Jika sudah URL lengkap (http/https), langsung return
     if (preg_match('~^(https?:)?//~', $src)) {
         return $src;
     }
+    // Gabungkan dengan base path
     return rtrim($basePath, '/') . '/' . ltrim($src, '/');
 }
 
-// Fungsi untuk mapping URL gambar
+// Fungsi untuk mapping URL gambar pada array items
 function mapImageList(array $items, string $key = 'image'): array
 {
     foreach ($items as &$item) {
@@ -37,9 +49,11 @@ function mapImageList(array $items, string $key = 'image'): array
 }
 
 
-// Routing halaman
+// ========== ROUTING HALAMAN ==========
+// Ambil parameter page dari URL, default ke 'home'
 $page = $_GET['page'] ?? 'home';
 
+// Route untuk halaman daftar berita
 if ($page === 'news') {
     require_once __DIR__ . '/controller/NewsController.php';
     $controller = new NewsController();
@@ -47,6 +61,7 @@ if ($page === 'news') {
     exit; 
 }
 
+// Route untuk halaman detail berita
 if ($page === 'news_detail') {
     require_once __DIR__ . '/controller/NewsController.php';
     $controller = new NewsController();
@@ -54,6 +69,7 @@ if ($page === 'news_detail') {
     exit;
 }
 
+// Route untuk halaman tentang kami
 if ($page === 'about') {
     require_once __DIR__ . '/controller/AboutController.php';
     $controller = new AboutController();
@@ -61,6 +77,7 @@ if ($page === 'about') {
     exit;
 }
 
+// Route untuk halaman katalog karya
 if ($page === 'catalog') { 
     require_once __DIR__ . '/controller/KatalogController.php';
     $controller = new KatalogController();
@@ -68,24 +85,30 @@ if ($page === 'catalog') {
     exit;
 }
 
+// Route untuk halaman galeri dengan pagination
 if ($page === 'gallery') {
     require_once __DIR__ . '/model/GaleriModel.php';
     $galeriModel = new GaleriModel();
     
+    // Setup pagination (9 item per halaman)
     $limit = 9; 
     $p = isset($_GET['p']) && is_numeric($_GET['p']) ? (int)$_GET['p'] : 1;
     if ($p < 1) $p = 1;
     
+    // Hitung offset untuk query database
     $offset = ($p - 1) * $limit;
     
+    // Hitung total halaman
     $totalData = $galeriModel->countAll(); 
     $totalPages = ceil($totalData / $limit);
     
+    // Validasi halaman tidak melebihi total halaman
     if ($p > $totalPages && $totalPages > 0) {
         $p = $totalPages;
         $offset = ($p - 1) * $limit;
     }
 
+    // Ambil data galeri dengan pagination
     $data = $galeriModel->getPaginated($limit, $offset);
     
     $currentPage = $p; 
@@ -93,26 +116,35 @@ if ($page === 'gallery') {
     exit;
 }
 
+// Route untuk halaman detail karya
 if ($page === 'detailKarya') {
     require_once __DIR__ . '/model/KaryaModel.php';
     $karyaModel = new KaryaModel();
+    // Ambil ID karya dari URL
     $karyaId = isset($_GET['id']) ? (int) $_GET['id'] : null;
+    // Ambil data karya berdasarkan ID
     $karyaItem = $karyaId ? $karyaModel->getById($karyaId) : null;
+    // Ambil semua karya untuk "Karya Lainnya"
     $allKarya = $karyaModel->getAll();
+    // Ambil daftar anggota tim
     $anggota = $karyaId ? $karyaModel->getAnggotaTim($karyaId) : [];
     include __DIR__ . '/view/karya_detail.php';
     exit;
 }
 
+// Route untuk halaman detail galeri
 if ($page === 'detailGallery') {
     require_once __DIR__ . '/model/GaleriModel.php';
     $galeriModel = new GaleriModel();
+    // Ambil ID galeri dari URL
     $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
     $detail = $galeriModel->getById($id);
+    // Redirect jika galeri tidak ditemukan
     if (!$detail) {
         header("Location: index.php?page=gallery");
         exit;
     }
+    // Ambil galeri lainnya untuk sidebar (kecuali yang sedang dibuka)
     $allGallery = $galeriModel->getAll();
     $sidebarGallery = array_filter($allGallery, function($item) use ($id) {
         return (int)$item['id'] !== $id;
@@ -124,18 +156,25 @@ if ($page === 'detailGallery') {
 }
 
 
+// ========== HALAMAN HOME (DEFAULT) ==========
+// Jika tidak ada route yang cocok, tampilkan halaman home
 $controller = new HomeController();
 $data = $controller->index();
 
+// Setup data hero section
 $hero = $data['hero'] ?? [];
 $heroImage = assetUrl($hero['image'] ?? '');
 $heroImage = assetUrl('assets/images/mmtLogo.png');
 $hero['image'] = $heroImage;
+
+// Setup data fokus utama (Game, UI/UX, AR/VR)
 $fokusItems = $data['fokus'] ?? [];
+
+// Setup data karya dan artikel dengan URL gambar yang sudah di-mapping
 $karyaItems = mapImageList($data['karya'] ?? []);
 $artikelItems = mapImageList($data['artikel'] ?? []);
 
-// Ambil semua kategori berita dari database
+// Setup kategori berita untuk filter
 $newsCategories = ['Semua'];
 $dbCategories = $data['newsCategories'] ?? [];
 foreach ($dbCategories as $cat) {
@@ -144,6 +183,7 @@ foreach ($dbCategories as $cat) {
     }
 }
 
+// Setup data galeri untuk marquee scroll
 $galleryTop = mapImageList($data['galleryTop'] ?? []);
 $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
 ?>
@@ -156,11 +196,13 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
     <title>Lab MMT - Beranda</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* ========== CSS VARIABLES ========== */
         :root {
-            --accent: #f97316;
-            --ink: #0f172a;
+            --accent: #f97316;  /* Warna orange utama */
+            --ink: #0f172a;     /* Warna teks gelap */
         }
 
+        /* ========== GLOBAL STYLES ========== */
         body {
             font-family: 'Poppins', system-ui, -apple-system, sans-serif;
             background-color: #ffffff;
@@ -221,7 +263,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
 
         /* ========== ANIMATIONS ========== */
         
-        /* Pulse animation untuk badge */
+        /* Pulse animation untuk badge (dot berkedip) */
         @keyframes pulse {
             0%, 100% {
                 opacity: 1;
@@ -235,7 +277,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
-        /* Float animation untuk logo hero */
+        /* Float animation untuk logo hero (naik-turun halus) */
         @keyframes float {
             0%, 100% {
                 transform: translateY(0px);
@@ -249,7 +291,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             animation: float 6s ease-in-out infinite;
         }
 
-        /* Lightbox animations */
+        /* Lightbox animations (popup gambar galeri) */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -336,7 +378,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             }
         }
 
-        /* Scroll reveal animation */
+        /* Scroll reveal animation (muncul saat di-scroll) */
         .scroll-reveal {
             opacity: 0;
             transform: translateY(30px);
@@ -348,7 +390,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             transform: translateY(0);
         }
 
-        /* Hero section animations */
+        /* Hero section animations (slide masuk dari kiri/kanan) */
         .slide-in-left {
             opacity: 0;
             animation: slideInLeft 0.8s ease-out forwards;
@@ -372,7 +414,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
         .delay-500 { animation-delay: 0.5s; }
         .delay-600 { animation-delay: 0.6s; }
 
-        /* Parallax effect */
+        /* Parallax effect (logo mengikuti mouse) */
         .parallax {
             transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
@@ -408,7 +450,9 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
     <?php include __DIR__ . '/layouts/footer.php'; ?>
 
     <script>
-        // Gallery marquee auto scroll
+        // ========== JAVASCRIPT UNTUK INTERAKTIVITAS ==========
+        
+        // Gallery marquee auto scroll (galeri bergerak otomatis)
         document.addEventListener('DOMContentLoaded', () => {
             const galleryTopData = <?php echo json_encode($galleryTop, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
             const galleryBottomData = <?php echo json_encode($galleryBottom, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
