@@ -4,6 +4,31 @@ include __DIR__ . '/../layouts/header.php';
 
 <script src="https://cdn.tailwindcss.com"></script>
 
+<style>
+    /* Fade In + Slide Up */
+    .fade-card {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity .6s ease, transform .6s ease;
+    }
+    .fade-card.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Hover Zoom */
+    .gallery-item img {
+        transition: transform .4s ease;
+    }
+    .gallery-item:hover img {
+        transform: scale(1.08);
+    }
+    .gallery-item:hover {
+        transform: translateY(-4px);
+        transition: transform .3s ease;
+    }
+</style>
+
 <div class="px-4 py-10 max-w-7xl mx-auto">
 
     <!-- Judul -->
@@ -42,7 +67,7 @@ include __DIR__ . '/../layouts/header.php';
                     class="gallery-item bg-white border rounded-xl shadow-sm overflow-hidden p-4 cursor-pointer hover:shadow-md transition"
                     data-title="<?= strtolower(htmlspecialchars($k['judul'])) ?>"
                     data-category="<?= strtolower(htmlspecialchars($k['nama_kategori'])) ?>"
-                    onclick="window.location.href='/pbl/view/detailKarya.php?id=<?= $k['id'] ?>'"
+                    onclick="window.location.href='index.php?page=detailKarya&id=<?= $k['id'] ?>'"
                 >
                     <?php 
                         $img_path_lain = !empty($k['gambar_proyek']) 
