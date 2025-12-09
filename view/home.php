@@ -1,6 +1,6 @@
 <main class="max-w-6xl mx-auto px-4 pt-14 pb-12 space-y-16">
     <!-- Bagian Hero / Pembuka -->
-    <section class="relative grid md:grid-cols-2 gap-12 items-center py-8">
+    <section class="relative flex flex-col-reverse md:grid md:grid-cols-2 gap-12 items-center py-8">
         <!-- Dekorasi background -->
         <div class="absolute inset-0 -z-10 pointer-events-none">
             <!-- Titik-titik kanan atas -->
