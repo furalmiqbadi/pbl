@@ -12,7 +12,7 @@ function h($value)
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 
-//bebasis url dan tidak
+// Fungsi untuk membuat URL asset
 function assetUrl(string $src): string
 {
     global $basePath;
@@ -25,7 +25,7 @@ function assetUrl(string $src): string
     return rtrim($basePath, '/') . '/' . ltrim($src, '/');
 }
 
-//varialbe menyimpan foto
+// Fungsi untuk mapping URL gambar
 function mapImageList(array $items, string $key = 'image'): array
 {
     foreach ($items as &$item) {
@@ -37,8 +37,8 @@ function mapImageList(array $items, string $key = 'image'): array
 }
 
 
-//sementara
-$page = $_GET['page'] ?? 'home'; // Cek URL, mau ke mana?
+// Routing halaman
+$page = $_GET['page'] ?? 'home';
 
 if ($page === 'news') {
     require_once __DIR__ . '/controller/NewsController.php';
@@ -122,7 +122,7 @@ if ($page === 'detailGallery') {
     include __DIR__ . '/view/gallery_detail.php';
     exit;
 }
-//sampai sini 
+
 
 $controller = new HomeController();
 $data = $controller->index();
@@ -221,13 +221,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
 
         /* ========== ANIMATIONS ========== */
         
-        /* PULSE ANIMATION - Untuk dot/badge yang berkedip */
-        /* Digunakan di: 
-           - Badge "Selamat Datang" di hero section
-           - Badge di setiap section header (Fokus Utama, Galeri, dll)
-        */
-        /* Cara kerja: Opacity berubah dari 1 (100%) ke 0.5 (50%) lalu kembali ke 1 */
-        /* Duration: 2 detik per cycle, infinite loop */
+        /* Pulse animation untuk badge */
         @keyframes pulse {
             0%, 100% {
                 opacity: 1;
@@ -241,10 +235,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
-        /* FLOAT ANIMATION - Untuk logo yang melayang naik-turun */
-        /* Digunakan di: Logo/maskot di hero section */
-        /* Cara kerja: Logo bergerak naik 20px lalu turun kembali ke posisi awal */
-        /* Duration: 6 detik per cycle, infinite loop, smooth easing */
+        /* Float animation untuk logo hero */
         @keyframes float {
             0%, 100% {
                 transform: translateY(0px);
@@ -258,8 +249,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             animation: float 6s ease-in-out infinite;
         }
 
-        /* LIGHTBOX ANIMATIONS - Untuk gallery lightbox */
-        /* fadeIn: muncul dari transparan ke solid */
+        /* Lightbox animations */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -269,7 +259,6 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             }
         }
 
-        /* fadeOut: hilang dari solid ke transparan */
         @keyframes fadeOut {
             from {
                 opacity: 1;
@@ -279,7 +268,6 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             }
         }
 
-        /* zoomIn: zoom dari 80% ke 100% sambil fade in */
         @keyframes zoomIn {
             from {
                 opacity: 0;
@@ -291,7 +279,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             }
         }
 
-        /* fadeInUp: muncul dari bawah sambil fade in - untuk scroll reveal */
+        /* Fade in dari bawah */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -303,7 +291,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             }
         }
 
-        /* slideInLeft: muncul dari kiri */
+        /* Slide animations */
         @keyframes slideInLeft {
             from {
                 opacity: 0;
@@ -315,7 +303,6 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             }
         }
 
-        /* slideInRight: muncul dari kanan */
         @keyframes slideInRight {
             from {
                 opacity: 0;
@@ -327,7 +314,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             }
         }
 
-        /* scaleIn: zoom in dengan fade */
+        /* Scale in animation */
         @keyframes scaleIn {
             from {
                 opacity: 0;
@@ -339,7 +326,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             }
         }
 
-        /* shimmer: efek loading shimmer */
+        /* Shimmer effect */
         @keyframes shimmer {
             0% {
                 background-position: -1000px 0;
@@ -349,23 +336,19 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             }
         }
 
-        /* ========== SCROLL REVEAL ANIMATION ========== */
-        /* Animasi sederhana: elemen muncul dari bawah saat di-scroll */
-        
-        /* Class untuk elemen yang akan di-animasi saat scroll */
+        /* Scroll reveal animation */
         .scroll-reveal {
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
 
-        /* Class yang ditambahkan saat elemen terlihat di layar */
         .scroll-reveal.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Animasi untuk hero section - langsung muncul tanpa scroll */
+        /* Hero section animations */
         .slide-in-left {
             opacity: 0;
             animation: slideInLeft 0.8s ease-out forwards;
@@ -381,7 +364,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             animation: scaleIn 0.6s ease-out forwards;
         }
 
-        /* Delay untuk animasi berurutan */
+        /* Animation delays */
         .delay-100 { animation-delay: 0.1s; }
         .delay-200 { animation-delay: 0.2s; }
         .delay-300 { animation-delay: 0.3s; }
@@ -394,7 +377,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        /* Enhanced hover effects */
+        /* Hover effects */
         .hover-lift {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -404,7 +387,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
         }
 
-        /* Smooth gradient animation */
+        /* Gradient animation */
         .gradient-shift {
             background-size: 200% 200%;
             animation: gradientShift 3s ease infinite;
@@ -425,35 +408,29 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
     <?php include __DIR__ . '/layouts/footer.php'; ?>
 
     <script>
-        // Galeri marquee: 4 tampilan, auto geser, pause on hover
+        // Gallery marquee auto scroll
         document.addEventListener('DOMContentLoaded', () => {
             const galleryTopData = <?php echo json_encode($galleryTop, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
             const galleryBottomData = <?php echo json_encode($galleryBottom, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
             const karyaData = <?php echo json_encode($karyaItems, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
 
-            // ========== GALLERY MARQUEE FUNCTION ==========
-            // Fungsi untuk membuat gallery scroll otomatis (marquee)
-            // Parameters:
-            //   - rowId: ID container row gallery
-            //   - trackId: ID track yang berisi gambar-gambar
-            //   - data: Array data gambar
-            //   - direction: 1 = kanan, -1 = kiri
+            // Gallery marquee function
             function startGalleryMarquee(rowId, trackId, data, direction = 1) {
                 const row = document.getElementById(rowId);
                 const track = document.getElementById(trackId);
                 if (!row || !track || !data || data.length === 0) return;
 
-                // Duplikasi data agar minimal 4 item untuk smooth loop
+                // Duplicate data untuk smooth loop
                 while (data.length < 4) data = data.concat(data);
                 const repeated = [...data, ...data];
-                // Render gallery cards dengan event listener untuk lightbox
+                // Render gallery cards
                 track.innerHTML = repeated.map((item, index) => `
             <div class="gallery-card" data-image="${item.image}" data-index="${index}">
                 <img src="${item.image}" alt="Galeri" class="w-full h-full object-cover cursor-pointer">
             </div>
         `).join('');
 
-                // Event listener untuk buka lightbox saat klik gambar
+                // Click handler untuk lightbox
                 track.querySelectorAll('.gallery-card').forEach(card => {
                     card.addEventListener('click', () => {
                         const imgSrc = card.dataset.image;
@@ -464,9 +441,9 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
                 let offset = direction === -1 ? (track.firstElementChild?.getBoundingClientRect().width || 0) * data.length : 0;
                 let cardWidth = 0;
                 let loopWidth = 0;
-                let paused = false; // Flag untuk pause saat hover
+                let paused = false;
 
-                // Fungsi untuk mengukur lebar card dan set posisi awal
+                // Measure card width
                 const measure = () => {
                     const firstCard = track.querySelector('.gallery-card');
                     if (firstCard) {
@@ -479,17 +456,17 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
                 measure();
                 window.addEventListener('resize', measure);
 
-                // Pause animasi saat hover, resume saat mouse keluar
+                // Pause on hover
                 row.addEventListener('mouseenter', () => paused = true);
                 row.addEventListener('mouseleave', () => paused = false);
 
-                const speed = 0.6; // Kecepatan scroll (pixels per frame)
-                // Fungsi animasi loop menggunakan requestAnimationFrame
+                const speed = 0.6;
+                // Animation loop
                 function step() {
                     if (!paused) {
                         offset += direction * speed;
                         track.style.transform = `translateX(${-offset}px)`;
-                        // Reset posisi untuk infinite loop
+                        // Reset untuk infinite loop
                         if (cardWidth > 0) {
                             const threshold = loopWidth;
                             if (direction === 1 && offset >= threshold) offset = 0;
@@ -501,31 +478,31 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
                 requestAnimationFrame(step);
             }
 
-            // Fungsi untuk membuka lightbox (zoom gambar)
+            // Open lightbox
             function openLightbox(imageSrc) {
-                // Create lightbox overlay dengan background hitam transparan
+                // Create lightbox overlay
                 const lightbox = document.createElement('div');
                 lightbox.id = 'gallery-lightbox';
                 lightbox.className = 'fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 cursor-pointer';
                 lightbox.style.animation = 'fadeIn 0.3s ease-out';
                 
-                // Container untuk gambar dengan animasi zoom
+                // Image container
                 const imgContainer = document.createElement('div');
                 imgContainer.className = 'relative max-w-7xl max-h-full';
                 imgContainer.style.animation = 'zoomIn 0.3s ease-out';
                 
-                // Gambar dengan max height 90% viewport
+                // Image element
                 const img = document.createElement('img');
                 img.src = imageSrc;
                 img.className = 'max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl';
                 img.style.cursor = 'default';
                 
-                // Prevent klik gambar menutup lightbox
+                // Prevent close on image click
                 img.addEventListener('click', (e) => {
                     e.stopPropagation();
                 });
                 
-                // Tombol close (X) di pojok kanan atas
+                // Close button
                 const closeBtn = document.createElement('button');
                 closeBtn.innerHTML = '&times;';
                 closeBtn.className = 'absolute -top-12 right-0 text-white text-4xl font-light hover:text-orange-400 transition-colors';
@@ -536,17 +513,13 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
                 lightbox.appendChild(imgContainer);
                 document.body.appendChild(lightbox);
                 
-                // Close saat klik di luar gambar
+                // Close handlers
                 lightbox.addEventListener('click', closeLightbox);
-                
-                // Close saat tekan tombol ESC
                 document.addEventListener('keydown', handleEscKey);
-                
-                // Prevent scroll body saat lightbox terbuka
                 document.body.style.overflow = 'hidden';
             }
             
-            // Fungsi untuk menutup lightbox dengan animasi fade out
+            // Close lightbox
             function closeLightbox() {
                 const lightbox = document.getElementById('gallery-lightbox');
                 if (lightbox) {
@@ -559,7 +532,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
                 }
             }
             
-            // Handle tombol ESC untuk tutup lightbox
+            // ESC key handler
             function handleEscKey(e) {
                 if (e.key === 'Escape') {
                     closeLightbox();
@@ -573,7 +546,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             const filterButtons = document.querySelectorAll('.karya-filter');
             const karyaGrid = document.getElementById('karya-grid');
 
-            // Fungsi untuk render karya ke grid (max 3 items)
+            // Render karya grid
             function renderKarya(list) {
                 karyaGrid.innerHTML = list.slice(0, 3).map(k => {
                     const detailUrl = k.id ? `index.php?page=detailKarya&id=${encodeURIComponent(k.id)}` : 'index.php?page=detailKarya';
@@ -608,12 +581,12 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
                 });
             });
 
-            // ========== FILTER BERITA BERDASARKAN KATEGORI ==========
+            // Filter berita
             const newsFilterButtons = document.querySelectorAll('.news-filter');
             const newsGrid = document.getElementById('news-grid');
             const newsData = <?php echo json_encode($artikelItems); ?>;
 
-            // Fungsi untuk render berita ke grid (max 3 items)
+            // Render news grid
             function renderNews(list) {
                 newsGrid.innerHTML = list.slice(0, 3).map(n => {
                     const detailUrl = n.id ? `index.php?page=news_detail&id=${encodeURIComponent(n.id)}` : 'index.php?page=news_detail';
@@ -649,17 +622,12 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
                 });
             });
 
-            // ========== PARALLAX EFFECT FOR HERO LOGO ==========
-            // Menambahkan efek parallax pada logo hero yang mengikuti gerakan mouse
+            // Parallax effect untuk hero logo
             const heroLogo = document.getElementById('hero-logo');
             if (heroLogo) {
                 document.addEventListener('mousemove', (e) => {
-                    // Hitung posisi mouse relatif terhadap center viewport
                     const mouseX = e.clientX / window.innerWidth - 0.5;
                     const mouseY = e.clientY / window.innerHeight - 0.5;
-                    
-                    // Terapkan transformasi dengan multiplier untuk efek subtle
-                    // Nilai kecil (20px) agar tidak terlalu berlebihan
                     const moveX = mouseX * 20;
                     const moveY = mouseY * 20;
                     
@@ -667,8 +635,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
                 });
             }
             
-            // ========== SCROLL REVEAL ANIMATION ==========
-            // Animasi sederhana: elemen muncul dari bawah saat di-scroll
+            // Scroll reveal animation
             
             const scrollObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -681,7 +648,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
                 rootMargin: '0px 0px -50px 0px'
             });
 
-            // Observe semua elemen dengan class 'scroll-reveal'
+            // Observe scroll-reveal elements
             document.querySelectorAll('.scroll-reveal').forEach(el => {
                 scrollObserver.observe(el);
             });
