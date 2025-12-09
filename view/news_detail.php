@@ -1,16 +1,23 @@
 <?php
+// ========== HELPER FUNCTION ==========
+// Fungsi untuk escape HTML (mencegah XSS attack)
 if (!function_exists('h')) {
     function h(?string $value): string {
         return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
     }
 }
 
+// Load header (navbar)
 include __DIR__ . '/../layouts/header.php';
 
+// ========== SETUP DATA BERITA ==========
+// Ambil data berita dari controller
 $detail = $newsItem ?? null;
+// Setup URL gambar berita
 $imageSrc = $detail ? assetUrl($detail['gambar_berita'] ?? '') : '';
 $fallbackImage = 'https://placehold.co/900x520?text=Berita';
 
+// ========== SETUP NAVBAR & BACK BUTTON ==========
 // Set halaman detail (tidak ada menu aktif di navbar)
 $_GET['page'] = 'detail';
 
@@ -19,6 +26,7 @@ $referer = $_SERVER['HTTP_REFERER'] ?? '';
 $backUrl = 'index.php';
 $backText = 'Kembali ke Beranda';
 
+// Jika dari halaman berita, tombol kembali ke berita
 if (strpos($referer, 'page=news') !== false) {
     $backUrl = 'index.php?page=news';
     $backText = 'Kembali ke Berita';
@@ -30,10 +38,12 @@ if (strpos($referer, 'page=news') !== false) {
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
+    /* ========== CUSTOM STYLES ========== */
     body { 
-         
+        /* Styles ditangani oleh Tailwind dan header.php */
     }
 
+    /* Animasi fade in dari bawah */
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -57,7 +67,8 @@ if (strpos($referer, 'page=news') !== false) {
 <main class="bg-white min-h-screen">
     <div class="max-w-6xl mx-auto px-4 pt-24 pb-16">
         
-        <!-- Tombol kembali (dinamis) -->
+        <!-- ========== TOMBOL KEMBALI ========== -->
+        <!-- Tombol kembali (dinamis sesuai dari mana user datang) -->
         <div class="mb-8 fade-in-up">
             <a href="<?php echo h($backUrl); ?>"
                class="inline-flex items-center gap-2 px-5 py-2.5 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-all duration-300 shadow-md hover:shadow-lg group">
@@ -66,7 +77,8 @@ if (strpos($referer, 'page=news') !== false) {
             </a>
         </div>
 
-        <!-- Badge kategori berita -->
+        <!-- ========== BADGE KATEGORI ========== -->
+        <!-- Badge kategori berita (ditampilkan di atas judul) -->
         <?php if (!empty($detail['nama_kategori'])): ?>
             <div class="text-center mb-4 fade-in-up delay-100">
                 <span class="inline-block px-4 py-1.5 bg-orange-100 text-orange-600 text-xs font-bold uppercase rounded-full tracking-wide">
@@ -75,19 +87,22 @@ if (strpos($referer, 'page=news') !== false) {
             </div>
         <?php endif; ?>
 
-        <!-- Judul berita -->
+        <!-- ========== JUDUL BERITA ========== -->
+        <!-- Judul berita (center aligned) -->
         <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4 leading-tight max-w-4xl mx-auto fade-in-up delay-100">
             <?php echo h($detail['judul'] ?? 'Berita tidak ditemukan'); ?>
         </h1>
 
-        <!-- Info meta (penulis & tanggal) -->
+        <!-- ========== INFO META ========== -->
+        <!-- Info meta (penulis & tanggal publikasi) -->
         <div class="text-center text-gray-500 text-sm mb-10 fade-in-up delay-100">
             <?php if (!empty($detail['created_at'])): ?>
                 Oleh Admin • <?php echo date('d M Y', strtotime($detail['created_at'])); ?>
             <?php endif; ?>
         </div>
 
-        <!-- Gambar hero (full width) -->
+        <!-- ========== GAMBAR HERO ========== -->
+        <!-- Gambar hero (full width dengan efek zoom saat hover) -->
         <div class="mb-12 fade-in-up delay-200">
             <div class="rounded-2xl overflow-hidden shadow-lg">
                 <div class="w-full h-64 md:h-96 bg-gray-100 relative overflow-hidden group">
@@ -98,10 +113,12 @@ if (strpos($referer, 'page=news') !== false) {
             </div>
         </div>
 
+        <!-- ========== KONTEN UTAMA ========== -->
         <!-- Konten: 2 kolom (Isi berita kiri + Sidebar kanan) -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16 fade-in-up delay-300">
             
-            <!-- Konten kiri: Isi berita -->
+            <!-- ========== ISI BERITA ========== -->
+            <!-- Konten kiri: Isi berita lengkap -->
             <div class="lg:col-span-8">
                 <?php if (!empty($detail['isi_berita'])): ?>
                     <div class="prose prose-lg max-w-none">
@@ -114,7 +131,8 @@ if (strpos($referer, 'page=news') !== false) {
                 <?php endif; ?>
             </div>
 
-            <!-- Sidebar kanan: Baca juga -->
+            <!-- ========== SIDEBAR BACA JUGA ========== -->
+            <!-- Sidebar kanan: Berita terkait lainnya -->
             <div class="lg:col-span-4">
                 <div class="sticky top-24 space-y-6">
                     <h3 class="text-xl font-bold text-gray-900 mb-4">Baca Juga</h3>
