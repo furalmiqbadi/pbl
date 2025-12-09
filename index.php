@@ -194,6 +194,7 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lab MMT - Beranda</title>
+    <link rel="icon" href="assets/images/mmtLogo.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* ========== CSS VARIABLES ========== */
