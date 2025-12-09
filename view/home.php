@@ -253,7 +253,7 @@
         </div>
         <!-- Grid artikel & berita -->
         <div class="grid md:grid-cols-3 gap-6" id="news-grid">
-            <?php foreach ($artikelItems as $artikel): ?>
+            <?php foreach (array_slice($artikelItems, 0, 3) as $artikel): ?>
                 <?php
                 $artikelLink = 'index.php?page=news_detail';
                 if (!empty($artikel['id'])) {
