@@ -25,49 +25,28 @@ class NewsController
             $categoryId = (int) $categoryInput;
         }
 
-        // 3. Logika Pagination
-        $perPageFirst = 10;
-        $perPageOther = 12;
+        // Update Pagination
+        $limit = 9; 
         $page = isset($_GET['p']) && ctype_digit((string) $_GET['p']) ? max(1, (int) $_GET['p']) : 1;
+        $offset = ($page - 1) * $limit;
 
         $totalNews = $this->model->countNews($search, $categoryId);
-        $remaining = max(0, $totalNews - $perPageFirst);
-        $totalPages = 1 + ($remaining > 0 ? (int) ceil($remaining / $perPageOther) : 0);
+        $totalPages = ceil($totalNews / $limit);
+        
+        if ($page > $totalPages && $totalPages > 0) $page = $totalPages;
 
-        if ($page > $totalPages && $totalPages > 0)
-            $page = $totalPages;
-
-        // 4. Logika Featured News (Headline Utama)
-        $featuredNews = null;
-        // Featured hanya muncul jika di halaman 1, tidak search, dan tidak filter kategori
-        if ($page === 1 && $search === '' && $categoryId === null) {
-            $featuredNews = $this->model->getLatest();
-        }
-
-        // 5. Hitung Offset Database
-        if ($page === 1) {
-            $offset = $featuredNews ? 1 : 0;
-            $limit = $featuredNews ? ($perPageFirst - 1) : $perPageFirst;
-        } else {
-            $offset = $perPageFirst + ($page - 2) * $perPageOther;
-            $limit = $perPageOther;
-        }
-
-        // 6. Ambil Data Utama
+        // 3. Ambil Data Utama
         $newsList = $this->model->getNews($search, $categoryId, $offset, $limit);
         $categories = $this->model->getCategories();
 
-        // 7. Logika Slide
-        $sliderNews = [];
-        if (!empty($featuredNews)) {
-            $sliderNews[] = $featuredNews;
-        }
-        if (!empty($newsList)) {
-            $sliderNews = array_merge($sliderNews, array_slice($newsList, 0, 2));
-        }
-        $sliderNews = array_unique($sliderNews, SORT_REGULAR);
+        // 4. Logika Slider (Ambil Berita Terbaru Terpisah)
+        $sliderData = $this->model->getNews(null, null, 0, 3); // Ambil 3 berita terbaru
+        
+        $sliderNews = $sliderData; // Gunakan ini untuk slider
+        
+        // ---
 
-        // 8. Panggil View
+        // 5. Panggil View
         include __DIR__ . '/../view/news.php';
     }
 
