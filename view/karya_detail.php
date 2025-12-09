@@ -43,7 +43,7 @@ if (strpos($referer, 'page=catalog') !== false) {
 
 <style>
     body { 
-        font-family: 'Poppins', sans-serif; 
+        
     }
 
     @keyframes fadeInUp {

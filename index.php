@@ -613,9 +613,9 @@ $galleryBottom = mapImageList($data['galleryBottom'] ?? []);
             const newsGrid = document.getElementById('news-grid');
             const newsData = <?php echo json_encode($artikelItems); ?>;
 
-            // Fungsi untuk render berita ke grid
+            // Fungsi untuk render berita ke grid (max 3 items)
             function renderNews(list) {
-                newsGrid.innerHTML = list.map(n => {
+                newsGrid.innerHTML = list.slice(0, 3).map(n => {
                     const detailUrl = n.id ? `index.php?page=news_detail&id=${encodeURIComponent(n.id)}` : 'index.php?page=news_detail';
                     return `
                 <a href="${detailUrl}" class="group bg-white rounded-xl card-outline overflow-hidden block hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">

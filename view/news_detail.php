@@ -31,7 +31,7 @@ if (strpos($referer, 'page=news') !== false) {
 
 <style>
     body { 
-        font-family: 'Poppins', sans-serif; 
+         
     }
 
     @keyframes fadeInUp {
