@@ -73,6 +73,31 @@ class AboutModel extends Model {
         } catch (PDOException $e) { return []; }
     }
 
+    public function getDosenDetail($id) {
+        if ($this->db === null) return null;
+        
+        try {
+            $sql = "SELECT d.*, dt.biografi, dt.pendidikan_terakhir, dt.bidang_keahlian, dt.email 
+                    FROM dosen_multimedia d
+                    LEFT JOIN detail_dosen dt ON d.id = dt.dosen_id
+                    WHERE d.id = :id";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($result && !empty($result['gambar_tim']) && strpos($result['gambar_tim'], '/') === false) {
+                $result['gambar_tim'] = 'uploads/' . $result['gambar_tim'];
+            }
+
+            return $result;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
     public function getPartner() {
         if ($this->db === null) return [];
         try {

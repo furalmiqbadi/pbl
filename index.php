@@ -77,6 +77,14 @@ if ($page === 'about') {
     exit;
 }
 
+// Route untuk halaman detail dosen
+if ($page === 'dosen_detail') {
+        require_once __DIR__ . '/controller/AboutController.php';
+        $controller = new AboutController();
+        $controller->detail();
+        exit;
+}
+
 // Route untuk halaman katalog karya
 if ($page === 'catalog') { 
     require_once __DIR__ . '/controller/KatalogController.php';
