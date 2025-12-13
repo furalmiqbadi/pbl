@@ -25,7 +25,7 @@ $partner = $data_About['partner'] ?? [];
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        body { scroll-behavior: smooth; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
         .timeline-line {
@@ -102,7 +102,6 @@ $partner = $data_About['partner'] ?? [];
                                              onerror="this.style.display='none'; document.getElementById('fallback-icon-<?= $i ?>').style.display='block';">
                                         
                                         <i id="fallback-icon-<?= $i ?>" class="fas fa-star text-3xl text-orange-500" style="display: none;"></i>
-                                    
                                     <?php else: ?>
                                         <i class="fas fa-star text-3xl text-orange-500"></i>
                                     <?php endif; ?>
@@ -113,9 +112,7 @@ $partner = $data_About['partner'] ?? [];
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <div class="col-span-full text-center py-10 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
-                            <p class="text-gray-400">Data Nilai Inti belum tersedia.</p>
-                        </div>
+                        <div class="col-span-full text-center py-10">Data Nilai Inti belum tersedia.</div>
                     <?php endif; ?>
                 </div>
             </div>
@@ -187,25 +184,39 @@ $partner = $data_About['partner'] ?? [];
                     <div id="dosenSlider" class="flex overflow-x-auto gap-6 pb-8 px-4 no-scrollbar scroll-smooth snap-x snap-mandatory">
                         <?php foreach ($dosen as $pic): ?>
                             <div class="flex-shrink-0 w-72 snap-start bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group reveal">
-                                <div class="w-24 h-24 mx-auto mb-6 relative">
-                                    <div class="absolute inset-0 bg-orange-100 rounded-full blur-md opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                                    <?php 
-                                        $imgDosen = basename($pic['gambar_tim'] ?? ''); 
-                                        $dosenPath = 'assets/images/uploads/' . $imgDosen; 
-                                    ?>
-                                    <img src="<?php echo assetUrl($dosenPath); ?>" 
-                                         alt="<?php echo h($pic['nama']); ?>" 
-                                         class="w-full h-full rounded-full object-cover relative z-10 border-2 border-gray-100 group-hover:border-orange-400 transition shadow-sm"
-                                         onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($pic['nama']); ?>&background=random';">
-                                </div>
+                                
+                                <a href="index.php?page=dosen_detail&id=<?php echo $pic['id']; ?>" class="block group/img">
+                                    <div class="w-24 h-24 mx-auto mb-6 relative cursor-pointer">
+                                        <div class="absolute inset-0 bg-orange-100 rounded-full blur-md opacity-0 group-hover/img:opacity-100 transition duration-300"></div>
+                                        <?php 
+                                            // FIX PATH GAMBAR DOSEN
+                                            $imgDosen = basename($pic['gambar_tim'] ?? ''); 
+                                            $dosenPath = 'assets/images/uploads/' . $imgDosen; 
+                                        ?>
+                                        <img src="<?php echo assetUrl($dosenPath); ?>" 
+                                             alt="<?php echo h($pic['nama']); ?>" 
+                                             class="w-full h-full rounded-full object-cover relative z-10 border-2 border-gray-100 group-hover/img:border-orange-400 transition shadow-sm"
+                                             onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($pic['nama']); ?>&background=random';">
+                                    </div>
+                                </a>
+
                                 <div class="text-center">
-                                    <h4 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-orange-600 transition"><?php echo h($pic['nama']); ?></h4>
+                                    <a href="index.php?page=dosen_detail&id=<?php echo $pic['id']; ?>" class="hover:text-orange-600 transition-colors">
+                                        <h4 class="text-lg font-bold text-gray-900 mb-1"><?php echo h($pic['nama']); ?></h4>
+                                    </a>
+                                    
                                     <p class="text-gray-500 text-xs uppercase tracking-wider font-semibold mb-4"><?php echo h($pic['jabatan']); ?></p>
                                     
                                     <div class="flex justify-center gap-4 border-t border-gray-100 pt-4 mt-4">
-                                        <?php if (!empty($pic['link_linkedin'])): ?> <a href="<?php echo h($pic['link_linkedin']); ?>" target="_blank" class="text-blue-700 transition transform hover:scale-110"><i class="fab fa-linkedin text-lg"></i></a> <?php endif; ?>
-                                        <?php if (!empty($pic['link_instagram'])): ?> <a href="<?php echo h($pic['link_instagram']); ?>" target="_blank" class="text-pink-600 transition transform hover:scale-110"><i class="fab fa-instagram text-lg"></i></a> <?php endif; ?>
-                                        <?php if (!empty($pic['link_github'])): ?> <a href="<?php echo h($pic['link_github']); ?>" target="_blank" class="text-gray-900 transition transform hover:scale-110"><i class="fab fa-github text-lg"></i></a> <?php endif; ?>
+                                        <?php if (!empty($pic['link_linkedin'])): ?>
+                                            <a href="<?php echo h($pic['link_linkedin']); ?>" target="_blank" class="text-gray-400 hover:text-blue-700 transition transform hover:scale-110"><i class="fab fa-linkedin text-lg"></i></a>
+                                        <?php endif; ?>
+                                        <?php if (!empty($pic['link_instagram'])): ?>
+                                            <a href="<?php echo h($pic['link_instagram']); ?>" target="_blank" class="text-gray-400 hover:text-pink-600 transition transform hover:scale-110"><i class="fab fa-instagram text-lg"></i></a>
+                                        <?php endif; ?>
+                                        <?php if (!empty($pic['link_github'])): ?>
+                                            <a href="<?php echo h($pic['link_github']); ?>" target="_blank" class="text-gray-400 hover:text-gray-900 transition transform hover:scale-110"><i class="fab fa-github text-lg"></i></a>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
@@ -215,25 +226,29 @@ $partner = $data_About['partner'] ?? [];
             </div>
         </section>
 
-        <section class="py-16 bg-gray-50 border-t border-gray-200">
+        <section class="py-20 bg-gray-50 border-t border-gray-200">
             <div class="container mx-auto px-4 text-center reveal">
-                <h3 class="text-2xl font-bold text-gray-800 mb-10">Partner & Kolaborasi</h3>
-                <div class="flex flex-wrap justify-center items-center gap-8 opacity-70 hover:opacity-100 transition-opacity duration-300">
+                <h3 class="text-3xl font-extrabold text-gray-900 mb-12">Partner & Kolaborasi</h3>
+                
+                <div class="flex flex-wrap justify-center items-center gap-8 max-w-5xl mx-auto">
                     <?php if (!empty($partner)): ?>
                         <?php foreach ($partner as $p): ?>
-                            <div class="w-32 h-20 bg-white rounded-xl shadow-sm border border-gray-200 flex items-center justify-center p-2 hover:shadow-md transition hover:-translate-y-1">
+                            <div class="group relative w-36 h-24 bg-white rounded-2xl shadow-sm border border-gray-200 flex items-center justify-center p-4 hover:shadow-xl hover:border-orange-300 transition-all duration-300 transform hover:scale-110 cursor-pointer">
+                                
+                                <div class="absolute inset-0 bg-orange-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
                                 <?php 
                                     $imgPartner = basename($p['gambar_brand'] ?? '');
                                     $partnerPath = 'assets/images/uploads/' . $imgPartner;
                                 ?>
                                 <img src="<?php echo assetUrl($partnerPath); ?>" 
                                      alt="<?php echo h($p['nama_brand']); ?>" 
-                                     class="max-h-12 max-w-full object-contain hover:grayscale-0 transition duration-300"
+                                     class="relative z-10 max-h-full max-w-full object-contain filter transition-all duration-500"
                                      onerror="this.style.display='none';">
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p class="text-gray-400">Belum ada partner.</p>
+                        <p class="text-gray-400 font-medium italic">Data partner belum tersedia.</p>
                     <?php endif; ?>
                 </div>
             </div>

@@ -18,5 +18,22 @@ class AboutController {
         // 2. Panggil View
         include __DIR__ . '/../view/about.php'; 
     }
+
+    public function detail() {
+        $id = $_GET['id'] ?? null;
+        if (!$id) {
+            header("Location: index.php?page=about");
+            exit;
+        }
+
+        $dosen = $this->model->getDosenDetail($id);
+        
+        if (!$dosen) {
+            echo "Data dosen tidak ditemukan.";
+            exit;
+        }
+
+        include __DIR__ . '/../view/dosen_detail.php';
+    }
 }
 ?>
